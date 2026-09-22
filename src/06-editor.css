@@ -71,10 +71,16 @@ body {
 
   /* Category colours mapped onto callout types.
      Five colours code the information lifecycle, same as the design system:
-     rule 元规则 · log 时序 · know 知识 · raw 外部输入 · proc 过程制品 */
-  --callout-note: var(--cairn-c-log);
+     rule 元规则 · log 时序 · know 知识 · raw 外部输入 · proc 过程制品
+
+     "note" has no dedicated core variable — Obsidian's app.css only maps
+     specific types (abstract/summary/tldr, info, todo, tip, …) to their own
+     --callout-<type> variable and lets everything else, note included, fall
+     through to --callout-default (blue). Overriding the default here is what
+     actually recolours note, and keeps any custom/unrecognised callout type
+     off Obsidian's blue too, in line with the no-cool-colours brand rule. */
+  --callout-default: var(--cairn-c-log);
   --callout-summary: var(--cairn-c-know);
-  --callout-abstract: var(--cairn-c-know);
   --callout-tip: var(--cairn-c-know);
   --callout-quote: var(--cairn-c-raw);
   --callout-example: var(--cairn-c-raw);
@@ -348,9 +354,12 @@ body {
   text-decoration-color: var(--cairn-kraft-deep);
 }
 
-/* Properties read as the label block at the top of a file card. */
+/* Properties read as the label block at the top of a file card — a solid
+   card fill, same as the table and blockquote fix above: with no background
+   of its own the ruled-paper stripe on the ancestor sizer would show through
+   the box instead of stopping at its border. */
 .metadata-container {
-  background-image: var(--cairn-rule-lines);
+  background-color: var(--cairn-card);
   border: 1px solid var(--cairn-line);
   border-radius: var(--radius-m);
   padding: 8px 12px;
