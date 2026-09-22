@@ -1,0 +1,149 @@
+/* ==========================================================================
+   Optional behaviours — Style Settings class toggles and selects
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Paper stock — what the note is printed on.
+
+   Ruled is the default and needs no class: the ruling is set on the sizer in
+   06-editor.css, so a vault without Style Settings still gets the notebook
+   page. The three variants below take it away or replace it. The stock class
+   lands on body, so each selector here outweighs the base rule by one class
+   and comes later in the build besides.
+   -------------------------------------------------------------------------- */
+
+/* Aged paper — a plain yellowed sheet: no ruling, but mottling, grain and a
+   wash over the note surface. Tokens live in the palette files.
+
+   Ruling rides the sizer, because a ruled sheet has margins and has to stop
+   at the measure. Aged stock does the opposite: it is the stock the whole
+   note is printed on, so it runs wall to wall on the scroller instead — a
+   wash that stopped at 42rem would draw a hard yellow rectangle down the
+   middle of the pane. The child combinators keep it off embedded notes,
+   which would otherwise take a second coat of the wash.
+
+   Attachment is local, so the texture belongs to the page and scrolls with
+   it. Left to scroll, the foxing would sit at a fixed spot on the screen and
+   read as a smudge on the monitor rather than a stain in the paper. */
+.cairn-stock-aged .markdown-source-view.mod-cm6 > .cm-editor > .cm-scroller,
+.cairn-stock-aged .markdown-reading-view > .markdown-preview-view {
+  background-image: var(--cairn-stock-aged);
+  background-size: var(--cairn-stock-aged-size);
+  /* No ruling to phase, so no offset — every tile starts at the top edge. */
+  background-position: 0 0;
+  background-attachment: local;
+}
+
+/* …and the ruling comes off the sheet itself. */
+.cairn-stock-aged .markdown-source-view.mod-cm6 .cm-sizer,
+.cairn-stock-aged .markdown-preview-view .markdown-preview-sizer {
+  background-image: none;
+}
+
+/* The rest of the app moves onto the same stock, grain only. */
+.theme-light.cairn-stock-aged,
+.theme-dark.cairn-stock-aged {
+  --cairn-grain: var(--cairn-grain-aged);
+}
+
+/* A callout is a card cut from the sheet it sits on, not a ruled page. */
+.cairn-stock-aged .callout {
+  background-image: var(--cairn-grain);
+}
+
+/* Plain sheet — drops the rules from the running text but keeps the desk. */
+.cairn-stock-plain .markdown-source-view.mod-cm6 .cm-sizer,
+.cairn-stock-plain .markdown-preview-view .markdown-preview-sizer {
+  background-image: none;
+}
+
+/* Flat — drops every texture layer, rules and grain alike. */
+.cairn-stock-flat .markdown-source-view.mod-cm6 .cm-sizer,
+.cairn-stock-flat .markdown-preview-view .markdown-preview-sizer,
+.cairn-stock-flat .workspace-ribbon,
+.cairn-stock-flat .modal,
+.cairn-stock-flat .prompt,
+.cairn-stock-flat .callout,
+.cairn-stock-flat .metadata-container {
+  background-image: none;
+}
+
+/* Plain quote — trades the paper card for the kraft spine the theme used
+   before it: same indentation, no stock, no lift. */
+.cairn-plain-quote {
+  --blockquote-border-thickness: 2px;
+  --blockquote-color: var(--cairn-ink-soft);
+}
+
+.cairn-plain-quote .markdown-rendered blockquote:not(.callout) {
+  margin: 1em 0;
+  padding: 0 0 0 18px;
+  border: none;
+  border-left: var(--blockquote-border-thickness) solid var(--blockquote-border-color);
+  border-radius: 0;
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  -webkit-mask-image: none;
+  mask-image: none;
+  filter: none;
+}
+
+.cairn-plain-quote
+  .markdown-source-view.mod-cm6.is-live-preview
+  .cm-line.HyperMD-quote {
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background-color: transparent;
+  box-shadow: none;
+  -webkit-mask-image: none;
+  mask-image: none;
+  filter: none;
+}
+
+/* No card, no corner to turn. */
+.cairn-plain-quote .markdown-rendered blockquote:not(.callout)::after,
+.cairn-plain-quote
+  .markdown-source-view.mod-cm6.is-live-preview
+  .cm-line.HyperMD-quote::after {
+  content: none;
+}
+
+/* Underline internal links */
+.cairn-underline-links .markdown-rendered a.internal-link {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--cairn-kraft-deep);
+}
+
+/* Dim the desk until hovered */
+.cairn-dim-chrome .workspace-ribbon,
+.cairn-dim-chrome .workspace-split.mod-left-split,
+.cairn-dim-chrome .workspace-split.mod-right-split,
+.cairn-dim-chrome .workspace-tab-header-container {
+  opacity: 0.5;
+  transition: opacity var(--anim-duration-moderate) var(--anim-motion-smooth);
+}
+
+.cairn-dim-chrome .workspace-ribbon:hover,
+.cairn-dim-chrome .workspace-split.mod-left-split:hover,
+.cairn-dim-chrome .workspace-split.mod-right-split:hover,
+.cairn-dim-chrome .workspace-tab-header-container:hover {
+  opacity: 1;
+}
+
+/* Block cursor */
+.cairn-block-cursor .cm-editor .cm-cursor-primary {
+  border-left-width: 0.5em;
+  opacity: 0.5;
+}
+
+/* Respect reduced motion for anything that moves on its own. */
+@media (prefers-reduced-motion: reduce) {
+  .nav-file-title,
+  .nav-folder-title,
+  button:not(.clickable-icon) {
+    transition: none;
+  }
+}

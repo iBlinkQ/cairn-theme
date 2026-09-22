@@ -1,0 +1,86 @@
+/* ==========================================================================
+   Foundations
+   Aesthetic tokens follow the Cairn Design System (kraft-paper archive).
+   Type scale, line width and spacing follow Obsidian's own conventions —
+   the design system's 14.5px body and .3em tracking are built for a landing
+   page, not for a note editor.
+   ========================================================================== */
+
+body {
+  /* Knobs exposed through Style Settings ---------------------------------- */
+  --cairn-line-height: 1.8;
+  --cairn-line-width: 42rem;
+  --cairn-radius: 4px;
+  --cairn-texture: 1;
+
+  /* Type — set in sans-serif.
+     Remote webfonts are forbidden in community themes, so this is an
+     OS-local stack: system UI face + Chinese Hei faces, no @import.
+     Only the *-theme slots are set, so Appearance → Font in Obsidian
+     (which writes --font-*-override) still wins. */
+  --cairn-font: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", "Noto Sans SC", "Source Han Sans SC", "Helvetica Neue", Arial,
+    sans-serif;
+  --font-text-theme: var(--cairn-font);
+  --font-interface-theme: var(--cairn-font);
+  --font-monospace-theme: "SF Mono", ui-monospace, "JetBrains Mono", Menlo, Consolas,
+    monospace;
+
+  /* --font-text-size is deliberately NOT set here. Obsidian writes it as an
+     inline style from Appearance → Font size, which outranks any theme rule,
+     so a theme-side slider would look broken. Font size stays Obsidian's. */
+  --line-height-normal: var(--cairn-line-height);
+  --line-height-tight: 1.35;
+  --file-line-width: var(--cairn-line-width);
+  --file-margins: 40px 44px 72px;
+
+  /* Headings — em-relative per Obsidian */
+  --h1-size: 1.8em;
+  --h2-size: 1.45em;
+  --h3-size: 1.22em;
+  --h4-size: 1.08em;
+  --h5-size: 1em;
+  --h6-size: 0.92em;
+  --h1-weight: 700;
+  --h2-weight: 700;
+  --h3-weight: 600;
+  --h4-weight: 600;
+  --h5-weight: 600;
+  --h6-weight: 600;
+  --h6-variant: normal;
+  --heading-spacing: 1.7em;
+
+  /* Tracking — wide tracking is a brand signature, but only on labels.
+     Body copy stays near zero so Chinese text keeps its rhythm. */
+  --cairn-ls-body: 0.01em;
+  --cairn-ls-label: 0.08em;
+  --cairn-ls-wide: 0.16em;
+
+  /* Radii — small and archival, never pill cards */
+  --radius-s: 2px;
+  --radius-m: var(--cairn-radius);
+  --radius-l: 6px;
+  --radius-xl: 8px;
+  --input-radius: 3px;
+  --button-radius: 3px;
+  --tab-radius: 3px 3px 0 0;
+  --tab-radius-active: 4px 4px 0 0;
+  --modal-radius: 8px;
+  --code-radius: 3px;
+  --callout-radius: 4px;
+  --checkbox-radius: 2px;
+
+  /* Spacing */
+  --size-4-1: 4px;
+  --header-height: 38px;
+  --ribbon-width: 42px;
+  --divider-width: 1px;
+  --divider-width-hover: 3px;
+  --border-width: 1px;
+
+  /* Motion — the brand's easing and durations */
+  --anim-duration-fast: 150ms;
+  --anim-duration-moderate: 350ms;
+  --anim-motion-smooth: ease;
+  --cairn-ease-feed: cubic-bezier(0.23, 1, 0.32, 1);
+}

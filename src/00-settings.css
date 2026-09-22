@@ -1,0 +1,187 @@
+/* @settings
+
+name: Cairn
+id: cairn
+settings:
+    -
+        id: cairn-info
+        title: About
+        description: Cairn — a kraft-paper archive for Obsidian. Warm paper, brown ink, terracotta accent.
+        type: info-text
+        markdown: false
+
+    -
+        id: cairn-color-heading
+        title: Colors
+        type: heading
+        level: 2
+        collapsed: true
+    -
+        id: accent
+        title: Accent
+        description: Terracotta. Drives the caret, active states and hover links.
+        type: variable-themed-color
+        format: hsl-split
+        opacity: false
+        default-light: '#bf5b3d'
+        default-dark: '#d9714f'
+    -
+        id: cairn-panel
+        title: Note surface
+        description: The sheet you write on.
+        type: variable-themed-color
+        format: hex
+        opacity: false
+        default-light: '#faf5e9'
+        default-dark: '#262019'
+    -
+        id: cairn-paper
+        title: Desk surface
+        description: Sidebars and the space around the note.
+        type: variable-themed-color
+        format: hex
+        opacity: false
+        default-light: '#f3ecdd'
+        default-dark: '#1e1a14'
+    -
+        id: cairn-ink
+        title: Ink
+        type: variable-themed-color
+        format: hex
+        opacity: false
+        default-light: '#3f3528'
+        default-dark: '#e8dcc4'
+    -
+        id: cairn-line
+        title: Hairline
+        description: Card edges, table rules, indentation guides.
+        type: variable-themed-color
+        format: hex
+        opacity: false
+        default-light: '#cbb795'
+        default-dark: '#443a2b'
+
+    -
+        id: cairn-type-heading
+        title: Typography
+        type: heading
+        level: 2
+        collapsed: true
+    -
+        id: cairn-font
+        title: Default font stack
+        description: Used for text and interface unless you pick fonts in Appearance → Font, which always wins. Remote webfonts are not allowed in community themes, so these must be fonts installed on your system.
+        type: variable-text
+        default: '-apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", "Source Han Sans SC", "Helvetica Neue", Arial, sans-serif'
+        quotes: false
+    -
+        id: cairn-font-size-note
+        title: Text size lives in Obsidian
+        description: Appearance → Font size. Obsidian sets it inline, which outranks any theme, so Cairn does not duplicate the control here.
+        type: info-text
+        markdown: false
+    -
+        id: cairn-line-height
+        title: Line height
+        description: The design system runs 1.85–1.95 on a landing page; 1.8 reads better in a note.
+        type: variable-number-slider
+        default: 1.8
+        min: 1.4
+        max: 2.2
+        step: 0.05
+    -
+        id: cairn-line-width
+        title: Line width
+        type: variable-number-slider
+        default: 42
+        min: 30
+        max: 90
+        step: 1
+        format: rem
+
+    -
+        id: cairn-paper-heading
+        title: Paper
+        type: heading
+        level: 2
+        collapsed: true
+    -
+        id: cairn-radius
+        title: Corner radius
+        description: Archival corners are small. Above 8px the cards stop looking like paper.
+        type: variable-number-slider
+        default: 4
+        min: 0
+        max: 12
+        step: 1
+        format: px
+    -
+        id: cairn-paper-stock
+        title: Paper stock
+        description: What the note is printed on. Ruled is the notebook page. Aged is a plain sheet of yellowed kraft, mottled and grainy the way paper that has sat in a drawer is. Plain keeps the desk grain but drops both. Flat is no texture at all.
+        type: class-select
+        allowEmpty: false
+        default: cairn-stock-ruled
+        options:
+            -
+                label: Ruled paper
+                value: cairn-stock-ruled
+            -
+                label: Aged paper
+                value: cairn-stock-aged
+            -
+                label: Plain sheet
+                value: cairn-stock-plain
+            -
+                label: Flat
+                value: cairn-stock-flat
+    -
+        id: cairn-rule-color
+        title: Ruled line color
+        description: The notebook rules behind the running text — ruled stock only. Pitched to your line height automatically.
+        type: variable-themed-color
+        format: rgb
+        opacity: true
+        default-light: 'rgba(150, 120, 80, 0.09)'
+        default-dark: 'rgba(232, 220, 196, 0.055)'
+    -
+        id: cairn-aged-tint
+        title: Aged wash
+        description: How yellowed the aged sheet is — a wash laid over your note surface, so the surface colour still shows through. Aged stock only.
+        type: variable-themed-color
+        format: rgb
+        opacity: true
+        default-light: 'rgba(193, 158, 92, 0.14)'
+        default-dark: 'rgba(120, 84, 44, 0.09)'
+    -
+        id: cairn-quote-paper
+        title: Quote card paper
+        description: The stock a blockquote is printed on. It sits a step off the note surface so the card reads as a separate sheet.
+        type: variable-themed-color
+        format: hex
+        opacity: false
+        default-light: '#f9f1d9'
+        default-dark: '#322a20'
+    -
+        id: cairn-plain-quote
+        title: Plain quote
+        description: Drops the paper card from blockquotes, leaving a kraft spine down the left edge.
+        type: class-toggle
+        default: false
+    -
+        id: cairn-underline-links
+        title: Underline internal links
+        type: class-toggle
+        default: false
+    -
+        id: cairn-dim-chrome
+        title: Dim the desk until hovered
+        type: class-toggle
+        default: false
+    -
+        id: cairn-block-cursor
+        title: Block cursor
+        type: class-toggle
+        default: false
+
+*/

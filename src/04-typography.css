@@ -1,0 +1,83 @@
+/* ==========================================================================
+   Typography — tracking reserved for labels
+   Headings use --font-text, not --cairn-font, so they follow the text font
+   picked in Appearance → Font instead of pinning the theme default.
+   ========================================================================== */
+
+.markdown-rendered,
+.markdown-source-view.mod-cm6 .cm-content {
+  letter-spacing: var(--cairn-ls-body);
+}
+
+/* Headings ---------------------------------------------------------------- */
+.markdown-rendered h1,
+.markdown-rendered h2,
+.markdown-rendered h3,
+.markdown-rendered h4,
+.markdown-rendered h5,
+.markdown-rendered h6,
+.HyperMD-header {
+  font-family: var(--font-text);
+  letter-spacing: 0.02em;
+}
+
+/* H1 carries the brand's 3px double rule — the hero rule of the archive. */
+.markdown-rendered h1 {
+  border-bottom: 3px double var(--cairn-kraft-deep);
+  padding-bottom: 0.3em;
+}
+
+.markdown-rendered h2 {
+  border-bottom: 1px dashed var(--cairn-kraft-deep);
+  padding-bottom: 0.25em;
+}
+
+/* H6 is the archivist's label: small, wide, uppercase-ish */
+.markdown-rendered h6 {
+  color: var(--text-muted);
+  letter-spacing: var(--cairn-ls-label);
+}
+
+.inline-title {
+  font-family: var(--font-text);
+  font-size: var(--h1-size);
+  font-weight: var(--h1-weight);
+  letter-spacing: 0.02em;
+}
+
+/* Links ------------------------------------------------------------------- */
+.markdown-rendered a.internal-link,
+.markdown-rendered a.external-link {
+  text-decoration: none;
+  text-underline-offset: 3px;
+  transition: color var(--anim-duration-fast) var(--anim-motion-smooth);
+}
+
+.markdown-rendered a.internal-link:hover,
+.markdown-rendered a.external-link:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--cairn-accent);
+}
+
+.markdown-rendered a.internal-link.is-unresolved {
+  text-decoration: underline dotted;
+  text-decoration-color: var(--cairn-kraft-deep);
+}
+
+/* Emphasis ---------------------------------------------------------------- */
+.markdown-rendered mark {
+  padding: 0.05em 0.2em;
+  border-radius: var(--radius-s);
+}
+
+.markdown-rendered strong {
+  font-weight: 700;
+  color: var(--cairn-ink);
+}
+
+/* Horizontal rule as an archival separator */
+.markdown-rendered hr {
+  border: none;
+  border-top: 3px double var(--hr-color);
+  margin: 2em 0;
+}

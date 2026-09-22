@@ -1,0 +1,46 @@
+/* ==========================================================================
+   Core plugins
+   ========================================================================== */
+
+body {
+  /* Graph — kraft lines, ink nodes, terracotta focus */
+  --graph-line: var(--cairn-line);
+  --graph-node: var(--cairn-ink-soft);
+  --graph-node-unresolved: var(--cairn-muted);
+  --graph-node-focused: var(--cairn-accent);
+  --graph-node-tag: rgb(var(--cairn-c-know));
+  --graph-node-attachment: rgb(var(--cairn-c-raw));
+
+  --search-result-background: transparent;
+  /* kraft-deep is the folder stock's own tone, which put the arrow at 1.93:1
+     against the pane — legible only because the stroke is heavy. muted is the
+     theme's own quiet ink and clears 2.8:1 while staying hardware rather than
+     a second label. */
+  --nav-collapse-icon-color: var(--cairn-muted);
+}
+
+/* Search matches use the ochre highlight — the archivist's marker pen. */
+.search-result-file-matched-text {
+  background-color: var(--text-highlight-bg);
+  color: var(--text-normal);
+  border-radius: var(--radius-s);
+}
+
+.search-result-file-title {
+  letter-spacing: 0.02em;
+}
+
+.outline-view-item-inner,
+.search-result-file-title {
+  color: var(--cairn-ink-soft);
+}
+
+/* Canvas cards are file cards. */
+.canvas-node-container {
+  border-radius: var(--radius-m);
+  box-shadow: var(--shadow-s);
+}
+
+.canvas-node-content {
+  background-image: var(--cairn-grain);
+}

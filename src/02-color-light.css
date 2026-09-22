@@ -1,0 +1,171 @@
+/* ==========================================================================
+   Light — kraft-paper archive
+   Palette taken verbatim from the Cairn Design System colour tokens.
+   No pure white, no pure black, no cool grays.
+   ========================================================================== */
+
+.theme-light {
+  /* Brand tokens ---------------------------------------------------------- */
+  --cairn-paper: #f3ecdd;
+  --cairn-paper-deep: #ece2cc;
+  --cairn-panel: #fbf5e6; /* --bg-ruled-paper: the sheet inside a folder */
+  --cairn-card: #fffdf4;
+  --cairn-kraft: #d9c19c;
+  --cairn-kraft-deep: #c4a87e;
+  --cairn-ink: #3f3528;
+  --cairn-ink-soft: #6e5f4c;
+  --cairn-muted: #9a8a72;
+  --cairn-line: #cbb795;
+
+  /* Interactive accent — terracotta hsl(14, 52%, 49%) */
+  --accent-h: 14;
+  --accent-s: 52%;
+  --accent-l: 49%;
+  --cairn-accent: #bf5b3d;
+  --cairn-accent-deep: #8e3c1f;
+  /* Focused tab label: text, so it takes the deep stamp like links do. */
+  --cairn-tab-focus: var(--cairn-accent-deep);
+
+  /* Surfaces — the desk is paper, the note is a sheet laid on it ---------- */
+  --background-primary: var(--cairn-panel);
+  --background-primary-alt: var(--cairn-card);
+  --background-secondary: var(--cairn-paper);
+  --background-secondary-alt: var(--cairn-paper-deep);
+
+  --background-modifier-hover: rgba(110, 85, 50, 0.07);
+  --background-modifier-active-hover: rgba(191, 91, 61, 0.12);
+  --background-modifier-border: var(--cairn-line);
+  --background-modifier-border-hover: var(--cairn-kraft-deep);
+  --background-modifier-border-focus: var(--cairn-accent);
+  --background-modifier-form-field: var(--cairn-card);
+  --background-modifier-success: rgba(125, 129, 71, 0.18);
+  --background-modifier-error: rgba(168, 75, 50, 0.16);
+  --background-modifier-error-hover: rgba(168, 75, 50, 0.24);
+  --background-modifier-message: rgba(63, 53, 40, 0.9);
+
+  /* Ink ------------------------------------------------------------------- */
+  --text-normal: var(--cairn-ink);
+  --text-muted: var(--cairn-ink-soft);
+  --text-faint: var(--cairn-muted);
+  --text-on-accent: #fdf3e3;
+  --text-error: #a84b32;
+  --text-success: #5f6335;
+  --text-selection: rgba(191, 91, 61, 0.18);
+  --text-highlight-bg: rgba(192, 138, 62, 0.32);
+
+  /* Links use the deeper terracotta: #bf5b3d is 4.04:1 on paper, which is
+     fine for a stamp but not for text you read all day. #8e3c1f is 6.85:1. */
+  --link-color: var(--cairn-accent-deep);
+  --link-color-hover: var(--cairn-accent);
+  --link-unresolved-color: var(--cairn-muted);
+  --link-external-color: var(--cairn-accent-deep);
+
+  /* Rules ----------------------------------------------------------------- */
+  --hr-color: var(--cairn-kraft-deep);
+  --divider-color: var(--cairn-line);
+  --divider-color-hover: var(--cairn-accent);
+
+  /* Blocks ---------------------------------------------------------------- */
+  --code-background: #f5ecd8;
+  --code-normal: #6b4a2f;
+  --blockquote-border-color: var(--cairn-kraft-deep);
+  --table-header-background: var(--cairn-paper-deep);
+
+  /* Blockquote paper — the design system's wiki note (#fbf3da → #f2e4bd on a
+     #d8c08e edge), sitting one step deeper than the note surface so the card
+     reads as a separate sheet laid on the sheet. --fold is the back of that
+     sheet, seen through the turned corner: deeper again, since the light on
+     the desk falls on the face. */
+  --cairn-quote-paper: #f9f1d9;
+  --cairn-quote-edge: #d8c08e;
+  --cairn-quote-fold: #ead9ac;
+  --cairn-quote-fold-deep: #d3bd8b;
+  --cairn-quote-shadow: 2px 3px 6px rgba(110, 85, 45, 0.2);
+  /* The same lift as --cairn-quote-shadow, as a filter: a clipped corner needs
+     a shadow that follows the cut, and box-shadow only knows rectangles. */
+  --cairn-quote-lift: drop-shadow(2px 3px 6px rgba(110, 85, 45, 0.2));
+  --cairn-quote-fold-shadow: -1px 1px 1px rgba(110, 85, 45, 0.32);
+  --table-row-alt-background: rgba(150, 120, 80, 0.05);
+
+  /* Shadows — always warm brown, never neutral gray */
+  --shadow-s: 0 1px 3px rgba(110, 85, 50, 0.1);
+  --shadow-l: 0 10px 30px rgba(80, 60, 35, 0.35);
+  --cairn-shadow-emboss: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  --cairn-shadow-glow: 0 0 0 3px rgba(191, 91, 61, 0.45);
+
+  /* Category colours — the five-colour information lifecycle.
+     Values are deepened from the source palette so they stay legible as
+     callout titles; hue is unchanged. */
+  --cairn-c-rule: 168, 75, 50; /* 元规则 · 砖红 */
+  --cairn-c-log: 95, 99, 53; /* 时序 · 橄榄 */
+  --cairn-c-know: 138, 101, 36; /* 知识 · 赭黄 */
+  --cairn-c-raw: 107, 97, 86; /* 外部输入 · 灰褐 */
+  --cairn-c-proc: 79, 111, 122; /* 过程制品 · 青灰 */
+
+  /* Paper grain and ruled lines */
+  --cairn-grain: repeating-linear-gradient(
+      0deg,
+      transparent 0 3px,
+      rgba(120, 95, 60, 0.022) 3px 4px
+    ),
+    repeating-linear-gradient(90deg, transparent 0 3px, rgba(120, 95, 60, 0.018) 3px 4px);
+  --cairn-rule-color: rgba(150, 120, 80, 0.09);
+  /* 180deg, so the pattern anchors at the top edge: these boxes grow as their
+     content grows, and a bottom-anchored pattern would slide as they do. */
+  --cairn-rule-lines: repeating-linear-gradient(
+    180deg,
+    transparent 0 26px,
+    rgba(150, 120, 80, 0.05) 26px 27px
+  );
+
+  /* Aged stock — the sheet that has been in the drawer a while.
+
+     Four layers of one thing: noise at four scales, from stains down to
+     specks, plus a wash that yellows whatever note surface is set instead of
+     replacing it — the Note surface setting still shows through.
+
+     Scale is the whole trick. Noise at a low base frequency is not grain, it
+     is mottling: soft continents of tone hundreds of pixels across, which is
+     what old paper actually looks like. Grain alone reads as film, and noise
+     stretched along one axis reads as brushed metal, so there is no
+     directional layer here at all.
+
+     The two mottling layers use type='turbulence' rather than fractalNoise.
+     Fractal noise is evenly distributed — pretty, but it covers the sheet
+     like weather. Turbulence is the absolute value of the same noise, so it
+     clumps: big stains in some places and clean paper in others, which is
+     the unevenness real foxing has. The mid layer stays fractal, to break up
+     the big shapes without competing with them.
+
+     Every filter carries an explicit region — x/y 0%, width/height 100%.
+     Without it the region defaults to 10% larger than the rect, stitchTiles
+     stitches the region rather than the tile, and every tile boundary shows
+     up as a straight line across the page. This is the fix for that.
+
+     The alphas are small on purpose. Anything heavier stops being paper and
+     starts being camouflage. Every tile anchors top-left at a fixed size,
+     which is what keeps the texture still while CodeMirror re-estimates the
+     document height — see the ruled-paper note in 06-editor.css. */
+  --cairn-aged-tint: rgba(193, 158, 92, 0.14);
+  /* Stains — the big uneven ones, a couple per screenful */
+  --cairn-mottle-stain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='1200'%3E%3Cfilter id='s' x='0%25' y='0%25' width='100%25' height='100%25'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.004' numOctaves='2' seed='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.404 0 0 0 0 0.31 0 0 0 0 0.157 0.15 0.15 0.15 0 -0.02'/%3E%3C/filter%3E%3Crect width='1200' height='1200' filter='url(%23s)'/%3E%3C/svg%3E");
+  /* Mid patches, on a tile that never lines up with the stains */
+  --cairn-mottle-patch: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500'%3E%3Cfilter id='p' x='0%25' y='0%25' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.02' numOctaves='3' seed='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.404 0 0 0 0 0.31 0 0 0 0 0.157 0.06 0.06 0.06 0 -0.07'/%3E%3C/filter%3E%3Crect width='500' height='500' filter='url(%23p)'/%3E%3C/svg%3E");
+  /* The only layer that lightens: paper wears thin as well as dark */
+  --cairn-mottle-bloom: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='800'%3E%3Cfilter id='b' x='0%25' y='0%25' width='100%25' height='100%25'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.006' numOctaves='2' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 0.98 0 0 0 0 0.92 0.1 0.1 0.1 0 -0.035'/%3E%3C/filter%3E%3Crect width='800' height='800' filter='url(%23b)'/%3E%3C/svg%3E");
+  /* Small grey marks — dirt worked into the sheet, not spread over it */
+  --cairn-mottle-smudge: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600'%3E%3Cfilter id='m' x='0%25' y='0%25' width='100%25' height='100%25'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.06' numOctaves='3' seed='21' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.3 0 0 0 0 0.27 0 0 0 0 0.22 0.34 0.34 0.34 0 -0.44'/%3E%3C/filter%3E%3Crect width='600' height='600' filter='url(%23m)'/%3E%3C/svg%3E");
+  /* One tile, three passes: the even grain of the fibre, a scatter of grey
+     flecks a couple of pixels across, and the odd bigger speck of dirt.
+     Both fleck passes are turbulence read past a high threshold, so most of
+     the tile stays clean and what does show is a mark rather than a film. */
+  --cairn-noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='g' x='0%25' y='0%25' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' seed='0' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.404 0 0 0 0 0.31 0 0 0 0 0.157 0.12 0.12 0.12 0 -0.09'/%3E%3C/filter%3E%3Cfilter id='f' x='0%25' y='0%25' width='100%25' height='100%25'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.5' numOctaves='2' seed='13' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.3 0 0 0 0 0.27 0 0 0 0 0.22 0.4 0.4 0.4 0 -0.5736'/%3E%3C/filter%3E%3Cfilter id='d' x='0%25' y='0%25' width='100%25' height='100%25'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.12' numOctaves='2' seed='29' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.3 0 0 0 0 0.27 0 0 0 0 0.22 0.6667 0.6667 0.6667 0 -1.01'/%3E%3C/filter%3E%3Crect width='320' height='320' filter='url(%23g)'/%3E%3Crect width='320' height='320' filter='url(%23f)'/%3E%3Crect width='320' height='320' filter='url(%23d)'/%3E%3C/svg%3E");
+  --cairn-stock-aged: var(--cairn-mottle-stain), var(--cairn-mottle-patch),
+    var(--cairn-mottle-bloom), var(--cairn-mottle-smudge), var(--cairn-noise),
+    linear-gradient(0deg, var(--cairn-aged-tint), var(--cairn-aged-tint));
+  --cairn-stock-aged-size: 1200px 1200px, 500px 500px, 800px 800px,
+    600px 600px, 320px 320px, auto;
+  /* The desk, the modals and the callouts take the grain alone — stains and
+     wash belong to the sheet, not to every panel in the app. */
+  --cairn-grain-aged: var(--cairn-noise), var(--cairn-grain);
+}

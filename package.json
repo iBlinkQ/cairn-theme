@@ -1,0 +1,16 @@
+{
+  "name": "cairn-theme",
+  "version": "0.1.0",
+  "description": "Cairn — a kraft-paper archive theme for Obsidian.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "sync": "node build.mjs --sync",
+    "dev": "node build.mjs --watch",
+    "check": "node build.mjs && node lint.mjs && node contrast.mjs",
+    "version": "node version-bump.mjs && git add manifest.json versions.json"
+  },
+  "author": "iBlinkQ",
+  "license": "MIT"
+}

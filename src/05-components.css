@@ -1,0 +1,160 @@
+/* ==========================================================================
+   Components — the workspace as a paper desk
+   ========================================================================== */
+
+body {
+  /* Tabs — kraft file tabs sitting on the desk */
+  --tab-text-color: var(--cairn-ink-soft);
+  --tab-text-color-active: var(--cairn-ink);
+  --tab-text-color-focused-active-current: var(--cairn-ink);
+  --tab-background-active: var(--background-primary);
+  --tab-outline-color: var(--cairn-line);
+  --tab-outline-width: 0px;
+  --tab-font-size: 13px;
+
+  /* Sidebar */
+  --nav-item-color: var(--cairn-ink-soft);
+  --nav-item-color-hover: var(--cairn-ink);
+  --nav-item-color-active: var(--cairn-ink);
+  --nav-item-background-hover: var(--background-modifier-hover);
+  --nav-item-background-active: rgba(191, 91, 61, 0.1);
+  --nav-item-weight-active: 700;
+  --nav-item-size: 13.5px;
+  --nav-indentation-guide-color: var(--cairn-line);
+  --nav-heading-color: var(--cairn-muted);
+
+  /* Inputs & buttons */
+  --interactive-normal: var(--cairn-paper-deep);
+  --interactive-hover: var(--cairn-kraft);
+  --input-height: 30px;
+  --input-shadow: var(--cairn-shadow-emboss);
+
+  /* Modals */
+  --modal-border-width: 1px;
+  --modal-border-color: var(--cairn-kraft-deep);
+  --prompt-border-width: 1px;
+  --prompt-border-color: var(--cairn-kraft-deep);
+
+  /* Scrollbars — kraft hardware */
+  --scrollbar-bg: transparent;
+  --scrollbar-thumb-bg: var(--cairn-line);
+  --scrollbar-active-thumb-bg: var(--cairn-kraft-deep);
+}
+
+/* Sidebar and ribbon share the desk surface, with grain. */
+.workspace-ribbon,
+.workspace-split.mod-left-split .workspace-leaf-content,
+.workspace-split.mod-right-split .workspace-leaf-content {
+  background-image: var(--cairn-grain);
+}
+
+.workspace-ribbon {
+  border-right: 1px solid var(--cairn-line);
+}
+
+.side-dock-ribbon-action {
+  color: var(--cairn-muted);
+  transition: color var(--anim-duration-fast) var(--anim-motion-smooth);
+}
+
+.side-dock-ribbon-action:hover {
+  color: var(--cairn-accent);
+}
+
+/* Section headers in the sidebar are archive labels: small, wide, muted. */
+.nav-header .nav-buttons-container,
+.tree-item-self.mod-collapsible.nav-folder-title {
+  letter-spacing: 0.03em;
+}
+
+.workspace-tab-header-container-inner .workspace-tab-header-inner-title,
+.view-header-title {
+  letter-spacing: 0.03em;
+}
+
+/* Hover is physical, not tonal — the brand moves things rather than tinting. */
+.nav-file-title,
+.nav-folder-title {
+  transition: transform var(--anim-duration-fast) var(--anim-motion-smooth),
+    background-color var(--anim-duration-fast) var(--anim-motion-smooth);
+}
+
+.nav-file-title:hover,
+.nav-folder-title:hover {
+  transform: translateX(2px);
+}
+
+/* Tabs: the active one is the sheet you pulled to the front. */
+.workspace-tab-header.is-active {
+  box-shadow: var(--cairn-shadow-emboss);
+}
+
+.workspace-tab-header-inner-title {
+  font-size: var(--tab-font-size);
+}
+
+/* In a split, only the pane holding focus gets its tab stamped in terracotta,
+   so the two front sheets are no longer indistinguishable. */
+.workspace-tabs.mod-active .workspace-tab-header.is-active {
+  box-shadow: var(--cairn-shadow-emboss), inset 0 -2px 0 var(--cairn-accent);
+}
+
+.workspace-tabs.mod-active .workspace-tab-header.is-active .workspace-tab-header-inner-title,
+.workspace-tabs.mod-active .workspace-tab-header.is-active .workspace-tab-header-inner-icon {
+  color: var(--cairn-tab-focus);
+}
+
+/* Buttons — embossed kraft card stock, pressed on click. */
+button:not(.clickable-icon),
+.checkbox-container {
+  box-shadow: var(--shadow-s), var(--cairn-shadow-emboss);
+  transition: transform var(--anim-duration-fast) var(--anim-motion-smooth),
+    box-shadow var(--anim-duration-fast) var(--anim-motion-smooth);
+}
+
+button:not(.clickable-icon):hover {
+  transform: translateY(-1px);
+}
+
+button:not(.clickable-icon):active {
+  transform: translateY(1px);
+}
+
+/* Focus reuses the brand's terracotta glow ring. */
+input:focus,
+input[type="text"]:focus,
+textarea:focus,
+.prompt-input:focus {
+  box-shadow: var(--cairn-shadow-glow);
+}
+
+/* Command palette / quick switcher — a card floating over the desk. */
+.prompt {
+  background-color: var(--cairn-card);
+  background-image: var(--cairn-grain);
+  border: 1px solid var(--cairn-kraft-deep);
+  box-shadow: var(--shadow-l);
+}
+
+.suggestion-item.is-selected {
+  background-color: rgba(191, 91, 61, 0.12);
+}
+
+.modal {
+  background-image: var(--cairn-grain);
+  box-shadow: var(--shadow-l), var(--cairn-shadow-emboss);
+}
+
+/* Status bar — the widest tracking in the theme, as a caption should be. */
+.status-bar {
+  background-color: transparent;
+  border-top: 1px solid var(--cairn-line);
+  color: var(--cairn-muted);
+  font-size: 11.5px;
+  letter-spacing: var(--cairn-ls-label);
+}
+
+/* Remove the double border between panes. */
+.workspace-split.mod-root .workspace-leaf-content {
+  border: none;
+}
