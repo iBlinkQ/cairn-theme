@@ -1,5 +1,7 @@
 # Cairn
 
+*Read this in: **English** | [中文](README.zh-CN.md)*
+
 A kraft-paper archive for Obsidian — your vault as physical files on a warm
 paper desk.
 
@@ -7,6 +9,16 @@ Warm paper neutrals, brown ink, a single terracotta accent, and clean
 sans-serif type. Corners are small and archival, shadows are warm brown rather than
 gray, and surfaces carry a faint CSS paper grain. No pure white, no pure black,
 no cool grays anywhere.
+
+## Screenshots
+
+Headings and the five-colour callout system:
+
+![Cairn callouts — five category colours mapped onto Obsidian's callout types](media/callouts.png)
+
+Blockquote card, code block, table and task list:
+
+![Cairn components — blockquote, code block, table, tasks](media/components.png)
 
 Cairn implements the [Project Cairn](https://github.com/iBlinkQ/project-cairn)
 design language. Its five category colors — 砖红 meta-rule, 橄榄 timeline,
