@@ -2,6 +2,8 @@
 
 *语言切换： [English](README.md) | **中文***
 
+![Cairn —— 浅色与深色模式斜向拼接](media/hero.png)
+
 一个 Obsidian 的牛皮纸档案主题——让你的知识库看起来像摆在暖色书桌上的一张张实体文件。
 
 暖色的纸张中性色、棕色墨水、单一的赭红色强调色，配上干净的无衬线字体。圆角小而带档案感，
@@ -10,7 +12,7 @@
 
 ## 截图
 
-标题与五色标注（callout）系统：
+五色标注（callout）系统：
 
 ![Cairn 的标注系统 —— 五种类别色映射到 Obsidian 的 callout 类型](media/callouts.png)
 

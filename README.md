@@ -2,6 +2,8 @@
 
 *Read this in: **English** | [中文](README.zh-CN.md)*
 
+![Cairn — light mode and dark mode, split diagonally](media/hero.png)
+
 A kraft-paper archive for Obsidian — your vault as physical files on a warm
 paper desk.
 
@@ -12,7 +14,7 @@ no cool grays anywhere.
 
 ## Screenshots
 
-Headings and the five-colour callout system:
+The five-colour callout system:
 
 ![Cairn callouts — five category colours mapped onto Obsidian's callout types](media/callouts.png)
 
