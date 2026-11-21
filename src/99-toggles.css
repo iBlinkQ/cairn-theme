@@ -122,7 +122,7 @@
 .cairn-no-image-tape .markdown-source-view.mod-cm6 .cm-content .image-embed::before,
 .markdown-preview-view.cairn-no-image-tape .image-embed::before,
 .markdown-source-view.mod-cm6.cairn-no-image-tape .cm-content .image-embed::before,
-.cairn-no-image-tape .canvas-node:has(.canvas-node-content.media-embed > img)::after {
+.cairn-no-image-tape .canvas-node:has(> .canvas-node-container > .image-embed)::after {
   content: none;
 }
 

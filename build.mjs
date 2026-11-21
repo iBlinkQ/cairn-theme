@@ -34,9 +34,22 @@ const VAULT_THEME_DIRS = process.env.OBSIDIAN_THEME_DIR
       join(iCloud, "iCloud~md~obsidian/Documents/BlinkObsidianVault/.obsidian/themes/Cairn"),
     ];
 
-const manifest = JSON.parse(readFileSync(join(root, "manifest.json"), "utf8"));
+/* Strips developer comments from compiled theme.css while preserving quoted
+   strings and Style Settings (@settings) blocks, keeping theme.css compact
+   without sacrificing documentation in src/*.css. */
+function stripComments(css) {
+  return css
+    .replace(/"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\/\*[\s\S]*?\*\//g, (m) => {
+      if (!m.startsWith("/*")) return m;
+      return m.startsWith("/* @settings") ? m : "";
+    })
+    .replace(/[ \t]+\n/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
 
 function build() {
+  const manifest = JSON.parse(readFileSync(join(root, "manifest.json"), "utf8"));
   const files = readdirSync(srcDir).filter((f) => f.endsWith(".css")).sort();
 
   const banner = `/*
@@ -45,7 +58,8 @@ function build() {
  */\n\n`;
 
   const body = files
-    .map((f) => readFileSync(join(srcDir, f), "utf8").trimEnd())
+    .map((f) => stripComments(readFileSync(join(srcDir, f), "utf8")))
+    .filter(Boolean)
     .join("\n\n");
 
   writeFileSync(outFile, banner + body + "\n");

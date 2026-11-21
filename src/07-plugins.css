@@ -236,7 +236,7 @@ body {
 /* Canvas image nodes — mounted archival prints sharing the exact same --cairn-card
    photo-paper mat and --cairn-line border as note images. Painted outward via
    box-shadow (6px all sides) so every aspect ratio stays evenly framed. */
-.canvas-node:not(.canvas-node-group):has(.canvas-node-content.media-embed > img)
+.canvas-node:not(.canvas-node-group):has(> .canvas-node-container > .image-embed)
   .canvas-node-container {
   background-color: var(--cairn-card);
   border-radius: 2px;
@@ -247,9 +247,7 @@ body {
     0 5px 14px 4px rgba(63, 53, 40, 0.16);
 }
 
-.canvas-node.is-selected:not(.canvas-node-group):has(.canvas-node-content.media-embed > img)
-  .canvas-node-container,
-.canvas-node.is-focused:not(.canvas-node-group):has(.canvas-node-content.media-embed > img)
+.canvas-node:is(.is-selected, .is-focused):not(.canvas-node-group):has(> .canvas-node-container > .image-embed)
   .canvas-node-container {
   border: none;
   box-shadow:
@@ -258,11 +256,11 @@ body {
     0 6px 18px 5px rgba(63, 53, 40, 0.22);
 }
 
-.canvas-node-content.media-embed:has(> img) {
+.canvas-node-content.image-embed {
   padding: 0;
 }
 
-.canvas-node-content.media-embed > img {
+.canvas-node-content.image-embed > img {
   width: 100%;
   height: 100%;
   max-width: 100%;
@@ -271,7 +269,7 @@ body {
   border-radius: 2px;
 }
 
-.canvas-node:has(.canvas-node-content.media-embed > img)::after {
+.canvas-node:has(> .canvas-node-container > .image-embed)::after {
   content: "";
   position: absolute;
   top: -15px;
@@ -286,7 +284,7 @@ body {
   z-index: 4;
 }
 
-.canvas-node:has(.canvas-node-content.media-embed > img) .canvas-node-label {
+.canvas-node:has(> .canvas-node-container > .image-embed) .canvas-node-label {
   top: calc(-18px * var(--zoom-multiplier));
   font-size: 11.5px;
   letter-spacing: 0.02em;
@@ -296,9 +294,7 @@ body {
     color var(--anim-duration-fast) var(--anim-motion-smooth);
 }
 
-.canvas-node:has(.canvas-node-content.media-embed > img):hover .canvas-node-label,
-.canvas-node:has(.canvas-node-content.media-embed > img).is-selected .canvas-node-label,
-.canvas-node:has(.canvas-node-content.media-embed > img).is-focused .canvas-node-label {
+.canvas-node:is(:hover, .is-selected, .is-focused):has(> .canvas-node-container > .image-embed) .canvas-node-label {
   opacity: 0.92;
   color: var(--cairn-ink-soft);
 }

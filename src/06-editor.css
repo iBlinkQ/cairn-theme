@@ -223,10 +223,9 @@ body {
   align-items: center;
 }
 
-.callout-title:has(+ .callout-content) {
-  padding-bottom: 8px;
-  margin-bottom: 8px;
-  border-bottom: 1px dashed color-mix(in srgb, rgb(var(--callout-color)) 30%, transparent);
+.callout-content {
+  margin-top: 8px;
+  border-top: 1px dashed color-mix(in srgb, rgb(var(--callout-color)) 30%, transparent);
 }
 
 .callout-icon {
