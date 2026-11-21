@@ -2,7 +2,7 @@
 
 *Read this in: **English** | [中文](README.zh-CN.md)*
 
-![Cairn — light mode and dark mode, split diagonally](media/hero.png)
+![Cairn — kraft-paper archive workspace in light mode](media/hero.png)
 
 A **warm kraft-paper archive theme** for Obsidian — turning your vault into physical sheets and index cards laid across a sunlit desk. Warm paper neutrals, deep brown ink, and a single terracotta accent across both Light and darkroom Dark modes, with no pure white, pure black, or cool grays anywhere.
 
@@ -37,6 +37,10 @@ Line-numbered code blocks and three-tier ledger tables:
 Inline typography, hand-drawn marker highlights, checkboxes and nested lists:
 
 ![Cairn inline styles, hand-drawn marker highlights, tasks and lists](media/typography.png)
+
+Dark mode (warm brown darkroom palette):
+
+![Cairn dark mode — warm brown darkroom palette](media/dark.png)
 
 ## Install
 
