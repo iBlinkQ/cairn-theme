@@ -12,21 +12,32 @@
 
 ## 截图
 
-五色标注（callout）系统：
+五色标注（callout）系统与独立圆章图标：
 
 ![Cairn 的标注系统 —— 五种类别色映射到 Obsidian 的 callout 类型](media/callouts.png)
 
-引用卡片、代码块、表格与任务列表：
+Obsidian **Bases（数据库）** 账本表格与内嵌白板点阵预览：
 
-![Cairn 的排版组件 —— 引用卡片、代码块、表格、任务清单](media/components.png)
+![Cairn 数据库与内嵌白板 —— 三阶暖牛皮纸账本表与点阵缩略预览](media/bases.png)
+
+**Canvas（白板）** 暖纸点阵底板、五色轻染色卡片与相纸胶带图片装裱：
+
+![Cairn 白板 —— 暖纸点阵底板、五色卡片与和纸胶带图片框](media/canvas.png)
+
+独立行号代码块与账本数据表格：
+
+![Cairn 代码块与账本表格](media/components.png)
+
+行内排版、手绘马克笔高亮、手写复选框与多级列表：
+
+![Cairn 行内排版、手绘马克笔高亮与任务列表](media/typography.png)
 
 Cairn 实现了 [Project Cairn](https://github.com/iBlinkQ/project-cairn) 设计语言。
 它的五种类别色——砖红（元规则）、橄榄（时间线）、赭黄（知识）、灰褐（外部输入）、
 青灰（过程物）——被映射到 Obsidian 的 callout 类型上，所以一个标注的配色方式，
 和 Cairn 可视化里一张文件卡片的配色方式是一致的。
 
-文件浏览器保留 Obsidian 自身的结构，只套用色板——牛皮纸底色、墨水色标签，
-当前打开的文件用赭红色标记。引用块（blockquote）做成带折角的纸卡片。
+两侧边栏铺开温和的天然牛皮纸纤维肌理，搭配连续柔淡的铅笔油墨展开竖线、圆角墨水折叠箭头与暖羊皮旧纸签选中态。顶部属性区做成上下锯齿撕边、以蓝漆曲别针夹住的档案小票；引用块做成带折角的纸卡片；正文与白板图片统一采用暖米白相纸装裱与半透明和纸胶带；代码块自带独立行号栏，Obsidian **Bases（数据库）** 与 **Canvas（白板）** 也完整映射到同一套账本表格与暖纸点阵语言。
 
 字号、行宽和间距沿用 Obsidian 自身的约定，而不是设计系统落地页上的数值：
 正文 16px、测量宽度 42rem、行高 1.8，标题相对 em 缩放。较宽的字间距作为品牌标志
@@ -52,15 +63,20 @@ Cairn 默认使用系统自带的无衬线字体栈：`-apple-system, "PingFang 
 
 ## 自定义
 
-安装 [Style Settings](https://github.com/obsidian-community/obsidian-style-settings)
-插件，就可以不写 CSS 直接调整 Cairn：
+Cairn 开箱即用，**不安装任何第三方插件也可以完整使用全部默认样式**。
+
+如果想在不写 CSS 的情况下可视化微调颜色、纸张材质与各项开关，可以选装社区插件
+[Style Settings](https://github.com/obsidian-community/obsidian-style-settings)：
 
 - 强调色、笔记表面色、桌面表面色、墨水色和分隔线颜色（浅色/深色分别设置）
 - 默认字体栈、行高、行宽
 - 圆角大小
-- 纸张材质——ruled（有横线）/ aged（做旧）/ plain（纯色）/ flat（去掉所有纹理），
-  以及横线颜色、做旧色调和引用卡纸张效果、纯色引用（去掉引用块卡片外观）、
-  内部链接加下划线、界面变暗、方块光标
+- 纸张材质——ruled（横线）/ dot grid（点阵）/ plain（空白），
+  以及横线颜色、标题粗横线颜色和引用卡纸张颜色、纯色引用（去掉引用块卡片外观）、
+  隐藏图片和纸胶带、内部链接加下划线、界面变暗
+
+即使不安装 Style Settings，也可以直接通过 Obsidian 原生笔记属性 `cssclasses`
+按单篇切换样式（支持 `cairn-stock-dots`、`cairn-stock-plain`、`cairn-no-image-tape`）。
 
 ## 开发
 
@@ -101,6 +117,12 @@ git push --follow-tags
 
 发布的 GitHub Actions 会构建主题，并把 `manifest.json` 和 `theme.css` 附到同版本号
 的 GitHub release 上。
+
+## 致谢
+
+纸张纤维肌理、索引卡式标题粗横线、曲别针小票属性区、手绘马克笔高亮与油墨引导线等实体文具细节受 Kevin Ngo 的
+[Looseleaf](https://github.com/kevintngo/looseleaf) 项目启发，并与
+[Project Cairn](https://github.com/iBlinkQ/project-cairn) 设计语言结合实现。
 
 ## 许可
 

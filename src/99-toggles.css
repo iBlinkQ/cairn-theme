@@ -5,67 +5,51 @@
 /* --------------------------------------------------------------------------
    Paper stock — what the note is printed on.
 
-   Ruled is the default and needs no class: the ruling is set on the sizer in
-   06-editor.css, so a vault without Style Settings still gets the notebook
-   page. The three variants below take it away or replace it. The stock class
-   lands on body, so each selector here outweighs the base rule by one class
-   and comes later in the build besides.
+   Three stocks, all sharing the cold-press fibrous sheet on the scroller and
+   the 2px header rule on .inline-title (set in 06-editor.css):
+     - Ruled (cairn-stock-ruled): default horizontal rules on the sizer.
+     - Dot grid (cairn-stock-dots): 20px/100px dot pad on the sizer.
+     - Plain (cairn-stock-plain): unruled body, title rule only.
+
+   Selectors match both body.cairn-stock-* (set globally by Style Settings)
+   and .markdown-source-view / .markdown-preview-view.cairn-stock-* (set per
+   note via Obsidian's cssclasses frontmatter property).
    -------------------------------------------------------------------------- */
 
-/* Aged paper — a plain yellowed sheet: no ruling, but mottling, grain and a
-   wash over the note surface. Tokens live in the palette files.
+/* Dot grid — uniform 20px dot pad. Offset by half a pitch (10px) so the outer
+   row of dots sits inside the sizer rather than getting clipped on the edge. */
+.cairn-stock-dots .markdown-source-view.mod-cm6 .cm-contentContainer,
+.cairn-stock-dots .markdown-preview-view .markdown-preview-sizer,
+.markdown-source-view.mod-cm6.cairn-stock-dots .cm-contentContainer,
+.markdown-preview-view.cairn-stock-dots .markdown-preview-sizer {
+  background-image: radial-gradient(circle at center, var(--cairn-dot-color) 0 0.9px, transparent 1.25px);
+  background-size: 20px 20px;
+  background-position: 10px 10px;
+}
 
-   Ruling rides the sizer, because a ruled sheet has margins and has to stop
-   at the measure. Aged stock does the opposite: it is the stock the whole
-   note is printed on, so it runs wall to wall on the scroller instead — a
-   wash that stopped at 42rem would draw a hard yellow rectangle down the
-   middle of the pane. The child combinators keep it off embedded notes,
-   which would otherwise take a second coat of the wash.
+/* Plain sheet — drops the body rules from the sizer, keeping the fibrous
+   cold-press sheet, the header rule under .inline-title and the linen desk. */
+.cairn-stock-plain .markdown-source-view.mod-cm6 .cm-contentContainer,
+.cairn-stock-plain .markdown-preview-view .markdown-preview-sizer,
+.markdown-source-view.mod-cm6.cairn-stock-plain .cm-contentContainer,
+.markdown-preview-view.cairn-stock-plain .markdown-preview-sizer {
+  background-image: none;
+}
 
-   Attachment is local, so the texture belongs to the page and scrolls with
-   it. Left to scroll, the foxing would sit at a fixed spot on the screen and
-   read as a smudge on the monitor rather than a stain in the paper. */
-.cairn-stock-aged .markdown-source-view.mod-cm6 > .cm-editor > .cm-scroller,
-.cairn-stock-aged .markdown-reading-view > .markdown-preview-view {
-  background-image: var(--cairn-stock-aged);
-  background-size: var(--cairn-stock-aged-size);
-  /* No ruling to phase, so no offset — every tile starts at the top edge. */
+/* Per-note override back to Ruled when the vault default is Dot grid or Plain. */
+.markdown-source-view.mod-cm6.cairn-stock-ruled .cm-contentContainer,
+.markdown-preview-view.cairn-stock-ruled .markdown-preview-sizer {
+  background-image: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 0 calc(var(--cairn-rule-pitch) - 1px),
+    var(--cairn-rule-color) calc(var(--cairn-rule-pitch) - 1px) var(--cairn-rule-pitch)
+  );
+  background-size: 100% var(--cairn-rule-pitch);
   background-position: 0 0;
-  background-attachment: local;
 }
 
-/* …and the ruling comes off the sheet itself. */
-.cairn-stock-aged .markdown-source-view.mod-cm6 .cm-sizer,
-.cairn-stock-aged .markdown-preview-view .markdown-preview-sizer {
-  background-image: none;
-}
-
-/* The rest of the app moves onto the same stock, grain only. */
-.theme-light.cairn-stock-aged,
-.theme-dark.cairn-stock-aged {
-  --cairn-grain: var(--cairn-grain-aged);
-}
-
-/* A callout is a card cut from the sheet it sits on, not a ruled page. */
-.cairn-stock-aged .callout {
-  background-image: var(--cairn-grain);
-}
-
-/* Plain sheet — drops the rules from the running text but keeps the desk. */
-.cairn-stock-plain .markdown-source-view.mod-cm6 .cm-sizer,
-.cairn-stock-plain .markdown-preview-view .markdown-preview-sizer {
-  background-image: none;
-}
-
-/* Flat — drops every texture layer, rules and grain alike. */
-.cairn-stock-flat .markdown-source-view.mod-cm6 .cm-sizer,
-.cairn-stock-flat .markdown-preview-view .markdown-preview-sizer,
-.cairn-stock-flat .workspace-ribbon,
-.cairn-stock-flat .modal,
-.cairn-stock-flat .prompt,
-.cairn-stock-flat .callout,
-.cairn-stock-flat .metadata-container {
-  background-image: none;
+.markdown-preview-view.cairn-stock-ruled .markdown-preview-sizer {
+  background-position: 0 var(--cairn-rule-offset);
 }
 
 /* Plain quote — trades the paper card for the kraft spine the theme used
@@ -91,8 +75,21 @@
 
 .cairn-plain-quote
   .markdown-source-view.mod-cm6.is-live-preview
-  .cm-line.HyperMD-quote {
-  padding: 0;
+  .cm-line.HyperMD-quote:not(.HyperMD-callout),
+.cairn-plain-quote
+  .markdown-source-view.mod-cm6.is-live-preview
+  .cm-line.HyperMD-quote
+  + .cm-line.HyperMD-quote:not(.HyperMD-callout),
+.cairn-plain-quote
+  .markdown-source-view.mod-cm6.is-live-preview
+  .cm-line.HyperMD-quote:not(.HyperMD-callout):has(+ *:not(.HyperMD-quote)),
+.cairn-plain-quote
+  .markdown-source-view.mod-cm6.is-live-preview
+  .cm-line.HyperMD-quote:not(.HyperMD-callout):last-child {
+  padding-top: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+  padding-inline-start: 18px;
   border: none;
   border-radius: 0;
   background-color: transparent;
@@ -106,12 +103,36 @@
 .cairn-plain-quote .markdown-rendered blockquote:not(.callout)::after,
 .cairn-plain-quote
   .markdown-source-view.mod-cm6.is-live-preview
-  .cm-line.HyperMD-quote::after {
+  .cm-line.HyperMD-quote:not(.HyperMD-callout)::after {
   content: none;
 }
 
-/* Underline internal links */
-.cairn-underline-links .markdown-rendered a.internal-link {
+/* Hide image washi tape — keeps the archival photo frame without the top
+   translucent tape strip. Works globally via Style Settings or per note via
+   frontmatter cssclasses: [cairn-no-image-tape]. */
+.cairn-no-image-tape .markdown-rendered .image-embed,
+.cairn-no-image-tape .markdown-source-view.mod-cm6 .cm-content .image-embed,
+.markdown-preview-view.cairn-no-image-tape .image-embed,
+.markdown-source-view.mod-cm6.cairn-no-image-tape .cm-content .image-embed {
+  padding-top: 0;
+  margin-top: 0;
+}
+
+.cairn-no-image-tape .markdown-rendered .image-embed::before,
+.cairn-no-image-tape .markdown-source-view.mod-cm6 .cm-content .image-embed::before,
+.markdown-preview-view.cairn-no-image-tape .image-embed::before,
+.markdown-source-view.mod-cm6.cairn-no-image-tape .cm-content .image-embed::before,
+.cairn-no-image-tape .canvas-node:has(.canvas-node-content.media-embed > img)::after {
+  content: none;
+}
+
+/* Underline internal links — works in both Reading View and Live Preview */
+.cairn-underline-links {
+  --link-decoration: underline;
+}
+
+.cairn-underline-links .markdown-rendered a.internal-link,
+.cairn-underline-links .cm-s-obsidian .cm-hmd-internal-link .cm-underline {
   text-decoration: underline;
   text-underline-offset: 3px;
   text-decoration-color: var(--cairn-kraft-deep);
@@ -131,12 +152,6 @@
 .cairn-dim-chrome .workspace-split.mod-right-split:hover,
 .cairn-dim-chrome .workspace-tab-header-container:hover {
   opacity: 1;
-}
-
-/* Block cursor */
-.cairn-block-cursor .cm-editor .cm-cursor-primary {
-  border-left-width: 0.5em;
-  opacity: 0.5;
 }
 
 /* Respect reduced motion for anything that moves on its own. */

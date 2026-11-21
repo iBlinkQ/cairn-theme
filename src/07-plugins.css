@@ -12,11 +12,84 @@ body {
   --graph-node-attachment: rgb(var(--cairn-c-raw));
 
   --search-result-background: transparent;
-  /* kraft-deep is the folder stock's own tone, which put the arrow at 1.93:1
-     against the pane — legible only because the stroke is heavy. muted is the
-     theme's own quiet ink and clears 2.8:1 while staying hardware rather than
-     a second label. */
-  --nav-collapse-icon-color: var(--cairn-muted);
+  /* Use soft ink for the refined 13px / 2.6px-stroke collapse chevrons so
+     they stay crisp and legible against the kraft desk in both themes. */
+  --nav-collapse-icon-color: var(--cairn-ink-soft);
+
+  /* Obsidian Bases — mapped onto Cairn's ledger table palette */
+  --bases-table-header-background: var(--table-header-background);
+  --bases-table-header-background-hover: var(--table-header-background);
+  --bases-table-header-color: var(--cairn-ink-soft);
+  --bases-table-header-weight: 700;
+  --bases-table-border-color: var(--table-border-color);
+  --bases-table-group-background: var(--table-background);
+  --bases-table-summary-background: var(--cairn-paper);
+  --bases-table-row-background-hover: var(--table-row-background-hover);
+  --bases-table-row-height: 34px;
+  --bases-cards-background: var(--cairn-card);
+  --bases-cards-shadow: 0 0 0 1px var(--cairn-line), var(--shadow-s);
+  --bases-cards-shadow-hover: 0 0 0 1px var(--cairn-kraft-deep), var(--shadow-s);
+
+  /* Canvas — warm kraft dot board and archival card palette.
+     Obsidian 1.9+ consumes --canvas-color-1..6 directly as CSS color values
+     (for SVG strokes, borders, and color-mix()), not bare RGB triplets. */
+  --canvas-background: var(--cairn-paper);
+  --canvas-dot-pattern: var(--cairn-dot-color);
+  --canvas-color: var(--cairn-kraft-deep);
+  --canvas-color-1: rgb(var(--cairn-c-rule));
+  --canvas-color-2: var(--cairn-accent);
+  --canvas-color-3: rgb(var(--cairn-c-know));
+  --canvas-color-4: rgb(var(--cairn-c-log));
+  --canvas-color-5: rgb(var(--cairn-c-proc));
+  --canvas-color-6: rgb(var(--cairn-c-raw));
+}
+
+/* Embedded Bases view — unified archival ledger card with full-width kraft
+   toolbar, bold 2px ledger header rule, and alternating warm zebra rows. */
+.workspace-leaf-content[data-type="markdown"] .bases-embed,
+.workspace-leaf-content[data-type="markdown"] .block-language-base {
+  --bases-embed-border-width: 0;
+  --bases-embed-border-radius: 0;
+  --bases-embed-radius: 0;
+  --bases-header-border-width: 0 0 1px 0;
+  --bases-header-padding-start: 10px;
+  border: 1px solid var(--cairn-line);
+  border-radius: var(--radius-m);
+  background-color: var(--table-background);
+  box-shadow: var(--shadow-s);
+  overflow: hidden;
+}
+
+.bases-header {
+  background-color: var(--cairn-paper-deep);
+  border-bottom: 1px solid var(--cairn-line);
+}
+
+.bases-toolbar {
+  background-color: transparent;
+  border-bottom: none;
+}
+
+.bases-table-container {
+  font-variant-numeric: tabular-nums;
+}
+
+.bases-thead {
+  background-color: var(--bases-table-header-background);
+  box-shadow: inset 0 -2px 0 var(--cairn-kraft-deep);
+}
+
+.bases-tbody {
+  background-color: var(--table-background);
+}
+
+.bases-tbody .bases-tr:nth-child(even) {
+  background-color: var(--table-row-alt-background);
+}
+
+.bases-tbody .bases-tr:hover,
+.bases-tbody .bases-tr:nth-child(even):hover {
+  background-color: var(--bases-table-row-background-hover);
 }
 
 /* Search matches use the ochre highlight — the archivist's marker pen. */
@@ -35,12 +108,197 @@ body {
   color: var(--cairn-ink-soft);
 }
 
-/* Canvas cards are file cards. */
-.canvas-node-container {
+/* Canvas — warm kraft dot board with tinted archival index cards, transparent
+   dashed groups, and framed embedded boards. */
+.canvas-wrapper {
+  background-color: var(--canvas-background);
+}
+
+.internal-embed.canvas-embed {
+  background-color: var(--cairn-paper);
+  background-image: radial-gradient(
+    circle at center,
+    var(--cairn-dot-color) 0 1px,
+    transparent 1.3px
+  );
+  background-size: 20px 20px;
+  border: 1px solid var(--cairn-line);
   border-radius: var(--radius-m);
+  overflow: hidden;
+  box-shadow: var(--shadow-s), var(--cairn-shadow-emboss);
+}
+
+.internal-embed.canvas-embed .embed-title {
+  margin: 0;
+  padding: 9px 36px 9px 14px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--cairn-ink);
+  background-color: var(--cairn-paper-deep);
+  border-bottom: 1px solid var(--cairn-line);
+}
+
+.internal-embed.canvas-embed .markdown-embed-link,
+.internal-embed.canvas-embed .file-embed-link {
+  top: 6px;
+  inset-inline-end: 8px;
+}
+
+.internal-embed.canvas-embed .canvas-minimap {
+  display: block;
+  padding: 14px 18px;
+}
+
+.canvas-minimap rect {
+  stroke-width: 5px;
+  stroke: var(--cairn-kraft-deep);
+  fill: var(--cairn-card);
+  fill-opacity: 0.92;
+}
+
+.canvas-minimap rect.is-themed {
+  stroke: var(--canvas-color);
+  fill: var(--canvas-color);
+  fill-opacity: 0.24;
+}
+
+.canvas-minimap path {
+  stroke: var(--cairn-kraft-deep);
+  fill: none;
+}
+
+.canvas-minimap path.is-themed {
+  stroke: var(--canvas-color);
+}
+
+.canvas-node:not(.canvas-node-group) .canvas-node-container {
+  background-color: var(--cairn-card);
+  background-image: var(--cairn-sheet-tooth);
+  background-size: var(--cairn-sheet-tooth-size);
+  border-radius: var(--radius-m);
+  border: 1px solid var(--cairn-kraft-deep);
+  box-shadow: var(--shadow-s), var(--cairn-shadow-emboss);
+}
+
+.canvas-node.is-themed:not(.canvas-node-group) .canvas-node-container {
+  background-color: color-mix(in srgb, var(--canvas-color) 10%, var(--cairn-card));
+  border-color: color-mix(in srgb, var(--canvas-color) 62%, var(--cairn-kraft-deep));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--canvas-color) 28%, transparent),
+    var(--shadow-s);
+}
+
+.canvas-node.is-selected .canvas-node-container,
+.canvas-node.is-focused .canvas-node-container {
+  border-color: var(--cairn-accent);
+  box-shadow: var(--shadow-s), 0 0 0 2px var(--cairn-accent);
+}
+
+.canvas-node.is-selected.is-themed .canvas-node-container,
+.canvas-node.is-focused.is-themed .canvas-node-container {
+  border-color: var(--canvas-color);
+  box-shadow: inset 0 0 0 1px var(--canvas-color), 0 0 0 2px var(--canvas-color);
+}
+
+.canvas-node.canvas-node-group .canvas-node-container,
+.canvas-node.canvas-node-group.is-themed .canvas-node-container {
+  background-color: transparent;
+  background-image: none;
+  border-radius: var(--radius-l);
+  border: 1.5px dashed color-mix(in srgb, var(--canvas-color) 55%, var(--cairn-kraft-deep));
+  box-shadow: none;
+}
+
+.canvas-node-group .canvas-node-content {
+  background-color: color-mix(in srgb, var(--canvas-color) 5%, transparent);
+  background-image: none;
+}
+
+.canvas-node:not(.canvas-node-group) .canvas-node-content {
+  background-color: transparent;
+  background-image: none;
+}
+
+.canvas-node-content .markdown-preview-view,
+.canvas-node-content .markdown-preview-sizer,
+.canvas-node-content .cm-contentContainer {
+  background-color: transparent;
+  background-image: none;
+}
+
+.canvas-path-label {
+  background-color: var(--cairn-card);
+  border: 1px solid var(--cairn-line);
+  border-radius: var(--radius-s);
+  color: var(--cairn-ink-soft);
   box-shadow: var(--shadow-s);
 }
 
-.canvas-node-content {
-  background-image: var(--cairn-grain);
+/* Canvas image nodes — mounted archival prints sharing the exact same --cairn-card
+   photo-paper mat and --cairn-line border as note images. Painted outward via
+   box-shadow (6px all sides) so every aspect ratio stays evenly framed. */
+.canvas-node:not(.canvas-node-group):has(.canvas-node-content.media-embed > img)
+  .canvas-node-container {
+  background-color: var(--cairn-card);
+  border-radius: 2px;
+  border: none;
+  box-shadow:
+    0 0 0 6px var(--cairn-card),
+    0 0 0 7px var(--cairn-line),
+    0 5px 14px 4px rgba(63, 53, 40, 0.16);
+}
+
+.canvas-node.is-selected:not(.canvas-node-group):has(.canvas-node-content.media-embed > img)
+  .canvas-node-container,
+.canvas-node.is-focused:not(.canvas-node-group):has(.canvas-node-content.media-embed > img)
+  .canvas-node-container {
+  border: none;
+  box-shadow:
+    0 0 0 6px var(--cairn-card),
+    0 0 0 8px var(--cairn-accent),
+    0 6px 18px 5px rgba(63, 53, 40, 0.22);
+}
+
+.canvas-node-content.media-embed:has(> img) {
+  padding: 0;
+}
+
+.canvas-node-content.media-embed > img {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 2px;
+}
+
+.canvas-node:has(.canvas-node-content.media-embed > img)::after {
+  content: "";
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-1.6deg);
+  width: 88px;
+  height: 20px;
+  background-image: var(--cairn-washi-tape);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.canvas-node:has(.canvas-node-content.media-embed > img) .canvas-node-label {
+  top: calc(-18px * var(--zoom-multiplier));
+  font-size: 11.5px;
+  letter-spacing: 0.02em;
+  color: var(--cairn-muted);
+  opacity: 0;
+  transition: opacity var(--anim-duration-fast) var(--anim-motion-smooth),
+    color var(--anim-duration-fast) var(--anim-motion-smooth);
+}
+
+.canvas-node:has(.canvas-node-content.media-embed > img):hover .canvas-node-label,
+.canvas-node:has(.canvas-node-content.media-embed > img).is-selected .canvas-node-label,
+.canvas-node:has(.canvas-node-content.media-embed > img).is-focused .canvas-node-label {
+  opacity: 0.92;
+  color: var(--cairn-ink-soft);
 }

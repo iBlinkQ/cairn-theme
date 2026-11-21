@@ -14,13 +14,25 @@ no cool grays anywhere.
 
 ## Screenshots
 
-The five-colour callout system:
+The five-colour callout system with custom circular stamp icons:
 
 ![Cairn callouts — five category colours mapped onto Obsidian's callout types](media/callouts.png)
 
-Blockquote card, code block, table and task list:
+Obsidian **Bases** ledger tables and embedded **Canvas** dot-board preview:
 
-![Cairn components — blockquote, code block, table, tasks](media/components.png)
+![Cairn Bases — archival ledger table and embedded dot-board Canvas preview](media/bases.png)
+
+**Canvas** warm dot-board with five-colour tinted cards and mounted photo-paper images:
+
+![Cairn Canvas — warm dot-board, five-colour cards, and washi-taped image frame](media/canvas.png)
+
+Line-numbered code blocks and three-tier ledger tables:
+
+![Cairn code block and ledger table](media/components.png)
+
+Inline typography, hand-drawn marker highlights, checkboxes and nested lists:
+
+![Cairn inline styles, hand-drawn marker highlights, tasks and lists](media/typography.png)
 
 Cairn implements the [Project Cairn](https://github.com/iBlinkQ/project-cairn)
 design language. Its five category colors — 砖红 meta-rule, 橄榄 timeline,
@@ -28,9 +40,13 @@ design language. Its five category colors — 砖红 meta-rule, 橄榄 timeline,
 Obsidian's callout types, so a callout is color-coded the same way a file card
 is in the Cairn visualization.
 
-The file explorer is left on Obsidian's own structure and takes the palette
-only — paper ground, ink labels, a terracotta marker on the open file. Blockquotes
-are paper cards with a turned-down corner.
+The sidebars rest on a flat natural kraft-paper desk with cellulose fibre grain,
+continuous pencil-ink indentation guides, rounded ink collapse chevrons, and a
+warm parchment slip on the active item. Note properties read as a jagged-edge
+archival receipt clipped with a blue enameled wire paperclip, blockquotes are
+folded-corner paper cards, images sit in warm photo-paper frames with
+translucent washi tape, and Obsidian **Bases** and **Canvas** inherit the same
+ledger-table and warm dot-board palette.
 
 Type scale, line width and spacing follow Obsidian's own conventions rather
 than the design system's landing-page values: 16px body, 42rem measure, 1.8
@@ -60,16 +76,24 @@ it too. No plugin needed.
 
 ## Customise
 
-Install the [Style Settings](https://github.com/obsidian-community/obsidian-style-settings)
-plugin to adjust Cairn without writing CSS:
+Cairn works completely out of the box with no plugins required.
+
+If you want to tweak colours, paper stock, or optional toggles visually without
+writing CSS, install the optional
+[Style Settings](https://github.com/obsidian-community/obsidian-style-settings)
+community plugin:
 
 - accent, note surface, desk surface, ink and hairline colors (light and dark
   set separately)
 - default font stack, line height, line width
 - corner radius
-- paper stock — ruled / aged / plain / flat, plus ruled line color, aged wash and quote card paper
-  (drops all texture), plain quote (drops the blockquote card), underlined
-  internal links, dimmed interface, block cursor
+- paper stock — ruled / dot grid / plain, plus ruled line color, title rule color
+  and quote card paper, plain quote (drops the blockquote card), hide image washi
+  tape, underlined internal links, dimmed interface
+
+Even without Style Settings, you can override paper stock or hide image tape on
+individual notes using Obsidian's native `cssclasses` frontmatter property
+(`cairn-stock-dots`, `cairn-stock-plain`, `cairn-no-image-tape`).
 
 ## Development
 
@@ -112,6 +136,13 @@ git push --follow-tags
 
 The release workflow builds the theme and attaches `manifest.json` and
 `theme.css` to a GitHub release tagged with the same version.
+
+## Acknowledgements
+
+Paper tooth, index-card title ruling, receipt properties with paperclip,
+hand-drawn marker highlights and ink-line details draw inspiration from
+[Looseleaf](https://github.com/kevintngo/looseleaf) by Kevin Ngo, alongside the
+[Project Cairn](https://github.com/iBlinkQ/project-cairn) design language.
 
 ## License
 

@@ -15,13 +15,17 @@ body {
   /* Sidebar */
   --nav-item-color: var(--cairn-ink-soft);
   --nav-item-color-hover: var(--cairn-ink);
-  --nav-item-color-active: var(--cairn-ink);
+  --nav-item-color-active: var(--cairn-accent-deep);
   --nav-item-background-hover: var(--background-modifier-hover);
-  --nav-item-background-active: rgba(191, 91, 61, 0.1);
+  --nav-item-background-active: var(--cairn-nav-active-bg);
   --nav-item-weight-active: 700;
   --nav-item-size: 13.5px;
   --nav-indentation-guide-color: var(--cairn-line);
-  --nav-heading-color: var(--cairn-muted);
+  --nav-heading-color: var(--cairn-ink-soft);
+  --ribbon-background: var(--cairn-desk);
+  --tab-container-background: var(--cairn-desk);
+  --titlebar-background: var(--cairn-desk);
+  --titlebar-background-focused: var(--cairn-desk);
 
   /* Inputs & buttons */
   --interactive-normal: var(--cairn-paper-deep);
@@ -41,19 +45,45 @@ body {
   --scrollbar-active-thumb-bg: var(--cairn-kraft-deep);
 }
 
-/* Sidebar and ribbon share the desk surface, with grain. */
+/* Sidebar and ribbon share the flat natural kraft desk surface — organic
+   cellulose fibres and pulp flecks (no checkerboard grid), recessed gently
+   beside the center writing sheet. */
 .workspace-ribbon,
+.workspace-split.mod-left-split,
 .workspace-split.mod-left-split .workspace-leaf-content,
-.workspace-split.mod-right-split .workspace-leaf-content {
+.workspace-split.mod-right-split,
+.workspace-split.mod-right-split .workspace-leaf-content,
+.workspace-split.mod-left-split .workspace-tab-header-container,
+.workspace-split.mod-right-split .workspace-tab-header-container,
+.workspace-split.mod-root .workspace-tab-header-container,
+.workspace-sidedock-vault-profile,
+.titlebar {
+  background-color: var(--cairn-desk);
   background-image: var(--cairn-grain);
+  background-size: var(--cairn-grain-size);
+}
+
+.workspace-split.mod-left-split {
+  box-shadow: var(--cairn-desk-depth-left);
+}
+
+.workspace-split.mod-right-split {
+  box-shadow: var(--cairn-desk-depth-right);
 }
 
 .workspace-ribbon {
   border-right: 1px solid var(--cairn-line);
 }
 
+.workspace-split.mod-left-split .workspace-tab-header.is-active,
+.workspace-split.mod-right-split .workspace-tab-header.is-active {
+  background-color: var(--cairn-panel);
+  border-radius: var(--radius-m);
+  box-shadow: inset 0 -2px 0 var(--cairn-accent);
+}
+
 .side-dock-ribbon-action {
-  color: var(--cairn-muted);
+  color: var(--cairn-ink-soft);
   transition: color var(--anim-duration-fast) var(--anim-motion-smooth);
 }
 
@@ -72,7 +102,107 @@ body {
   letter-spacing: 0.03em;
 }
 
-/* Hover is physical, not tonal — the brand moves things rather than tinting. */
+/* Active navigation items (File Explorer, Outline, Bookmarks, etc.) sit on a
+   warm parchment archive slip — calm, tonal, and strictly inside the expanded
+   tree's vertical ink guide lines.
+   Obsidian injects inline negative margin-inline-start (!important) on nested
+   .tree-item-self rows so their outer box stretches to the sidebar edge; painting
+   the parchment slip on .tree-item-inner keeps it cleanly to the right of every
+   vertical guide line at any nesting depth without shifting text alignment. */
+.workspace-split:not(.mod-root) .tree-item-self.is-clickable:hover,
+.workspace-split:not(.mod-root) .tree-item-self.is-active:not(.is-being-renamed),
+.workspace-split:not(.mod-root) .tree-item-self.is-active:not(.is-being-renamed):hover,
+.workspace-split:not(.mod-root) .tree-item-self.mod-active,
+.workspace-split:not(.mod-root) .tree-item-self.mod-active:hover {
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.workspace-split:not(.mod-root) .tree-item-self .tree-item-inner {
+  flex: 1 1 auto;
+  min-width: 0;
+  border-radius: 3px;
+  padding: 3px 8px 3px 12px;
+  margin: -3px 0 -3px -12px;
+  transition: background-color var(--anim-duration-fast) var(--anim-motion-smooth),
+    color var(--anim-duration-fast) var(--anim-motion-smooth);
+}
+
+.workspace-split:not(.mod-root) .tree-item-self.mod-collapsible .tree-item-inner {
+  padding-inline-start: 5px;
+  margin-inline-start: -5px;
+}
+
+.workspace-split:not(.mod-root) .tree-item-self.is-clickable:hover .tree-item-inner {
+  background-color: var(--nav-item-background-hover);
+  color: var(--nav-item-color-hover);
+}
+
+.workspace-split:not(.mod-root) .tree-item-self.is-active,
+.workspace-split:not(.mod-root) .tree-item-self.is-active:hover,
+.workspace-split:not(.mod-root) .tree-item-self.mod-active,
+.workspace-split:not(.mod-root) .tree-item-self.mod-active:hover {
+  color: var(--cairn-accent-deep);
+  font-weight: 700;
+}
+
+.workspace-split:not(.mod-root) .tree-item-self.is-active .tree-item-inner,
+.workspace-split:not(.mod-root) .tree-item-self.is-active:hover .tree-item-inner,
+.workspace-split:not(.mod-root) .tree-item-self.mod-active .tree-item-inner,
+.workspace-split:not(.mod-root) .tree-item-self.mod-active:hover .tree-item-inner {
+  background-color: var(--cairn-nav-active-bg);
+  color: var(--cairn-accent-deep);
+  box-shadow: inset 0 0 0 1px var(--cairn-nav-active-border);
+}
+
+/* Expanded tree indentation guides use a single reusable 6x160px vector
+   pencil-ink SVG tile (continuous and subtly textured, zero filter cost).
+   Shifting margin/padding by 3px keeps identical 16px child indentation
+   while centering the ink stroke directly beneath the collapse chevron. */
+.workspace-split:not(.mod-root) .tree-item-children {
+  margin-inline-start: 9px;
+  padding-inline-start: 7px;
+  border-inline-start: none;
+  background-image: var(--cairn-nav-guide);
+  background-repeat: repeat-y;
+  background-position: left top;
+  background-size: 6px 160px;
+}
+
+.mod-rtl .workspace-split:not(.mod-root) .tree-item-children {
+  background-position: right top;
+}
+
+.workspace-split:not(.mod-root) .graph-control-section .tree-item-children,
+.workspace-split:not(.mod-root) .recent-changes-container .tree-item-children,
+.workspace-split:not(.mod-root) .nav-folder.mod-root > .tree-item-children {
+  margin-inline-start: 0;
+  padding-inline-start: 0;
+  background-image: none;
+}
+
+/* Collapse chevrons — refined rounded ink angle, enlarged for clarity
+   over Obsidian's stock 10px / 4px-stroke arrow. */
+.workspace-split:not(.mod-root) .tree-item-self .collapse-icon svg.svg-icon {
+  width: 13px;
+  height: 13px;
+  stroke-width: 2.6px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  color: var(--nav-collapse-icon-color);
+  transition: transform var(--anim-duration-fast) cubic-bezier(0.2, 0.9, 0.3, 1.15),
+    color var(--anim-duration-fast) var(--anim-motion-smooth);
+}
+
+.workspace-split:not(.mod-root) .tree-item-self:hover .collapse-icon svg.svg-icon {
+  color: var(--cairn-accent);
+}
+
+.workspace-split:not(.mod-root) .tree-item-self.is-active .collapse-icon svg.svg-icon,
+.workspace-split:not(.mod-root) .tree-item-self.mod-active .collapse-icon svg.svg-icon {
+  color: var(--cairn-accent-deep);
+}
+
 .nav-file-title,
 .nav-folder-title {
   transition: transform var(--anim-duration-fast) var(--anim-motion-smooth),
@@ -142,7 +272,35 @@ textarea:focus,
 
 .modal {
   background-image: var(--cairn-grain);
+  background-size: var(--cairn-grain-size);
   box-shadow: var(--shadow-l), var(--cairn-shadow-emboss);
+}
+
+/* Hover preview popovers & context menus — paper sheets floating above the desk. */
+.popover.hover-popover {
+  background-color: var(--cairn-panel);
+  background-image: var(--cairn-sheet-tooth);
+  background-size: var(--cairn-sheet-tooth-size);
+  border: 1px solid var(--cairn-kraft-deep);
+  border-radius: var(--radius-l);
+  box-shadow: var(--shadow-l), var(--cairn-shadow-emboss);
+}
+
+.menu {
+  background-color: var(--cairn-card);
+  background-image: var(--cairn-grain);
+  background-size: var(--cairn-grain-size);
+  border: 1px solid var(--cairn-kraft-deep);
+  box-shadow: var(--shadow-l), var(--cairn-shadow-emboss);
+}
+
+.menu-separator {
+  border-bottom: 1px dashed var(--cairn-line);
+}
+
+.menu-item.selected:not(.is-disabled):not(.is-label) {
+  background-color: var(--background-modifier-active-hover);
+  color: var(--cairn-accent-deep);
 }
 
 /* Status bar — the widest tracking in the theme, as a caption should be. */

@@ -32,7 +32,7 @@ settings:
         type: variable-themed-color
         format: hex
         opacity: false
-        default-light: '#faf5e9'
+        default-light: '#fbf5e6'
         default-dark: '#262019'
     -
         id: cairn-paper
@@ -118,7 +118,7 @@ settings:
     -
         id: cairn-paper-stock
         title: Paper stock
-        description: What the note is printed on. Ruled is the notebook page. Aged is a plain sheet of yellowed kraft, mottled and grainy the way paper that has sat in a drawer is. Plain keeps the desk grain but drops both. Flat is no texture at all.
+        description: What the note is printed on. Ruled is the notebook page. Dot grid is a uniform 20px archival dot pad. Plain drops the body ruling and keeps only the fibrous sheet and the header rule under the title.
         type: class-select
         allowEmpty: false
         default: cairn-stock-ruled
@@ -127,14 +127,11 @@ settings:
                 label: Ruled paper
                 value: cairn-stock-ruled
             -
-                label: Aged paper
-                value: cairn-stock-aged
+                label: Dot grid
+                value: cairn-stock-dots
             -
                 label: Plain sheet
                 value: cairn-stock-plain
-            -
-                label: Flat
-                value: cairn-stock-flat
     -
         id: cairn-rule-color
         title: Ruled line color
@@ -145,14 +142,14 @@ settings:
         default-light: 'rgba(150, 120, 80, 0.09)'
         default-dark: 'rgba(232, 220, 196, 0.055)'
     -
-        id: cairn-aged-tint
-        title: Aged wash
-        description: How yellowed the aged sheet is — a wash laid over your note surface, so the surface colour still shows through. Aged stock only.
+        id: cairn-title-rule-color
+        title: Title rule color
+        description: The heavier header rule sitting directly under each line of the note title on all paper stocks.
         type: variable-themed-color
         format: rgb
         opacity: true
-        default-light: 'rgba(193, 158, 92, 0.14)'
-        default-dark: 'rgba(120, 84, 44, 0.09)'
+        default-light: 'rgba(168, 75, 50, 0.32)'
+        default-dark: 'rgba(217, 116, 86, 0.25)'
     -
         id: cairn-quote-paper
         title: Quote card paper
@@ -169,6 +166,12 @@ settings:
         type: class-toggle
         default: false
     -
+        id: cairn-no-image-tape
+        title: Hide image washi tape
+        description: Removes the translucent washi tape strip from the top of embedded images, keeping only the photo frame.
+        type: class-toggle
+        default: false
+    -
         id: cairn-underline-links
         title: Underline internal links
         type: class-toggle
@@ -176,11 +179,6 @@ settings:
     -
         id: cairn-dim-chrome
         title: Dim the desk until hovered
-        type: class-toggle
-        default: false
-    -
-        id: cairn-block-cursor
-        title: Block cursor
         type: class-toggle
         default: false
 

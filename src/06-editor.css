@@ -4,7 +4,7 @@
 
 body {
   /* Code */
-  --code-white-space: pre-wrap;
+  --code-white-space: pre;
   --code-size: 0.875em;
 
   /* Blockquote — a paper card, not a spine. The fill and the border are
@@ -38,8 +38,8 @@ body {
   /* Lists */
   --list-indent: 1.7em;
   --list-spacing: 0.15em;
-  --list-marker-color: var(--cairn-kraft-deep);
-  --list-bullet-size: 4px;
+  --list-marker-color: var(--cairn-accent);
+  --list-bullet-size: 6px;
 
   /* Callouts */
   --callout-padding: 12px 16px 12px 18px;
@@ -48,12 +48,14 @@ body {
   --callout-title-size: 1em;
   --callout-title-weight: 700;
 
-  /* Checkboxes */
+  /* Checkboxes — paper card box with a hand-drawn terracotta pen checkmark */
   --checkbox-border-color: var(--cairn-kraft-deep);
   --checkbox-border-color-hover: var(--cairn-accent);
-  --checkbox-color: var(--cairn-accent);
-  --checkbox-color-hover: var(--cairn-accent-deep);
-  --checkbox-marker-color: var(--text-on-accent);
+  --checkbox-color: color-mix(in srgb, var(--cairn-accent) 14%, var(--cairn-card));
+  --checkbox-color-hover: color-mix(in srgb, var(--cairn-accent) 22%, var(--cairn-card));
+  --checkbox-marker-color: var(--cairn-accent);
+  --checklist-done-color: var(--cairn-muted);
+  --checklist-done-decoration: line-through var(--cairn-kraft-deep);
 
   /* Embeds */
   --embed-border-left: 2px solid var(--cairn-kraft-deep);
@@ -95,6 +97,15 @@ body {
   --callout-bug: var(--cairn-c-rule);
 }
 
+/* The sheet itself — lightweight vector cellulose fibres run wall to wall on
+   the scroller. Child combinators keep it off embedded notes. */
+.markdown-source-view.mod-cm6 > .cm-editor > .cm-scroller,
+.markdown-reading-view > .markdown-preview-view {
+  background-image: var(--cairn-sheet-tooth);
+  background-size: var(--cairn-sheet-tooth-size);
+  background-position: 0 0;
+}
+
 /* Ruled paper — the sheet inside the folder.
    The design system pitches its rules at a fixed 26px; here the pitch is
    computed from the live font size and line height instead, so the lines land
@@ -119,36 +130,67 @@ body {
    box is one pitch tall, but a heading, a code block, an image or any
    paragraph spacing isn't, and everything below one of those is off the
    rhythm for good. Ruled paper doesn't know what's written on it either. */
-.markdown-source-view.mod-cm6 .cm-sizer,
+.markdown-source-view.mod-cm6 .cm-contentContainer,
 .markdown-preview-view .markdown-preview-sizer {
   --cairn-rule-pitch: calc(1em * var(--cairn-line-height));
   --cairn-rule-bleed: 18px;
-  /* The inline title's line box — not its block: the 0.5em margin below the
-     title is left out on purpose, so the rule lands under the title's own
-     letters rather than a margin's width below them. Both views set
-     font-size to --font-text-size, so the em here is the em the pitch is
-     built from. Nudge the ruling by overriding --cairn-rule-offset. */
   --cairn-rule-title-line: calc(var(--h1-size) * var(--h1-line-height));
   --cairn-rule-offset: calc(var(--cairn-rule-title-line) - var(--cairn-rule-pitch));
 
+  position: relative;
   background-image: linear-gradient(
     180deg,
     rgba(0, 0, 0, 0) 0 calc(var(--cairn-rule-pitch) - 1px),
     var(--cairn-rule-color) calc(var(--cairn-rule-pitch) - 1px) var(--cairn-rule-pitch)
   );
   background-size: 100% var(--cairn-rule-pitch);
-
-  /* Unphased, a rule sits across the face of the title. The offset above
-     moves the ruling so one lands just under the title's letters instead;
-     because it tiles, the rest of the page is ruled exactly as before.
-     Properties, if the note has them, push the body off this alignment;
-     that is fine. */
-  background-position: 0 var(--cairn-rule-offset);
+  background-position: 0 0;
 
   /* Let the paper breathe a little wider than the text sitting on it,
      without moving the text: padding out, margin back. */
   padding-left: var(--cairn-rule-bleed);
   padding-right: var(--cairn-rule-bleed);
+  margin-left: calc(var(--cairn-rule-bleed) * -1);
+  margin-right: calc(var(--cairn-rule-bleed) * -1);
+}
+
+/* In reading view the sizer wraps both the title and the body, so phase the
+   body rules to the title line box. */
+.markdown-preview-view .markdown-preview-sizer {
+  background-position: 0 var(--cairn-rule-offset);
+}
+
+/* Pull the line-number and fold gutters out into the left margin so
+   .cm-content starts at the exact same left edge as .inline-title and
+   .metadata-container, whether line numbers are on or off.
+   left: auto overrides CodeMirror's default left: 0 on .cm-gutters. */
+.markdown-source-view.mod-cm6 .cm-gutters {
+  position: absolute;
+  left: auto;
+  right: calc(100% - var(--cairn-rule-bleed) + 8px);
+  z-index: 1;
+}
+
+/* The inline title carries its own 2px header rule at the bottom of every
+   wrapped line on a transparent ground, so the paper tooth underneath flows
+   through without a seam. */
+.markdown-source-view.mod-cm6 .inline-title,
+.markdown-preview-view .inline-title {
+  --cairn-title-line-height: var(--inline-title-line-height, var(--h1-line-height, 1.2));
+  --cairn-title-pitch: calc(1em * var(--cairn-title-line-height));
+  --cairn-title-rule-width: 2px;
+  --cairn-rule-bleed: 18px;
+
+  line-height: var(--cairn-title-line-height);
+  background-image: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 0 calc(var(--cairn-title-pitch) - var(--cairn-title-rule-width)),
+    var(--cairn-title-rule-color) calc(var(--cairn-title-pitch) - var(--cairn-title-rule-width)) var(--cairn-title-pitch)
+  );
+  background-size: 100% var(--cairn-title-pitch);
+  background-position: 0 0;
+
+  padding: 0 var(--cairn-rule-bleed);
   margin-left: calc(var(--cairn-rule-bleed) * -1);
   margin-right: calc(var(--cairn-rule-bleed) * -1);
 }
@@ -166,51 +208,243 @@ body {
    opaque card colour instead produces an opaque result, which fully lifts
    the callout off the page it's sitting on. */
 .callout {
-  border-left: 5px solid rgba(var(--callout-color), 0.85);
+  border-top: 1px solid color-mix(in srgb, rgb(var(--callout-color)) 28%, var(--cairn-line));
+  border-right: 1px solid color-mix(in srgb, rgb(var(--callout-color)) 28%, var(--cairn-line));
+  border-bottom: 1px solid color-mix(in srgb, rgb(var(--callout-color)) 28%, var(--cairn-line));
+  border-left: 5px solid rgba(var(--callout-color), 0.88);
   background-color: color-mix(in srgb, rgb(var(--callout-color)) 14%, var(--cairn-card));
-  box-shadow: var(--shadow-s);
+  background-image: var(--cairn-tex-fibre);
+  background-size: 240px 240px;
+  box-shadow: var(--shadow-s), var(--cairn-shadow-emboss);
 }
 
 .callout-title {
   letter-spacing: 0.02em;
+  align-items: center;
 }
 
-/* Code blocks — a hairline frame, card stock inside. */
+.callout-title:has(+ .callout-content) {
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+  border-bottom: 1px dashed color-mix(in srgb, rgb(var(--callout-color)) 30%, transparent);
+}
+
+.callout-icon {
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  background-color: color-mix(in srgb, rgb(var(--callout-color)) 14%, transparent);
+  border: 1px solid color-mix(in srgb, rgb(var(--callout-color)) 32%, transparent);
+  border-radius: 50%;
+  padding: 0;
+}
+
+.callout-icon .svg-icon {
+  width: 17px;
+  height: 17px;
+}
+
+/* Strip any redundant outer circle from stock Lucide icons so the circular
+   stamp badge around .callout-icon is never doubled. */
+.callout-icon .svg-icon > circle[cx="12"][cy="12"] {
+  display: none;
+}
+
+/* Distinct full-sized glyphs (spanning y=3.5..20.5 in 24x24, no inner circle)
+   for types whose default Lucide icon carried a circle or duplicated another
+   type:
+   - info: serifed archival 'i'
+   - todo: task checklist (check + lines, distinct from success's single check)
+   - question/help/faq: full-height '?'
+   - important: bold '!' (distinct from warning's triangle and tip's flame) */
+.callout[data-callout="info"] {
+  --cairn-callout-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='5.2' r='1.6' fill='%23000' stroke='none'/%3E%3Cpath d='M9.6 10.2H12.4V19.6M8.8 19.6H15.4'/%3E%3C/svg%3E");
+}
+
+.callout[data-callout="todo"] {
+  --cairn-callout-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.8 7.5L6.2 9.8L10.4 5.2M13.5 7.5H20.2M3.8 16.5L6.2 18.8L10.4 14.2M13.5 16.5H20.2'/%3E%3C/svg%3E");
+}
+
+.callout[data-callout="question"],
+.callout[data-callout="help"],
+.callout[data-callout="faq"] {
+  --cairn-callout-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8.2 8.2Q8.5 4.2 12.2 4.2Q16 4.3 16 8.2Q16 10.8 12.6 12.2Q12 12.7 12 14.8'/%3E%3Ccircle cx='12' cy='19.2' r='1.55' fill='%23000' stroke='none'/%3E%3C/svg%3E");
+}
+
+.callout[data-callout="important"] {
+  --cairn-callout-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.6' stroke-linecap='round'%3E%3Cpath d='M12 4.5V14.2'/%3E%3Ccircle cx='12' cy='19.2' r='1.65' fill='%23000' stroke='none'/%3E%3C/svg%3E");
+}
+
+.callout[data-callout="info"] .callout-icon .svg-icon,
+.callout[data-callout="todo"] .callout-icon .svg-icon,
+.callout[data-callout="question"] .callout-icon .svg-icon,
+.callout[data-callout="help"] .callout-icon .svg-icon,
+.callout[data-callout="faq"] .callout-icon .svg-icon,
+.callout[data-callout="important"] .callout-icon .svg-icon {
+  background-color: rgb(var(--callout-color));
+  -webkit-mask-image: var(--cairn-callout-mask);
+  mask-image: var(--cairn-callout-mask);
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+.callout[data-callout="info"] .callout-icon .svg-icon > *,
+.callout[data-callout="todo"] .callout-icon .svg-icon > *,
+.callout[data-callout="question"] .callout-icon .svg-icon > *,
+.callout[data-callout="help"] .callout-icon .svg-icon > *,
+.callout[data-callout="faq"] .callout-icon .svg-icon > *,
+.callout[data-callout="important"] .callout-icon .svg-icon > * {
+  display: none;
+}
+
+/* Code blocks — a hairline frame, card stock inside, and an independent
+   1-based line-number gutter in both reading view and live preview. */
 .markdown-rendered pre,
 .cm-s-obsidian .HyperMD-codeblock-bg {
   border: 1px solid var(--cairn-line);
 }
 
 .markdown-rendered pre {
-  padding: 12px 14px;
+  --cairn-code-lh: 1.6em;
+  padding: 12px 14px 12px 3.2em;
+  line-height: var(--cairn-code-lh);
   box-shadow: var(--cairn-shadow-emboss);
+  overflow-x: auto;
+  background-image:
+    linear-gradient(0deg, var(--code-background) 0 12px, rgba(0, 0, 0, 0) 12px),
+    var(--cairn-code-ln),
+    linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0) 0 2.4em,
+      var(--cairn-line) 2.4em calc(2.4em + 1px),
+      rgba(0, 0, 0, 0) calc(2.4em + 1px)
+    );
+  background-size: 100% 100%, 2.4em calc(120 * var(--cairn-code-lh)), 100% 100%;
+  background-position: 0 0, 0 12px, 0 0;
+  background-repeat: no-repeat, no-repeat, no-repeat;
+}
+
+/* Code block copy button & Live Preview language flair — kraft paper badges. */
+.markdown-rendered pre > button.copy-code-button,
+.markdown-source-view.mod-cm6 .code-block-flair {
+  background-color: var(--cairn-card);
+  color: var(--cairn-ink-soft);
+  border: 1px solid var(--cairn-line);
+  border-radius: var(--radius-s);
+  box-shadow: var(--shadow-s), var(--cairn-shadow-emboss);
+  padding: 3px 8px;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  transition: color var(--anim-duration-fast) var(--anim-motion-smooth),
+    border-color var(--anim-duration-fast) var(--anim-motion-smooth),
+    opacity var(--anim-duration-fast) var(--anim-motion-smooth);
+}
+
+.markdown-rendered pre > button.copy-code-button:hover,
+.markdown-source-view.mod-cm6 .code-block-flair:hover {
+  background-color: var(--cairn-card);
+  color: var(--cairn-accent-deep);
+  border-color: var(--cairn-kraft-deep);
 }
 
 .markdown-rendered code {
   letter-spacing: 0;
 }
 
-/* Tables: horizontal rules between rows, kraft header, boxed by a hairline
-   on all four sides — the outer edge belongs to the table itself, not to
-   every cell, so the interior stays free of vertical dividers.
-   The card fill is solid for the same reason as the callout fix above: the
-   ruled-paper stripe lives on the ancestor sizer, and cells with no
-   background of their own would let it show through one row at a time. */
-.markdown-rendered table {
-  border-collapse: collapse;
-  border: 1px solid var(--table-border-color);
-  background-color: var(--cairn-card);
+.cm-s-obsidian .cm-line.HyperMD-codeblock-begin {
+  counter-reset: cairn-code-line 0;
 }
 
-.markdown-rendered th {
-  letter-spacing: var(--cairn-ls-label);
-  font-size: 0.9em;
+.cm-s-obsidian .cm-line.HyperMD-codeblock:not(.HyperMD-codeblock-begin):not(.HyperMD-codeblock-end) {
+  counter-increment: cairn-code-line;
+  padding-left: 3.2em;
+  position: relative;
+}
+
+.cm-s-obsidian .cm-line.HyperMD-codeblock:not(.HyperMD-codeblock-begin):not(.HyperMD-codeblock-end)::before {
+  content: counter(cairn-code-line);
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2.4em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: var(--cairn-muted);
+  font-family: var(--font-monospace);
+  font-size: 0.85em;
+  font-variant-numeric: tabular-nums;
+  border-right: 1px solid var(--cairn-line);
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Tables: horizontal rules between rows, kraft header with a 2px ledger
+   bottom rule, boxed by a hairline on all four sides. Covers Reading View
+   (.markdown-rendered), Live Preview table widgets (.cm-table-widget) and
+   embedded tables (.cm-embed-block). */
+.markdown-rendered table,
+.cm-table-widget table,
+.cm-embed-block table {
+  border-collapse: collapse;
+  border: 1px solid var(--table-border-color);
+  background-color: var(--table-background);
+  box-shadow: var(--shadow-s);
+  font-variant-numeric: tabular-nums;
 }
 
 .markdown-rendered th,
-.markdown-rendered td {
+.cm-table-widget th,
+.cm-embed-block th {
+  letter-spacing: var(--cairn-ls-label);
+  font-size: 0.9em;
+  border-bottom: 2px solid var(--cairn-kraft-deep);
+}
+
+.markdown-rendered th,
+.markdown-rendered td,
+.cm-table-widget th,
+.cm-table-widget td,
+.cm-embed-block th,
+.cm-embed-block td {
   border-left: none;
   border-right: none;
+}
+
+/* Obsidian's app.css applies --table-row-alt-background to tbody tr:nth-child(odd).
+   Reset odd rows to the warm parchment --table-background so the first row under
+   the header is soft cream (never glaring white), and shade even rows instead. */
+.markdown-rendered tbody tr:nth-child(odd),
+.cm-table-widget tbody tr:nth-child(odd),
+.cm-embed-block tbody tr:nth-child(odd) {
+  background-color: var(--table-background);
+}
+
+.markdown-rendered tbody tr:nth-child(even),
+.cm-table-widget tbody tr:nth-child(even),
+.cm-embed-block tbody tr:nth-child(even) {
+  background-color: var(--table-row-alt-background);
+}
+
+.markdown-rendered tbody tr:hover,
+.markdown-rendered tbody tr:nth-child(odd):hover,
+.markdown-rendered tbody tr:nth-child(even):hover,
+.cm-table-widget tbody tr:hover,
+.cm-table-widget tbody tr:nth-child(odd):hover,
+.cm-table-widget tbody tr:nth-child(even):hover,
+.cm-embed-block tbody tr:hover,
+.cm-embed-block tbody tr:nth-child(odd):hover,
+.cm-embed-block tbody tr:nth-child(even):hover {
+  background-color: var(--table-row-background-hover);
 }
 
 /* Blockquotes are paper cards — the design system's wiki note laid on the
@@ -347,34 +581,225 @@ body {
   border-bottom-right-radius: var(--radius-s);
 }
 
-/* Completed tasks are filed away, not deleted. */
-.markdown-rendered li.task-list-item[data-task="x"] .task-list-item-checkbox + * {
-  color: var(--cairn-muted);
-  text-decoration: line-through;
-  text-decoration-color: var(--cairn-kraft-deep);
+/* Lists — tabular terracotta numerals for ordered lists. */
+.markdown-rendered ol > li::marker,
+.cm-s-obsidian .cm-formatting-list-ol {
+  color: var(--cairn-accent-deep);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 
-/* Properties read as the label block at the top of a file card — a solid
-   card fill, same as the table and blockquote fix above: with no background
-   of its own the ruled-paper stripe on the ancestor sizer would show through
-   the box instead of stopping at its border. */
-.metadata-container {
+/* Checkboxes & completed tasks — a stamped paper box with a full-bleed
+   hand-drawn pen checkmark. Obsidian's --checklist-done-* variables handle
+   the muted text and kraft strikethrough in both views without doubling. */
+input[type="checkbox"].task-list-item-checkbox {
+  border-radius: var(--checkbox-radius);
   background-color: var(--cairn-card);
-  border: 1px solid var(--cairn-line);
-  border-radius: var(--radius-m);
-  padding: 8px 12px;
-  margin-bottom: 20px;
-  box-shadow: var(--cairn-shadow-emboss);
+  box-shadow: var(--shadow-s), var(--cairn-shadow-emboss);
+}
+
+input[type="checkbox"].task-list-item-checkbox:checked {
+  background-color: var(--checkbox-color);
+  border-color: var(--cairn-accent);
+  transform: rotate(-2deg);
+}
+
+input[type="checkbox"].task-list-item-checkbox:checked::after {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--cairn-accent);
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='2.25' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.5 8.3Q4.7 10.7 6.2 12.2Q9.9 6.2 13.9 2.2'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='2.25' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.5 8.3Q4.7 10.7 6.2 12.2Q9.9 6.2 13.9 2.2'/%3E%3C/svg%3E");
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+/* Properties read as an archival receipt slip clipped to the top of the note:
+   zig-zag tear-off teeth on both top and bottom edges, a dashed divider under
+   the header, typewriter-style property keys, and an enameled wire paperclip
+   over the top-right edge. */
+.metadata-container {
+  position: relative;
+  background-color: transparent;
+  background-image:
+    var(--cairn-receipt-top),
+    linear-gradient(0deg, var(--cairn-card), var(--cairn-card)),
+    var(--cairn-receipt-bottom);
+  background-size:
+    10px 7px,
+    100% calc(100% - 12px),
+    10px 7px;
+  background-position:
+    right 0,
+    0 6px,
+    right 100%;
+  background-repeat: repeat-x, no-repeat, repeat-x;
+  border: none;
+  border-radius: 0;
+  padding: 18px 20px 16px;
+  margin-top: 6px;
+  margin-bottom: 24px;
+  box-shadow: none;
+  filter: var(--cairn-receipt-shadow);
+}
+
+/* Paperclip is phase-locked 1:1 to the right-anchored 10px zig-zag teeth so
+   the back leg clips cleanly behind the paper edge at any container width. */
+.metadata-container::after {
+  content: "";
+  position: absolute;
+  top: -15px;
+  right: 16px;
+  width: 24px;
+  height: 54px;
+  background-image: var(--cairn-paperclip);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* In the sidebar File Properties pane, shift right by an exact 10px tooth
+   period (16px -> 6px) so the 1:1 zig-zag clip remains phase-locked while
+   staying clear of the centered receipt heading. */
+.workspace > .workspace-split:not(.mod-root) .metadata-container,
+.workspace-leaf-content[data-type="file-properties"] .metadata-container {
+  --metadata-divider-width: 0px;
+  padding: 16px 16px 14px;
+  margin-top: 10px;
+}
+
+.workspace-leaf-content[data-type="file-properties"] .metadata-container::after {
+  top: -15px;
+  right: 6px;
+  width: 24px;
+  height: 54px;
+}
+
+.workspace-leaf-content[data-type="file-properties"] .metadata-properties-heading {
+  display: flex;
+  justify-content: center;
+  padding: 2px 30px 10px;
+  margin-bottom: 6px;
+}
+
+.workspace-leaf-content[data-type="file-properties"] .metadata-property:not(:last-child) {
+  border-bottom: 1px dashed var(--cairn-line);
+  padding-bottom: 2px;
+  margin-bottom: 2px;
+}
+
+.metadata-properties-heading {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 2px 4px 10px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--cairn-kraft-deep);
+}
+
+.metadata-container.is-collapsed .metadata-properties-heading {
+  margin-bottom: 0;
+  padding-bottom: 4px;
+  border-bottom: none;
+}
+
+.metadata-properties-title {
+  letter-spacing: 0.04em;
+  font-weight: 700;
+  color: var(--cairn-ink);
 }
 
 .metadata-property-key-input {
+  font-family: var(--font-monospace);
+  color: var(--cairn-ink-soft);
+  letter-spacing: 0.02em;
+  font-size: 0.88em;
+}
+
+.metadata-property-value {
+  font-variant-numeric: tabular-nums;
+}
+
+.metadata-container .metadata-add-button {
+  margin-top: 6px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--cairn-line);
+  width: 100%;
   color: var(--cairn-muted);
-  letter-spacing: var(--cairn-ls-label);
-  font-size: 0.9em;
 }
 
 /* Tags are archive badges — small, wide-tracked, squared off. */
 .markdown-rendered a.tag,
 .cm-s-obsidian .cm-hashtag {
   letter-spacing: 0.04em;
+}
+
+/* Images — mounted on archival photo paper with a soft warm shadow and a
+   translucent washi tape strip along the top edge. padding-top keeps the tape
+   inside .image-embed's own paint box so CodeMirror's contain: paint in Live
+   Preview never clips it; matches both block embeds and .cm-line > .image-embed.
+   Users can hide the tape via Style Settings or cssclasses: [cairn-no-image-tape]. */
+.markdown-rendered .image-embed,
+.markdown-source-view.mod-cm6 .cm-content .image-embed {
+  position: relative;
+  display: inline-flex;
+  width: fit-content;
+  max-width: 100%;
+  padding-top: 10px;
+  margin-top: 4px;
+}
+
+.markdown-rendered .image-embed::before,
+.markdown-source-view.mod-cm6 .cm-content .image-embed::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%) rotate(-1.5deg);
+  width: 78px;
+  height: 19px;
+  background-image: var(--cairn-washi-tape);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.markdown-rendered img:not(.emoji),
+.markdown-source-view.mod-cm6 .cm-content img:not(.emoji) {
+  display: block;
+  padding: 6px;
+  background-color: var(--cairn-card);
+  border: 1px solid var(--cairn-line);
+  border-radius: var(--radius-m);
+  box-shadow: var(--shadow-s), var(--cairn-shadow-emboss);
+}
+
+/* Internal note embeds — opaque archival sub-sheet card so ruled paper lines
+   stop cleanly at the embed border. Excludes hover popovers which wrap their
+   own .markdown-embed directly inside .popover.hover-popover. */
+.markdown-rendered .internal-embed.markdown-embed,
+.markdown-source-view.mod-cm6 .internal-embed.markdown-embed {
+  background-color: var(--cairn-card);
+  background-image: var(--cairn-tex-fibre);
+  background-size: 240px 240px;
+  border: 1px solid var(--cairn-line);
+  border-left: 4px solid var(--cairn-kraft-deep);
+  border-radius: var(--radius-m);
+  padding: 12px 16px 14px;
+  margin: 1.1em 0;
+  box-shadow: var(--shadow-s), var(--cairn-shadow-emboss);
+}
+
+.markdown-rendered .internal-embed.markdown-embed .markdown-embed-title,
+.markdown-source-view.mod-cm6 .internal-embed.markdown-embed .markdown-embed-title {
+  color: var(--cairn-accent-deep);
+  padding-bottom: 6px;
+  margin-bottom: 8px;
+  border-bottom: 1px dashed var(--cairn-line);
 }

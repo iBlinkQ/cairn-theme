@@ -37,7 +37,7 @@ settings:
         type: variable-themed-color
         format: hex
         opacity: false
-        default-light: '#faf5e9'
+        default-light: '#fbf5e6'
         default-dark: '#262019'
     -
         id: cairn-paper
@@ -123,7 +123,7 @@ settings:
     -
         id: cairn-paper-stock
         title: Paper stock
-        description: What the note is printed on. Ruled is the notebook page. Aged is a plain sheet of yellowed kraft, mottled and grainy the way paper that has sat in a drawer is. Plain keeps the desk grain but drops both. Flat is no texture at all.
+        description: What the note is printed on. Ruled is the notebook page. Dot grid is a uniform 20px archival dot pad. Plain drops the body ruling and keeps only the fibrous sheet and the header rule under the title.
         type: class-select
         allowEmpty: false
         default: cairn-stock-ruled
@@ -132,14 +132,11 @@ settings:
                 label: Ruled paper
                 value: cairn-stock-ruled
             -
-                label: Aged paper
-                value: cairn-stock-aged
+                label: Dot grid
+                value: cairn-stock-dots
             -
                 label: Plain sheet
                 value: cairn-stock-plain
-            -
-                label: Flat
-                value: cairn-stock-flat
     -
         id: cairn-rule-color
         title: Ruled line color
@@ -150,14 +147,14 @@ settings:
         default-light: 'rgba(150, 120, 80, 0.09)'
         default-dark: 'rgba(232, 220, 196, 0.055)'
     -
-        id: cairn-aged-tint
-        title: Aged wash
-        description: How yellowed the aged sheet is — a wash laid over your note surface, so the surface colour still shows through. Aged stock only.
+        id: cairn-title-rule-color
+        title: Title rule color
+        description: The heavier header rule sitting directly under each line of the note title on all paper stocks.
         type: variable-themed-color
         format: rgb
         opacity: true
-        default-light: 'rgba(193, 158, 92, 0.14)'
-        default-dark: 'rgba(120, 84, 44, 0.09)'
+        default-light: 'rgba(168, 75, 50, 0.32)'
+        default-dark: 'rgba(217, 116, 86, 0.25)'
     -
         id: cairn-quote-paper
         title: Quote card paper
@@ -174,6 +171,12 @@ settings:
         type: class-toggle
         default: false
     -
+        id: cairn-no-image-tape
+        title: Hide image washi tape
+        description: Removes the translucent washi tape strip from the top of embedded images, keeping only the photo frame.
+        type: class-toggle
+        default: false
+    -
         id: cairn-underline-links
         title: Underline internal links
         type: class-toggle
@@ -181,11 +184,6 @@ settings:
     -
         id: cairn-dim-chrome
         title: Dim the desk until hovered
-        type: class-toggle
-        default: false
-    -
-        id: cairn-block-cursor
-        title: Block cursor
         type: class-toggle
         default: false
 
@@ -290,6 +288,7 @@ body {
   --cairn-paper-deep: #ece2cc;
   --cairn-panel: #fbf5e6; /* --bg-ruled-paper: the sheet inside a folder */
   --cairn-card: #fffdf4;
+  --cairn-desk: #efe6d3;
   --cairn-kraft: #d9c19c;
   --cairn-kraft-deep: #c4a87e;
   --cairn-ink: #3f3528;
@@ -331,7 +330,7 @@ body {
   --text-error: #a84b32;
   --text-success: #5f6335;
   --text-selection: rgba(191, 91, 61, 0.18);
-  --text-highlight-bg: rgba(192, 138, 62, 0.32);
+  --text-highlight-bg: rgba(248, 220, 76, 0.65);
 
   /* Links use the deeper terracotta: #bf5b3d is 4.04:1 on paper, which is
      fine for a stamp but not for text you read all day. #8e3c1f is 6.85:1. */
@@ -345,11 +344,24 @@ body {
   --divider-color: var(--cairn-line);
   --divider-color-hover: var(--cairn-accent);
 
-  /* Blocks ---------------------------------------------------------------- */
+  /* Blocks & five-colour archival code syntax ----------------------------- */
   --code-background: #f5ecd8;
-  --code-normal: #6b4a2f;
+  --code-normal: #5a432c;
+  --code-comment: var(--cairn-muted);
+  --code-keyword: rgb(var(--cairn-c-rule));
+  --code-string: rgb(var(--cairn-c-log));
+  --code-function: rgb(var(--cairn-c-proc));
+  --code-property: rgb(var(--cairn-c-proc));
+  --code-value: rgb(var(--cairn-c-know));
+  --code-important: rgb(var(--cairn-c-know));
+  --code-tag: var(--cairn-accent-deep);
+  --code-operator: var(--cairn-ink-soft);
+  --code-punctuation: var(--cairn-ink-soft);
   --blockquote-border-color: var(--cairn-kraft-deep);
-  --table-header-background: var(--cairn-paper-deep);
+  --table-background: #f7efdc;
+  --table-column-alt-background: transparent;
+  --table-header-background: #e5d6b8;
+  --table-header-background-hover: #e5d6b8;
 
   /* Blockquote paper — the design system's wiki note (#fbf3da → #f2e4bd on a
      #d8c08e edge), sitting one step deeper than the note surface so the card
@@ -365,11 +377,13 @@ body {
      a shadow that follows the cut, and box-shadow only knows rectangles. */
   --cairn-quote-lift: drop-shadow(2px 3px 6px rgba(110, 85, 45, 0.2));
   --cairn-quote-fold-shadow: -1px 1px 1px rgba(110, 85, 45, 0.32);
-  --table-row-alt-background: rgba(150, 120, 80, 0.05);
+  --table-row-alt-background: #efe4cc;
+  --table-row-background-hover: rgba(191, 91, 61, 0.12);
+  --table-row-alt-background-hover: rgba(191, 91, 61, 0.12);
 
-  /* Shadows — always warm brown, never neutral gray */
-  --shadow-s: 0 1px 3px rgba(110, 85, 50, 0.1);
-  --shadow-l: 0 10px 30px rgba(80, 60, 35, 0.35);
+  /* Shadows — two-layer warm brown contact + diffuse lift, never cool gray */
+  --shadow-s: 0 1px 1.5px rgba(90, 68, 40, 0.14), 0 5px 12px -4px rgba(90, 68, 40, 0.14);
+  --shadow-l: 0 2px 4px rgba(80, 60, 35, 0.16), 0 12px 28px -6px rgba(80, 60, 35, 0.34);
   --cairn-shadow-emboss: inset 0 1px 0 rgba(255, 255, 255, 0.7);
   --cairn-shadow-glow: 0 0 0 3px rgba(191, 91, 61, 0.45);
 
@@ -382,72 +396,32 @@ body {
   --cairn-c-raw: 107, 97, 86; /* 外部输入 · 灰褐 */
   --cairn-c-proc: 79, 111, 122; /* 过程制品 · 青灰 */
 
-  /* Paper grain and ruled lines */
-  --cairn-grain: repeating-linear-gradient(
-      0deg,
-      transparent 0 3px,
-      rgba(120, 95, 60, 0.022) 3px 4px
-    ),
-    repeating-linear-gradient(90deg, transparent 0 3px, rgba(120, 95, 60, 0.018) 3px 4px);
+  /* Paper tooth, desk grain and ruling tokens -----------------------------
+     --cairn-tex-fibre is a pure vector path SVG (curved cellulose fibres and
+     plant flecks wrapped toroidally across a 240x240 tile) with zero SVG
+     filter primitives, so it rasterises once on the GPU without CPU overhead. */
+  --cairn-tex-fibre: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240' fill='none' stroke-linecap='round'%3E%3Cpath d='M232.2 221Q237.6 216.9 241.7 211.6M-7.8 221Q-2.4 216.9 1.7 211.6M217.2 205Q217.4 200.9 214.7 197.8M12.5 192.3Q10.6 201.4 9.6 210.5M147 111.7Q149.8 111.6 151.7 113.6M199.1 230.1Q198.4 233.9 197.3 237.6M181 107.2Q178.1 108.6 175 107.7M239.9 157.2Q239.6 153.3 237.4 150M-0.1 157.2Q-0.4 153.3 -2.6 150M106 87.6Q106.1 92 107 96.3M76.1 101.5Q77.7 103.5 78.9 105.6M170.3 65Q174.3 66.6 178.4 65.6M56.6 137.8Q52.6 143.3 51.8 150M93.3 132.9Q89.9 135.5 85.6 135.8M38.2 175.2Q32.5 179.5 25.8 181.6M47.8 80.1Q45.6 83.3 46.9 86.9M171.5 26.7Q173.2 33.3 173.1 40.1M16.5 30.2Q13.8 35.2 11.7 40.5M129.5 40.6Q131.8 38.3 130.6 35.2M136.1 85.6Q128.3 79.2 121.6 71.6M55.9 164.2Q52.3 167.9 50.6 172.9M35.9 215.9Q30.3 212.8 24 211.6M51.3 107.3Q54.2 101.4 58.3 96.2M13.9 46.8Q19.2 51.9 24.1 57.4M236.8 25.7Q243.5 17.5 252 11.2M-3.2 25.7Q3.5 17.5 12 11.2M136.4 12Q135.2 9.2 134.3 6.3M75.5 17.3Q76.3 14.2 76.2 11M115.1 107.9Q109.9 114.4 102.7 118.8M113.1 215.7Q119 211.2 122 204.5M172.8 201.1Q174.7 198.9 174.4 196M78.5 152.1Q76.6 157.9 72.7 162.7M65.4 126.8Q63.6 137.4 63.3 148.1M95.9 232.4Q95.2 237.2 95.8 242M95.9 -7.6Q95.2 -2.8 95.8 2M181.4 180.9Q176.8 173.2 171.1 166.4M34 13.1Q31.6 6.1 30.4 -1.2M34 253.1Q31.6 246.1 30.4 238.8M1.7 71.4Q3 69 4.5 66.9M241.7 71.4Q243 69 244.5 66.9M45.9 150.8Q49.2 159 55.1 165.5' stroke='%23fffdf4' stroke-width='0.65' stroke-opacity='0.6'/%3E%3Cpath d='M108.6 237.4Q112.2 241.1 117.2 241.7M108.6 -2.6Q112.2 1.1 117.2 1.7M30.5 158.8Q27.6 158 26.7 155.2M7.5 90.5Q9.8 88.3 13 88.4M84.5 45.2Q82.5 43.5 82 40.9M133 229.5Q132.6 232.8 130.4 235.3M30.8 14.7Q21.1 17.4 11.9 21.4M40.5 13.8Q43.1 16.4 46.5 18.1M14.2 107.8Q17.9 105.4 20.7 102.1M236 135.7Q240.3 133.6 245 132.5M-4 135.7Q0.3 133.6 5 132.5M201.4 67.6Q208.4 63.3 216.2 61M117.5 4.1Q117.8 14.1 114.4 23.5M57.3 65.2Q51 58 44.4 51.1M231.2 171.7Q227.5 172.4 223.9 172.3M176.2 1.6Q182.2 -2.7 185.7 -9.2M176.2 241.6Q182.2 237.3 185.7 230.8M223.2 215.6Q223.1 212.4 220.6 210.5M3.3 203.8Q2.3 206.3 2.9 209M237.9 19.3Q233.3 21.3 230.2 25.4M34.3 0.5Q38.7 6.1 42.3 12.3M34.3 240.5Q38.7 246.1 42.3 252.3M175.9 145.9Q177 143.4 179.6 142.5M60 69.2Q60.7 80.2 64.8 90.5M114.8 162.1Q118.5 157.7 124.1 156.3M111.8 14.9Q111.3 11.3 113.9 8.7M116.2 136.9Q112 140 107.8 143M196.4 47.3Q203.7 50.4 211.5 50.3M94.9 53.7Q92.9 43.2 94.4 32.6M155.2 138.4Q143.6 139.8 133.1 145.2M225.2 87.3Q219.8 78 214.7 68.6M9.6 183Q-6.6 173.2 -24.6 167M249.6 183Q233.4 173.2 215.4 167M217.7 0.6Q217.9 18.6 223.8 35.5M217.7 240.6Q217.9 258.6 223.8 275.5M85.2 38.2Q104.5 33.1 124.3 35.8M102.7 93.5Q102.2 110.2 100.2 126.7' stroke='%23674f28' stroke-width='0.55' stroke-opacity='0.085'/%3E%3Cpath d='M145.1 171.8Q144.2 169.3 142.7 167.1M36.7 32.4Q35.3 33 34.5 34.2M85.5 0.9Q84.7 2.9 83.2 4.3M85.5 240.9Q84.7 242.9 83.2 244.3M134.6 227.2Q135.2 224.5 135.4 221.9M160.7 79.8Q159.5 78 157.6 76.8M210.4 157Q210.7 160 212 162.7M90 2.6Q90.3 4.2 91.3 5.4M232.3 224Q230.7 225.2 228.7 225.5M119.1 88.7Q119 86.9 119.4 85.1M28.3 14.8Q28.7 17.5 28.4 20.2' stroke='%23543f20' stroke-width='0.8' stroke-opacity='0.14'/%3E%3C/svg%3E");
+
+  --cairn-sheet-tooth: var(--cairn-tex-fibre);
+  --cairn-sheet-tooth-size: 240px 240px;
+
+  --cairn-kraft-flecks: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180' fill='none'%3E%3Ccircle cx='18' cy='24' r='0.75' fill='%23543f20' fill-opacity='0.1'/%3E%3Ccircle cx='62' cy='14' r='0.55' fill='%23543f20' fill-opacity='0.075'/%3E%3Ccircle cx='115' cy='38' r='0.8' fill='%2378582c' fill-opacity='0.09'/%3E%3Ccircle cx='158' cy='19' r='0.6' fill='%23543f20' fill-opacity='0.08'/%3E%3Ccircle cx='34' cy='76' r='0.65' fill='%23543f20' fill-opacity='0.085'/%3E%3Ccircle cx='89' cy='68' r='0.5' fill='%23fffdf4' fill-opacity='0.5'/%3E%3Ccircle cx='142' cy='84' r='0.85' fill='%23674f28' fill-opacity='0.1'/%3E%3Ccircle cx='12' cy='128' r='0.7' fill='%2378582c' fill-opacity='0.085'/%3E%3Ccircle cx='71' cy='116' r='0.75' fill='%23543f20' fill-opacity='0.09'/%3E%3Ccircle cx='126' cy='135' r='0.55' fill='%23fffdf4' fill-opacity='0.45'/%3E%3Ccircle cx='168' cy='118' r='0.7' fill='%23543f20' fill-opacity='0.08'/%3E%3Ccircle cx='48' cy='162' r='0.8' fill='%23674f28' fill-opacity='0.09'/%3E%3Ccircle cx='102' cy='154' r='0.6' fill='%23543f20' fill-opacity='0.075'/%3E%3Ccircle cx='151' cy='169' r='0.65' fill='%2378582c' fill-opacity='0.085'/%3E%3Cpath d='M42 44l7-1.2M128 56l6 1.5M22 104l8-0.8M96 142l7 1.1M138 14l5-1.6M76 92l6 0.9M154 146l6-1.3M14 158l5 1.2' stroke='%23674f28' stroke-width='0.55' stroke-opacity='0.085' stroke-linecap='round'/%3E%3Cpath d='M58 32l6 1.1M112 98l7-1.4M28 144l5-0.9M162 62l5 1.3' stroke='%23fffdf4' stroke-width='0.6' stroke-opacity='0.42' stroke-linecap='round'/%3E%3C/svg%3E");
+  --cairn-grain: var(--cairn-tex-fibre), var(--cairn-kraft-flecks);
+  --cairn-grain-size: 240px 240px, 180px 180px;
+  --cairn-desk-depth-left: inset -8px 0 14px -10px rgba(85, 62, 35, 0.16);
+  --cairn-desk-depth-right: inset 8px 0 14px -10px rgba(85, 62, 35, 0.16);
+  --cairn-nav-active-bg: #f8f1dd;
+  --cairn-nav-active-border: rgba(196, 168, 126, 0.65);
+  --cairn-nav-guide: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='160' viewBox='0 0 6 160' fill='none' stroke-linecap='round'%3E%3Cpath d='M3 0L3.06 40L2.96 82L3.05 124L3 160' stroke='%236e5f4c' stroke-width='1.05' stroke-opacity='0.34'/%3E%3Cpath d='M2.97 0L3.03 52L2.98 106L3.02 160' stroke='%233f3528' stroke-width='0.7' stroke-opacity='0.18'/%3E%3Cpath d='M3.02 8v5M2.96 27v4M3.04 49v6M2.97 73v4M3.03 95v5M2.96 118v4M3.04 141v6' stroke='%233f3528' stroke-width='1.2' stroke-opacity='0.16'/%3E%3C/svg%3E");
   --cairn-rule-color: rgba(150, 120, 80, 0.09);
-  /* 180deg, so the pattern anchors at the top edge: these boxes grow as their
-     content grows, and a bottom-anchored pattern would slide as they do. */
-  --cairn-rule-lines: repeating-linear-gradient(
-    180deg,
-    transparent 0 26px,
-    rgba(150, 120, 80, 0.05) 26px 27px
-  );
-
-  /* Aged stock — the sheet that has been in the drawer a while.
-
-     Four layers of one thing: noise at four scales, from stains down to
-     specks, plus a wash that yellows whatever note surface is set instead of
-     replacing it — the Note surface setting still shows through.
-
-     Scale is the whole trick. Noise at a low base frequency is not grain, it
-     is mottling: soft continents of tone hundreds of pixels across, which is
-     what old paper actually looks like. Grain alone reads as film, and noise
-     stretched along one axis reads as brushed metal, so there is no
-     directional layer here at all.
-
-     The two mottling layers use type='turbulence' rather than fractalNoise.
-     Fractal noise is evenly distributed — pretty, but it covers the sheet
-     like weather. Turbulence is the absolute value of the same noise, so it
-     clumps: big stains in some places and clean paper in others, which is
-     the unevenness real foxing has. The mid layer stays fractal, to break up
-     the big shapes without competing with them.
-
-     Every filter carries an explicit region — x/y 0%, width/height 100%.
-     Without it the region defaults to 10% larger than the rect, stitchTiles
-     stitches the region rather than the tile, and every tile boundary shows
-     up as a straight line across the page. This is the fix for that.
-
-     The alphas are small on purpose. Anything heavier stops being paper and
-     starts being camouflage. Every tile anchors top-left at a fixed size,
-     which is what keeps the texture still while CodeMirror re-estimates the
-     document height — see the ruled-paper note in 06-editor.css. */
-  --cairn-aged-tint: rgba(193, 158, 92, 0.14);
-  /* Stains — the big uneven ones, a couple per screenful */
-  --cairn-mottle-stain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='1200'%3E%3Cfilter id='s' x='0%25' y='0%25' width='100%25' height='100%25'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.004' numOctaves='2' seed='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.404 0 0 0 0 0.31 0 0 0 0 0.157 0.15 0.15 0.15 0 -0.02'/%3E%3C/filter%3E%3Crect width='1200' height='1200' filter='url(%23s)'/%3E%3C/svg%3E");
-  /* Mid patches, on a tile that never lines up with the stains */
-  --cairn-mottle-patch: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500'%3E%3Cfilter id='p' x='0%25' y='0%25' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.02' numOctaves='3' seed='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.404 0 0 0 0 0.31 0 0 0 0 0.157 0.06 0.06 0.06 0 -0.07'/%3E%3C/filter%3E%3Crect width='500' height='500' filter='url(%23p)'/%3E%3C/svg%3E");
-  /* The only layer that lightens: paper wears thin as well as dark */
-  --cairn-mottle-bloom: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='800'%3E%3Cfilter id='b' x='0%25' y='0%25' width='100%25' height='100%25'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.006' numOctaves='2' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 0.98 0 0 0 0 0.92 0.1 0.1 0.1 0 -0.035'/%3E%3C/filter%3E%3Crect width='800' height='800' filter='url(%23b)'/%3E%3C/svg%3E");
-  /* Small grey marks — dirt worked into the sheet, not spread over it */
-  --cairn-mottle-smudge: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600'%3E%3Cfilter id='m' x='0%25' y='0%25' width='100%25' height='100%25'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.06' numOctaves='3' seed='21' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.3 0 0 0 0 0.27 0 0 0 0 0.22 0.34 0.34 0.34 0 -0.44'/%3E%3C/filter%3E%3Crect width='600' height='600' filter='url(%23m)'/%3E%3C/svg%3E");
-  /* One tile, three passes: the even grain of the fibre, a scatter of grey
-     flecks a couple of pixels across, and the odd bigger speck of dirt.
-     Both fleck passes are turbulence read past a high threshold, so most of
-     the tile stays clean and what does show is a mark rather than a film. */
-  --cairn-noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='g' x='0%25' y='0%25' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' seed='0' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.404 0 0 0 0 0.31 0 0 0 0 0.157 0.12 0.12 0.12 0 -0.09'/%3E%3C/filter%3E%3Cfilter id='f' x='0%25' y='0%25' width='100%25' height='100%25'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.5' numOctaves='2' seed='13' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.3 0 0 0 0 0.27 0 0 0 0 0.22 0.4 0.4 0.4 0 -0.5736'/%3E%3C/filter%3E%3Cfilter id='d' x='0%25' y='0%25' width='100%25' height='100%25'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.12' numOctaves='2' seed='29' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.3 0 0 0 0 0.27 0 0 0 0 0.22 0.6667 0.6667 0.6667 0 -1.01'/%3E%3C/filter%3E%3Crect width='320' height='320' filter='url(%23g)'/%3E%3Crect width='320' height='320' filter='url(%23f)'/%3E%3Crect width='320' height='320' filter='url(%23d)'/%3E%3C/svg%3E");
-  --cairn-stock-aged: var(--cairn-mottle-stain), var(--cairn-mottle-patch),
-    var(--cairn-mottle-bloom), var(--cairn-mottle-smudge), var(--cairn-noise),
-    linear-gradient(0deg, var(--cairn-aged-tint), var(--cairn-aged-tint));
-  --cairn-stock-aged-size: 1200px 1200px, 500px 500px, 800px 800px,
-    600px 600px, 320px 320px, auto;
-  /* The desk, the modals and the callouts take the grain alone — stains and
-     wash belong to the sheet, not to every panel in the app. */
-  --cairn-grain-aged: var(--cairn-noise), var(--cairn-grain);
+  --cairn-title-rule-color: rgba(168, 75, 50, 0.32);
+  --cairn-dot-color: rgba(110, 95, 76, 0.28);
+  --cairn-receipt-top: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpolygon points='0,7 0,6 5,0 10,6 10,7' fill='%23fffdf4'/%3E%3C/svg%3E");
+  --cairn-receipt-bottom: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpolygon points='0,0 10,0 10,1 5,7 0,1' fill='%23fffdf4'/%3E%3C/svg%3E");
+  --cairn-receipt-shadow: drop-shadow(0 1px 1.5px rgba(85, 62, 35, 0.22)) drop-shadow(0 8px 18px rgba(85, 62, 35, 0.16));
+  --cairn-paperclip: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 54' fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cdefs%3E%3CclipPath id='a'%3E%3Cpath d='M-4-4H28V16.2L25 15L20 21L15 15L10 21L5 15L0 21L-4 16.2Z'/%3E%3C/clipPath%3E%3C/defs%3E%3Cg clip-path='url(%23a)'%3E%3Cpath d='M19 30V8.5A5.8 5.8 0 0 0 7.4 8.5V22' stroke='%233e84bd' stroke-width='2.15'/%3E%3Cpath d='M19 30V8.5A5.8 5.8 0 0 0 7.4 8.5V22' stroke='%231d3b54' stroke-width='0.85' stroke-opacity='0.34' transform='translate(0.45 0.3)'/%3E%3Cpath d='M19 30V8.5A5.8 5.8 0 0 0 7.4 8.5V22' stroke='%23fffdf6' stroke-width='0.72' stroke-opacity='0.86' transform='translate(-0.42 -0.45)'/%3E%3C/g%3E%3Cline x1='18.2' y1='16.4' x2='19.8' y2='17.8' stroke='%233f3528' stroke-width='1.2' stroke-opacity='0.16'/%3E%3Cpath d='M13.2 2.7A5.8 5.8 0 0 0 7.4 8.5V40.5A4.4 4.4 0 0 0 16.2 40.5V22.5' stroke='%233f3528' stroke-width='2.4' stroke-opacity='0.2' transform='translate(1.1 1.5)'/%3E%3Cpath d='M13.2 2.7A5.8 5.8 0 0 0 7.4 8.5V40.5A4.4 4.4 0 0 0 16.2 40.5V22.5' stroke='%233e84bd' stroke-width='2.15'/%3E%3Cpath d='M13.2 2.7A5.8 5.8 0 0 0 7.4 8.5V40.5A4.4 4.4 0 0 0 16.2 40.5V22.5' stroke='%231d3b54' stroke-width='0.85' stroke-opacity='0.34' transform='translate(0.45 0.3)'/%3E%3Cpath d='M13.2 2.7A5.8 5.8 0 0 0 7.4 8.5V40.5A4.4 4.4 0 0 0 16.2 40.5V22.5' stroke='%23fffdf6' stroke-width='0.72' stroke-opacity='0.86' transform='translate(-0.42 -0.45)'/%3E%3C/svg%3E");
+  --cairn-washi-tape: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='20' viewBox='0 0 84 20'%3E%3Cpolygon points='2,1.5 82,1 79.5,5.5 82.5,10.5 80,15 82,18.5 1.5,19 4,14 1.5,9.5 4,5' fill='%23efe3c4' fill-opacity='0.78' stroke='%239a8a72' stroke-opacity='0.34' stroke-width='0.75'/%3E%3Cline x1='10' y1='2.6' x2='74' y2='2.2' stroke='%23ffffff' stroke-opacity='0.52' stroke-width='0.8'/%3E%3C/svg%3E");
+  --cairn-code-ln: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 1920' preserveAspectRatio='xMaxYMin meet' fill='%239a8a72' font-family='SF Mono,ui-monospace,Menlo,Consolas,monospace' font-size='8.5' text-anchor='end'%3E%3Ctext x='20' y='11.5'%3E1%3C/text%3E%3Ctext x='20' y='27.5'%3E2%3C/text%3E%3Ctext x='20' y='43.5'%3E3%3C/text%3E%3Ctext x='20' y='59.5'%3E4%3C/text%3E%3Ctext x='20' y='75.5'%3E5%3C/text%3E%3Ctext x='20' y='91.5'%3E6%3C/text%3E%3Ctext x='20' y='107.5'%3E7%3C/text%3E%3Ctext x='20' y='123.5'%3E8%3C/text%3E%3Ctext x='20' y='139.5'%3E9%3C/text%3E%3Ctext x='20' y='155.5'%3E10%3C/text%3E%3Ctext x='20' y='171.5'%3E11%3C/text%3E%3Ctext x='20' y='187.5'%3E12%3C/text%3E%3Ctext x='20' y='203.5'%3E13%3C/text%3E%3Ctext x='20' y='219.5'%3E14%3C/text%3E%3Ctext x='20' y='235.5'%3E15%3C/text%3E%3Ctext x='20' y='251.5'%3E16%3C/text%3E%3Ctext x='20' y='267.5'%3E17%3C/text%3E%3Ctext x='20' y='283.5'%3E18%3C/text%3E%3Ctext x='20' y='299.5'%3E19%3C/text%3E%3Ctext x='20' y='315.5'%3E20%3C/text%3E%3Ctext x='20' y='331.5'%3E21%3C/text%3E%3Ctext x='20' y='347.5'%3E22%3C/text%3E%3Ctext x='20' y='363.5'%3E23%3C/text%3E%3Ctext x='20' y='379.5'%3E24%3C/text%3E%3Ctext x='20' y='395.5'%3E25%3C/text%3E%3Ctext x='20' y='411.5'%3E26%3C/text%3E%3Ctext x='20' y='427.5'%3E27%3C/text%3E%3Ctext x='20' y='443.5'%3E28%3C/text%3E%3Ctext x='20' y='459.5'%3E29%3C/text%3E%3Ctext x='20' y='475.5'%3E30%3C/text%3E%3Ctext x='20' y='491.5'%3E31%3C/text%3E%3Ctext x='20' y='507.5'%3E32%3C/text%3E%3Ctext x='20' y='523.5'%3E33%3C/text%3E%3Ctext x='20' y='539.5'%3E34%3C/text%3E%3Ctext x='20' y='555.5'%3E35%3C/text%3E%3Ctext x='20' y='571.5'%3E36%3C/text%3E%3Ctext x='20' y='587.5'%3E37%3C/text%3E%3Ctext x='20' y='603.5'%3E38%3C/text%3E%3Ctext x='20' y='619.5'%3E39%3C/text%3E%3Ctext x='20' y='635.5'%3E40%3C/text%3E%3Ctext x='20' y='651.5'%3E41%3C/text%3E%3Ctext x='20' y='667.5'%3E42%3C/text%3E%3Ctext x='20' y='683.5'%3E43%3C/text%3E%3Ctext x='20' y='699.5'%3E44%3C/text%3E%3Ctext x='20' y='715.5'%3E45%3C/text%3E%3Ctext x='20' y='731.5'%3E46%3C/text%3E%3Ctext x='20' y='747.5'%3E47%3C/text%3E%3Ctext x='20' y='763.5'%3E48%3C/text%3E%3Ctext x='20' y='779.5'%3E49%3C/text%3E%3Ctext x='20' y='795.5'%3E50%3C/text%3E%3Ctext x='20' y='811.5'%3E51%3C/text%3E%3Ctext x='20' y='827.5'%3E52%3C/text%3E%3Ctext x='20' y='843.5'%3E53%3C/text%3E%3Ctext x='20' y='859.5'%3E54%3C/text%3E%3Ctext x='20' y='875.5'%3E55%3C/text%3E%3Ctext x='20' y='891.5'%3E56%3C/text%3E%3Ctext x='20' y='907.5'%3E57%3C/text%3E%3Ctext x='20' y='923.5'%3E58%3C/text%3E%3Ctext x='20' y='939.5'%3E59%3C/text%3E%3Ctext x='20' y='955.5'%3E60%3C/text%3E%3Ctext x='20' y='971.5'%3E61%3C/text%3E%3Ctext x='20' y='987.5'%3E62%3C/text%3E%3Ctext x='20' y='1003.5'%3E63%3C/text%3E%3Ctext x='20' y='1019.5'%3E64%3C/text%3E%3Ctext x='20' y='1035.5'%3E65%3C/text%3E%3Ctext x='20' y='1051.5'%3E66%3C/text%3E%3Ctext x='20' y='1067.5'%3E67%3C/text%3E%3Ctext x='20' y='1083.5'%3E68%3C/text%3E%3Ctext x='20' y='1099.5'%3E69%3C/text%3E%3Ctext x='20' y='1115.5'%3E70%3C/text%3E%3Ctext x='20' y='1131.5'%3E71%3C/text%3E%3Ctext x='20' y='1147.5'%3E72%3C/text%3E%3Ctext x='20' y='1163.5'%3E73%3C/text%3E%3Ctext x='20' y='1179.5'%3E74%3C/text%3E%3Ctext x='20' y='1195.5'%3E75%3C/text%3E%3Ctext x='20' y='1211.5'%3E76%3C/text%3E%3Ctext x='20' y='1227.5'%3E77%3C/text%3E%3Ctext x='20' y='1243.5'%3E78%3C/text%3E%3Ctext x='20' y='1259.5'%3E79%3C/text%3E%3Ctext x='20' y='1275.5'%3E80%3C/text%3E%3Ctext x='20' y='1291.5'%3E81%3C/text%3E%3Ctext x='20' y='1307.5'%3E82%3C/text%3E%3Ctext x='20' y='1323.5'%3E83%3C/text%3E%3Ctext x='20' y='1339.5'%3E84%3C/text%3E%3Ctext x='20' y='1355.5'%3E85%3C/text%3E%3Ctext x='20' y='1371.5'%3E86%3C/text%3E%3Ctext x='20' y='1387.5'%3E87%3C/text%3E%3Ctext x='20' y='1403.5'%3E88%3C/text%3E%3Ctext x='20' y='1419.5'%3E89%3C/text%3E%3Ctext x='20' y='1435.5'%3E90%3C/text%3E%3Ctext x='20' y='1451.5'%3E91%3C/text%3E%3Ctext x='20' y='1467.5'%3E92%3C/text%3E%3Ctext x='20' y='1483.5'%3E93%3C/text%3E%3Ctext x='20' y='1499.5'%3E94%3C/text%3E%3Ctext x='20' y='1515.5'%3E95%3C/text%3E%3Ctext x='20' y='1531.5'%3E96%3C/text%3E%3Ctext x='20' y='1547.5'%3E97%3C/text%3E%3Ctext x='20' y='1563.5'%3E98%3C/text%3E%3Ctext x='20' y='1579.5'%3E99%3C/text%3E%3Ctext x='20' y='1595.5'%3E100%3C/text%3E%3Ctext x='20' y='1611.5'%3E101%3C/text%3E%3Ctext x='20' y='1627.5'%3E102%3C/text%3E%3Ctext x='20' y='1643.5'%3E103%3C/text%3E%3Ctext x='20' y='1659.5'%3E104%3C/text%3E%3Ctext x='20' y='1675.5'%3E105%3C/text%3E%3Ctext x='20' y='1691.5'%3E106%3C/text%3E%3Ctext x='20' y='1707.5'%3E107%3C/text%3E%3Ctext x='20' y='1723.5'%3E108%3C/text%3E%3Ctext x='20' y='1739.5'%3E109%3C/text%3E%3Ctext x='20' y='1755.5'%3E110%3C/text%3E%3Ctext x='20' y='1771.5'%3E111%3C/text%3E%3Ctext x='20' y='1787.5'%3E112%3C/text%3E%3Ctext x='20' y='1803.5'%3E113%3C/text%3E%3Ctext x='20' y='1819.5'%3E114%3C/text%3E%3Ctext x='20' y='1835.5'%3E115%3C/text%3E%3Ctext x='20' y='1851.5'%3E116%3C/text%3E%3Ctext x='20' y='1867.5'%3E117%3C/text%3E%3Ctext x='20' y='1883.5'%3E118%3C/text%3E%3Ctext x='20' y='1899.5'%3E119%3C/text%3E%3Ctext x='20' y='1915.5'%3E120%3C/text%3E%3C/svg%3E");
 }
 
 /* ==========================================================================
@@ -463,6 +437,7 @@ body {
   --cairn-paper-deep: #171310;
   --cairn-panel: #262019;
   --cairn-card: #2c251c;
+  --cairn-desk: #1c1812;
   --cairn-kraft: #6b5942;
   --cairn-kraft-deep: #55462f;
   --cairn-ink: #e8dcc4;
@@ -503,7 +478,7 @@ body {
   --text-error: #d97456;
   --text-success: #a3a862;
   --text-selection: rgba(217, 113, 79, 0.22);
-  --text-highlight-bg: rgba(217, 169, 92, 0.28);
+  --text-highlight-bg: rgba(248, 220, 76, 0.36);
 
   --link-color: var(--cairn-accent);
   --link-color-hover: var(--cairn-accent-deep);
@@ -515,11 +490,24 @@ body {
   --divider-color: var(--cairn-line);
   --divider-color-hover: var(--cairn-accent);
 
-  /* Blocks ---------------------------------------------------------------- */
+  /* Blocks & five-colour archival code syntax ----------------------------- */
   --code-background: #201b15;
   --code-normal: #cdb083;
+  --code-comment: var(--cairn-muted);
+  --code-keyword: rgb(var(--cairn-c-rule));
+  --code-string: rgb(var(--cairn-c-log));
+  --code-function: rgb(var(--cairn-c-proc));
+  --code-property: rgb(var(--cairn-c-proc));
+  --code-value: rgb(var(--cairn-c-know));
+  --code-important: rgb(var(--cairn-c-know));
+  --code-tag: var(--cairn-accent-deep);
+  --code-operator: var(--cairn-ink-soft);
+  --code-punctuation: var(--cairn-ink-soft);
   --blockquote-border-color: var(--cairn-kraft);
-  --table-header-background: #2b241b;
+  --table-background: #2a231b;
+  --table-column-alt-background: transparent;
+  --table-header-background: #201a14;
+  --table-header-background-hover: #201a14;
 
   /* Blockquote paper — the same card, one step lighter than the note surface
      rather than one step deeper: on a dark ground a sheet catches light. The
@@ -532,10 +520,12 @@ body {
   --cairn-quote-shadow: 2px 3px 8px rgba(0, 0, 0, 0.4);
   --cairn-quote-lift: drop-shadow(2px 3px 8px rgba(0, 0, 0, 0.4));
   --cairn-quote-fold-shadow: -1px 1px 1px rgba(0, 0, 0, 0.5);
-  --table-row-alt-background: rgba(232, 220, 196, 0.025);
+  --table-row-alt-background: #332a20;
+  --table-row-background-hover: rgba(217, 113, 79, 0.14);
+  --table-row-alt-background-hover: rgba(217, 113, 79, 0.14);
 
-  --shadow-s: 0 1px 3px rgba(0, 0, 0, 0.4);
-  --shadow-l: 0 10px 30px rgba(0, 0, 0, 0.55);
+  --shadow-s: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 14px -4px rgba(0, 0, 0, 0.45);
+  --shadow-l: 0 2px 5px rgba(0, 0, 0, 0.45), 0 12px 30px -6px rgba(0, 0, 0, 0.6);
   --cairn-shadow-emboss: inset 0 1px 0 rgba(232, 220, 196, 0.08);
   --cairn-shadow-glow: 0 0 0 3px rgba(217, 113, 79, 0.4);
 
@@ -547,71 +537,30 @@ body {
   --cairn-c-raw: 176, 161, 145;
   --cairn-c-proc: 133, 168, 181;
 
-  /* Grain reads as light dust on a dark ground */
-  --cairn-grain: repeating-linear-gradient(
-      0deg,
-      transparent 0 3px,
-      rgba(232, 220, 196, 0.016) 3px 4px
-    ),
-    repeating-linear-gradient(90deg, transparent 0 3px, rgba(232, 220, 196, 0.012) 3px 4px);
+  /* Paper tooth, desk grain and ruling tokens (darkroom values) ----------- */
+  --cairn-tex-fibre: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240' fill='none' stroke-linecap='round'%3E%3Cpath d='M232.2 221Q237.6 216.9 241.7 211.6M-7.8 221Q-2.4 216.9 1.7 211.6M217.2 205Q217.4 200.9 214.7 197.8M12.5 192.3Q10.6 201.4 9.6 210.5M147 111.7Q149.8 111.6 151.7 113.6M199.1 230.1Q198.4 233.9 197.3 237.6M181 107.2Q178.1 108.6 175 107.7M239.9 157.2Q239.6 153.3 237.4 150M-0.1 157.2Q-0.4 153.3 -2.6 150M106 87.6Q106.1 92 107 96.3M76.1 101.5Q77.7 103.5 78.9 105.6M170.3 65Q174.3 66.6 178.4 65.6M56.6 137.8Q52.6 143.3 51.8 150M93.3 132.9Q89.9 135.5 85.6 135.8M38.2 175.2Q32.5 179.5 25.8 181.6M47.8 80.1Q45.6 83.3 46.9 86.9M171.5 26.7Q173.2 33.3 173.1 40.1M16.5 30.2Q13.8 35.2 11.7 40.5M129.5 40.6Q131.8 38.3 130.6 35.2M136.1 85.6Q128.3 79.2 121.6 71.6M55.9 164.2Q52.3 167.9 50.6 172.9M35.9 215.9Q30.3 212.8 24 211.6M51.3 107.3Q54.2 101.4 58.3 96.2M13.9 46.8Q19.2 51.9 24.1 57.4M236.8 25.7Q243.5 17.5 252 11.2M-3.2 25.7Q3.5 17.5 12 11.2M136.4 12Q135.2 9.2 134.3 6.3M75.5 17.3Q76.3 14.2 76.2 11M115.1 107.9Q109.9 114.4 102.7 118.8M113.1 215.7Q119 211.2 122 204.5M172.8 201.1Q174.7 198.9 174.4 196M78.5 152.1Q76.6 157.9 72.7 162.7M65.4 126.8Q63.6 137.4 63.3 148.1M95.9 232.4Q95.2 237.2 95.8 242M95.9 -7.6Q95.2 -2.8 95.8 2M181.4 180.9Q176.8 173.2 171.1 166.4M34 13.1Q31.6 6.1 30.4 -1.2M34 253.1Q31.6 246.1 30.4 238.8M1.7 71.4Q3 69 4.5 66.9M241.7 71.4Q243 69 244.5 66.9M45.9 150.8Q49.2 159 55.1 165.5' stroke='%23cdb083' stroke-width='0.55' stroke-opacity='0.032'/%3E%3Cpath d='M108.6 237.4Q112.2 241.1 117.2 241.7M108.6 -2.6Q112.2 1.1 117.2 1.7M30.5 158.8Q27.6 158 26.7 155.2M7.5 90.5Q9.8 88.3 13 88.4M84.5 45.2Q82.5 43.5 82 40.9M133 229.5Q132.6 232.8 130.4 235.3M30.8 14.7Q21.1 17.4 11.9 21.4M40.5 13.8Q43.1 16.4 46.5 18.1M14.2 107.8Q17.9 105.4 20.7 102.1M236 135.7Q240.3 133.6 245 132.5M-4 135.7Q0.3 133.6 5 132.5M201.4 67.6Q208.4 63.3 216.2 61M117.5 4.1Q117.8 14.1 114.4 23.5M57.3 65.2Q51 58 44.4 51.1M231.2 171.7Q227.5 172.4 223.9 172.3M176.2 1.6Q182.2 -2.7 185.7 -9.2M176.2 241.6Q182.2 237.3 185.7 230.8M223.2 215.6Q223.1 212.4 220.6 210.5M3.3 203.8Q2.3 206.3 2.9 209M237.9 19.3Q233.3 21.3 230.2 25.4M34.3 0.5Q38.7 6.1 42.3 12.3M34.3 240.5Q38.7 246.1 42.3 252.3M175.9 145.9Q177 143.4 179.6 142.5M60 69.2Q60.7 80.2 64.8 90.5M114.8 162.1Q118.5 157.7 124.1 156.3M111.8 14.9Q111.3 11.3 113.9 8.7M116.2 136.9Q112 140 107.8 143M196.4 47.3Q203.7 50.4 211.5 50.3M94.9 53.7Q92.9 43.2 94.4 32.6M155.2 138.4Q143.6 139.8 133.1 145.2M225.2 87.3Q219.8 78 214.7 68.6M9.6 183Q-6.6 173.2 -24.6 167M249.6 183Q233.4 173.2 215.4 167M217.7 0.6Q217.9 18.6 223.8 35.5M217.7 240.6Q217.9 258.6 223.8 275.5M85.2 38.2Q104.5 33.1 124.3 35.8M102.7 93.5Q102.2 110.2 100.2 126.7' stroke='%230d0a07' stroke-width='0.55' stroke-opacity='0.24'/%3E%3Cpath d='M145.1 171.8Q144.2 169.3 142.7 167.1M36.7 32.4Q35.3 33 34.5 34.2M85.5 0.9Q84.7 2.9 83.2 4.3M85.5 240.9Q84.7 242.9 83.2 244.3M134.6 227.2Q135.2 224.5 135.4 221.9M160.7 79.8Q159.5 78 157.6 76.8M210.4 157Q210.7 160 212 162.7M90 2.6Q90.3 4.2 91.3 5.4M232.3 224Q230.7 225.2 228.7 225.5M119.1 88.7Q119 86.9 119.4 85.1M28.3 14.8Q28.7 17.5 28.4 20.2' stroke='%23cdb083' stroke-width='0.65' stroke-opacity='0.042'/%3E%3C/svg%3E");
+
+  --cairn-sheet-tooth: var(--cairn-tex-fibre);
+  --cairn-sheet-tooth-size: 240px 240px;
+
+  /* Grain reads as organic kraft fibres and darkroom flecks (no checkerboard grid) */
+  --cairn-kraft-flecks: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180' fill='none'%3E%3Ccircle cx='18' cy='24' r='0.75' fill='%23000000' fill-opacity='0.24'/%3E%3Ccircle cx='62' cy='14' r='0.55' fill='%23e8dcc4' fill-opacity='0.06'/%3E%3Ccircle cx='115' cy='38' r='0.8' fill='%23000000' fill-opacity='0.22'/%3E%3Ccircle cx='158' cy='19' r='0.6' fill='%23cdb083' fill-opacity='0.07'/%3E%3Ccircle cx='34' cy='76' r='0.65' fill='%23000000' fill-opacity='0.2'/%3E%3Ccircle cx='89' cy='68' r='0.5' fill='%23e8dcc4' fill-opacity='0.06'/%3E%3Ccircle cx='142' cy='84' r='0.85' fill='%23000000' fill-opacity='0.24'/%3E%3Ccircle cx='12' cy='128' r='0.7' fill='%23cdb083' fill-opacity='0.065'/%3E%3Ccircle cx='71' cy='116' r='0.75' fill='%23000000' fill-opacity='0.2'/%3E%3Ccircle cx='126' cy='135' r='0.55' fill='%23e8dcc4' fill-opacity='0.055'/%3E%3Cpath d='M42 44l7-1.2M128 56l6 1.5M22 104l8-0.8M96 142l7 1.1' stroke='%23000000' stroke-width='0.6' stroke-opacity='0.2' stroke-linecap='round'/%3E%3Cpath d='M58 32l6 1.1M112 98l7-1.4' stroke='%23e8dcc4' stroke-width='0.5' stroke-opacity='0.055' stroke-linecap='round'/%3E%3C/svg%3E");
+  --cairn-grain: var(--cairn-tex-fibre), var(--cairn-kraft-flecks);
+  --cairn-grain-size: 240px 240px, 180px 180px;
+  --cairn-desk-depth-left: inset -10px 0 16px -10px rgba(0, 0, 0, 0.5);
+  --cairn-desk-depth-right: inset 10px 0 16px -10px rgba(0, 0, 0, 0.5);
+  --cairn-nav-active-bg: #2b241b;
+  --cairn-nav-active-border: var(--cairn-kraft-deep);
+  --cairn-nav-guide: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='160' viewBox='0 0 6 160' fill='none' stroke-linecap='round'%3E%3Cpath d='M3 0L3.06 40L2.96 82L3.05 124L3 160' stroke='%23b0a086' stroke-width='1.05' stroke-opacity='0.24'/%3E%3Cpath d='M2.97 0L3.03 52L2.98 106L3.02 160' stroke='%23e8dcc4' stroke-width='0.7' stroke-opacity='0.12'/%3E%3Cpath d='M3.02 8v5M2.96 27v4M3.04 49v6M2.97 73v4M3.03 95v5M2.96 118v4M3.04 141v6' stroke='%23e8dcc4' stroke-width='1.2' stroke-opacity='0.12'/%3E%3C/svg%3E");
   --cairn-rule-color: rgba(232, 220, 196, 0.055);
-  /* 180deg — see the light palette; the pattern has to anchor at the top. */
-  --cairn-rule-lines: repeating-linear-gradient(
-    180deg,
-    transparent 0 26px,
-    rgba(232, 220, 196, 0.045) 26px 27px
-  );
-
-  /* Aged stock — the sheet that has been in the drawer a while.
-
-     Four layers of one thing: noise at four scales, from stains down to
-     specks, plus a wash that yellows whatever note surface is set instead of
-     replacing it — the Note surface setting still shows through.
-
-     Scale is the whole trick. Noise at a low base frequency is not grain, it
-     is mottling: soft continents of tone hundreds of pixels across, which is
-     what old paper actually looks like. Grain alone reads as film, and noise
-     stretched along one axis reads as brushed metal, so there is no
-     directional layer here at all.
-
-     The two mottling layers use type='turbulence' rather than fractalNoise.
-     Fractal noise is evenly distributed — pretty, but it covers the sheet
-     like weather. Turbulence is the absolute value of the same noise, so it
-     clumps: big stains in some places and clean paper in others, which is
-     the unevenness real foxing has. The mid layer stays fractal, to break up
-     the big shapes without competing with them.
-
-     Every filter carries an explicit region — x/y 0%, width/height 100%.
-     Without it the region defaults to 10% larger than the rect, stitchTiles
-     stitches the region rather than the tile, and every tile boundary shows
-     up as a straight line across the page. This is the fix for that.
-
-     The alphas are small on purpose. Anything heavier stops being paper and
-     starts being camouflage. Every tile anchors top-left at a fixed size,
-     which is what keeps the texture still while CodeMirror re-estimates the
-     document height — see the ruled-paper note in 06-editor.css. */
-  --cairn-aged-tint: rgba(120, 84, 44, 0.09);
-  /* Stains — the big uneven ones, a couple per screenful */
-  --cairn-mottle-stain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='1200'%3E%3Cfilter id='s' x='0%25' y='0%25' width='100%25' height='100%25'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.004' numOctaves='2' seed='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.15 0 0 0 0 0.11 0 0 0 0 0.06 0.1 0.1 0.1 0 -0.015'/%3E%3C/filter%3E%3Crect width='1200' height='1200' filter='url(%23s)'/%3E%3C/svg%3E");
-  /* Mid patches, on a tile that never lines up with the stains */
-  --cairn-mottle-patch: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500'%3E%3Cfilter id='p' x='0%25' y='0%25' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.014' numOctaves='3' seed='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.15 0 0 0 0 0.11 0 0 0 0 0.06 0.026 0.026 0.026 0 -0.033'/%3E%3C/filter%3E%3Crect width='500' height='500' filter='url(%23p)'/%3E%3C/svg%3E");
-  /* The only layer that lightens: paper wears thin as well as dark */
-  --cairn-mottle-bloom: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='800'%3E%3Cfilter id='b' x='0%25' y='0%25' width='100%25' height='100%25'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.006' numOctaves='2' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 0.98 0 0 0 0 0.92 0.055 0.055 0.055 0 -0.02'/%3E%3C/filter%3E%3Crect width='800' height='800' filter='url(%23b)'/%3E%3C/svg%3E");
-  /* Small grey marks — dirt worked into the sheet, not spread over it */
-  --cairn-mottle-smudge: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600'%3E%3Cfilter id='m' x='0%25' y='0%25' width='100%25' height='100%25'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.06' numOctaves='3' seed='21' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.88 0 0 0 0 0.86 0 0 0 0 0.82 0.16 0.16 0.16 0 -0.26'/%3E%3C/filter%3E%3Crect width='600' height='600' filter='url(%23m)'/%3E%3C/svg%3E");
-  /* One tile, three passes: the even grain of the fibre, a scatter of grey
-     flecks a couple of pixels across, and the odd bigger speck of dirt.
-     Both fleck passes are turbulence read past a high threshold, so most of
-     the tile stays clean and what does show is a mark rather than a film. */
-  --cairn-noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='g' x='0%25' y='0%25' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' seed='0' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 0.98 0 0 0 0 0.92 0.07 0.07 0.07 0 -0.055'/%3E%3C/filter%3E%3Cfilter id='f' x='0%25' y='0%25' width='100%25' height='100%25'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.5' numOctaves='2' seed='13' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.88 0 0 0 0 0.86 0 0 0 0 0.82 0.2 0.2 0.2 0 -0.2856'/%3E%3C/filter%3E%3Cfilter id='d' x='0%25' y='0%25' width='100%25' height='100%25'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.12' numOctaves='2' seed='29' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.88 0 0 0 0 0.86 0 0 0 0 0.82 0.4 0.4 0.4 0 -0.606'/%3E%3C/filter%3E%3Crect width='320' height='320' filter='url(%23g)'/%3E%3Crect width='320' height='320' filter='url(%23f)'/%3E%3Crect width='320' height='320' filter='url(%23d)'/%3E%3C/svg%3E");
-  --cairn-stock-aged: var(--cairn-mottle-stain), var(--cairn-mottle-patch),
-    var(--cairn-mottle-bloom), var(--cairn-mottle-smudge), var(--cairn-noise),
-    linear-gradient(0deg, var(--cairn-aged-tint), var(--cairn-aged-tint));
-  --cairn-stock-aged-size: 1200px 1200px, 500px 500px, 800px 800px,
-    600px 600px, 320px 320px, auto;
-  /* The desk, the modals and the callouts take the grain alone — stains and
-     wash belong to the sheet, not to every panel in the app. */
-  --cairn-grain-aged: var(--cairn-noise), var(--cairn-grain);
+  --cairn-title-rule-color: rgba(217, 116, 86, 0.25);
+  --cairn-dot-color: rgba(232, 220, 196, 0.18);
+  --cairn-receipt-top: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpolygon points='0,7 0,6 5,0 10,6 10,7' fill='%232c251c'/%3E%3C/svg%3E");
+  --cairn-receipt-bottom: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpolygon points='0,0 10,0 10,1 5,7 0,1' fill='%232c251c'/%3E%3C/svg%3E");
+  --cairn-receipt-shadow: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.45)) drop-shadow(0 8px 20px rgba(0, 0, 0, 0.45));
+  --cairn-paperclip: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 54' fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cdefs%3E%3CclipPath id='a'%3E%3Cpath d='M-4-4H28V16.2L25 15L20 21L15 15L10 21L5 15L0 21L-4 16.2Z'/%3E%3C/clipPath%3E%3C/defs%3E%3Cg clip-path='url(%23a)'%3E%3Cpath d='M19 30V8.5A5.8 5.8 0 0 0 7.4 8.5V22' stroke='%235aa0d6' stroke-width='2.15'/%3E%3Cpath d='M19 30V8.5A5.8 5.8 0 0 0 7.4 8.5V22' stroke='%231d3b54' stroke-width='0.85' stroke-opacity='0.4' transform='translate(0.45 0.3)'/%3E%3Cpath d='M19 30V8.5A5.8 5.8 0 0 0 7.4 8.5V22' stroke='%23e8dcc4' stroke-width='0.72' stroke-opacity='0.65' transform='translate(-0.42 -0.45)'/%3E%3C/g%3E%3Cline x1='18.2' y1='16.4' x2='19.8' y2='17.8' stroke='%23000000' stroke-width='1.2' stroke-opacity='0.32'/%3E%3Cpath d='M13.2 2.7A5.8 5.8 0 0 0 7.4 8.5V40.5A4.4 4.4 0 0 0 16.2 40.5V22.5' stroke='%23000000' stroke-width='2.4' stroke-opacity='0.42' transform='translate(1.1 1.5)'/%3E%3Cpath d='M13.2 2.7A5.8 5.8 0 0 0 7.4 8.5V40.5A4.4 4.4 0 0 0 16.2 40.5V22.5' stroke='%235aa0d6' stroke-width='2.15'/%3E%3Cpath d='M13.2 2.7A5.8 5.8 0 0 0 7.4 8.5V40.5A4.4 4.4 0 0 0 16.2 40.5V22.5' stroke='%231d3b54' stroke-width='0.85' stroke-opacity='0.4' transform='translate(0.45 0.3)'/%3E%3Cpath d='M13.2 2.7A5.8 5.8 0 0 0 7.4 8.5V40.5A4.4 4.4 0 0 0 16.2 40.5V22.5' stroke='%23e8dcc4' stroke-width='0.72' stroke-opacity='0.65' transform='translate(-0.42 -0.45)'/%3E%3C/svg%3E");
+  --cairn-washi-tape: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='20' viewBox='0 0 84 20'%3E%3Cpolygon points='2,1.5 82,1 79.5,5.5 82.5,10.5 80,15 82,18.5 1.5,19 4,14 1.5,9.5 4,5' fill='%2355462f' fill-opacity='0.72' stroke='%23857759' stroke-opacity='0.36' stroke-width='0.75'/%3E%3Cline x1='10' y1='2.6' x2='74' y2='2.2' stroke='%23e8dcc4' stroke-opacity='0.22' stroke-width='0.8'/%3E%3C/svg%3E");
+  --cairn-code-ln: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 1920' preserveAspectRatio='xMaxYMin meet' fill='%23857759' font-family='SF Mono,ui-monospace,Menlo,Consolas,monospace' font-size='8.5' text-anchor='end'%3E%3Ctext x='20' y='11.5'%3E1%3C/text%3E%3Ctext x='20' y='27.5'%3E2%3C/text%3E%3Ctext x='20' y='43.5'%3E3%3C/text%3E%3Ctext x='20' y='59.5'%3E4%3C/text%3E%3Ctext x='20' y='75.5'%3E5%3C/text%3E%3Ctext x='20' y='91.5'%3E6%3C/text%3E%3Ctext x='20' y='107.5'%3E7%3C/text%3E%3Ctext x='20' y='123.5'%3E8%3C/text%3E%3Ctext x='20' y='139.5'%3E9%3C/text%3E%3Ctext x='20' y='155.5'%3E10%3C/text%3E%3Ctext x='20' y='171.5'%3E11%3C/text%3E%3Ctext x='20' y='187.5'%3E12%3C/text%3E%3Ctext x='20' y='203.5'%3E13%3C/text%3E%3Ctext x='20' y='219.5'%3E14%3C/text%3E%3Ctext x='20' y='235.5'%3E15%3C/text%3E%3Ctext x='20' y='251.5'%3E16%3C/text%3E%3Ctext x='20' y='267.5'%3E17%3C/text%3E%3Ctext x='20' y='283.5'%3E18%3C/text%3E%3Ctext x='20' y='299.5'%3E19%3C/text%3E%3Ctext x='20' y='315.5'%3E20%3C/text%3E%3Ctext x='20' y='331.5'%3E21%3C/text%3E%3Ctext x='20' y='347.5'%3E22%3C/text%3E%3Ctext x='20' y='363.5'%3E23%3C/text%3E%3Ctext x='20' y='379.5'%3E24%3C/text%3E%3Ctext x='20' y='395.5'%3E25%3C/text%3E%3Ctext x='20' y='411.5'%3E26%3C/text%3E%3Ctext x='20' y='427.5'%3E27%3C/text%3E%3Ctext x='20' y='443.5'%3E28%3C/text%3E%3Ctext x='20' y='459.5'%3E29%3C/text%3E%3Ctext x='20' y='475.5'%3E30%3C/text%3E%3Ctext x='20' y='491.5'%3E31%3C/text%3E%3Ctext x='20' y='507.5'%3E32%3C/text%3E%3Ctext x='20' y='523.5'%3E33%3C/text%3E%3Ctext x='20' y='539.5'%3E34%3C/text%3E%3Ctext x='20' y='555.5'%3E35%3C/text%3E%3Ctext x='20' y='571.5'%3E36%3C/text%3E%3Ctext x='20' y='587.5'%3E37%3C/text%3E%3Ctext x='20' y='603.5'%3E38%3C/text%3E%3Ctext x='20' y='619.5'%3E39%3C/text%3E%3Ctext x='20' y='635.5'%3E40%3C/text%3E%3Ctext x='20' y='651.5'%3E41%3C/text%3E%3Ctext x='20' y='667.5'%3E42%3C/text%3E%3Ctext x='20' y='683.5'%3E43%3C/text%3E%3Ctext x='20' y='699.5'%3E44%3C/text%3E%3Ctext x='20' y='715.5'%3E45%3C/text%3E%3Ctext x='20' y='731.5'%3E46%3C/text%3E%3Ctext x='20' y='747.5'%3E47%3C/text%3E%3Ctext x='20' y='763.5'%3E48%3C/text%3E%3Ctext x='20' y='779.5'%3E49%3C/text%3E%3Ctext x='20' y='795.5'%3E50%3C/text%3E%3Ctext x='20' y='811.5'%3E51%3C/text%3E%3Ctext x='20' y='827.5'%3E52%3C/text%3E%3Ctext x='20' y='843.5'%3E53%3C/text%3E%3Ctext x='20' y='859.5'%3E54%3C/text%3E%3Ctext x='20' y='875.5'%3E55%3C/text%3E%3Ctext x='20' y='891.5'%3E56%3C/text%3E%3Ctext x='20' y='907.5'%3E57%3C/text%3E%3Ctext x='20' y='923.5'%3E58%3C/text%3E%3Ctext x='20' y='939.5'%3E59%3C/text%3E%3Ctext x='20' y='955.5'%3E60%3C/text%3E%3Ctext x='20' y='971.5'%3E61%3C/text%3E%3Ctext x='20' y='987.5'%3E62%3C/text%3E%3Ctext x='20' y='1003.5'%3E63%3C/text%3E%3Ctext x='20' y='1019.5'%3E64%3C/text%3E%3Ctext x='20' y='1035.5'%3E65%3C/text%3E%3Ctext x='20' y='1051.5'%3E66%3C/text%3E%3Ctext x='20' y='1067.5'%3E67%3C/text%3E%3Ctext x='20' y='1083.5'%3E68%3C/text%3E%3Ctext x='20' y='1099.5'%3E69%3C/text%3E%3Ctext x='20' y='1115.5'%3E70%3C/text%3E%3Ctext x='20' y='1131.5'%3E71%3C/text%3E%3Ctext x='20' y='1147.5'%3E72%3C/text%3E%3Ctext x='20' y='1163.5'%3E73%3C/text%3E%3Ctext x='20' y='1179.5'%3E74%3C/text%3E%3Ctext x='20' y='1195.5'%3E75%3C/text%3E%3Ctext x='20' y='1211.5'%3E76%3C/text%3E%3Ctext x='20' y='1227.5'%3E77%3C/text%3E%3Ctext x='20' y='1243.5'%3E78%3C/text%3E%3Ctext x='20' y='1259.5'%3E79%3C/text%3E%3Ctext x='20' y='1275.5'%3E80%3C/text%3E%3Ctext x='20' y='1291.5'%3E81%3C/text%3E%3Ctext x='20' y='1307.5'%3E82%3C/text%3E%3Ctext x='20' y='1323.5'%3E83%3C/text%3E%3Ctext x='20' y='1339.5'%3E84%3C/text%3E%3Ctext x='20' y='1355.5'%3E85%3C/text%3E%3Ctext x='20' y='1371.5'%3E86%3C/text%3E%3Ctext x='20' y='1387.5'%3E87%3C/text%3E%3Ctext x='20' y='1403.5'%3E88%3C/text%3E%3Ctext x='20' y='1419.5'%3E89%3C/text%3E%3Ctext x='20' y='1435.5'%3E90%3C/text%3E%3Ctext x='20' y='1451.5'%3E91%3C/text%3E%3Ctext x='20' y='1467.5'%3E92%3C/text%3E%3Ctext x='20' y='1483.5'%3E93%3C/text%3E%3Ctext x='20' y='1499.5'%3E94%3C/text%3E%3Ctext x='20' y='1515.5'%3E95%3C/text%3E%3Ctext x='20' y='1531.5'%3E96%3C/text%3E%3Ctext x='20' y='1547.5'%3E97%3C/text%3E%3Ctext x='20' y='1563.5'%3E98%3C/text%3E%3Ctext x='20' y='1579.5'%3E99%3C/text%3E%3Ctext x='20' y='1595.5'%3E100%3C/text%3E%3Ctext x='20' y='1611.5'%3E101%3C/text%3E%3Ctext x='20' y='1627.5'%3E102%3C/text%3E%3Ctext x='20' y='1643.5'%3E103%3C/text%3E%3Ctext x='20' y='1659.5'%3E104%3C/text%3E%3Ctext x='20' y='1675.5'%3E105%3C/text%3E%3Ctext x='20' y='1691.5'%3E106%3C/text%3E%3Ctext x='20' y='1707.5'%3E107%3C/text%3E%3Ctext x='20' y='1723.5'%3E108%3C/text%3E%3Ctext x='20' y='1739.5'%3E109%3C/text%3E%3Ctext x='20' y='1755.5'%3E110%3C/text%3E%3Ctext x='20' y='1771.5'%3E111%3C/text%3E%3Ctext x='20' y='1787.5'%3E112%3C/text%3E%3Ctext x='20' y='1803.5'%3E113%3C/text%3E%3Ctext x='20' y='1819.5'%3E114%3C/text%3E%3Ctext x='20' y='1835.5'%3E115%3C/text%3E%3Ctext x='20' y='1851.5'%3E116%3C/text%3E%3Ctext x='20' y='1867.5'%3E117%3C/text%3E%3Ctext x='20' y='1883.5'%3E118%3C/text%3E%3Ctext x='20' y='1899.5'%3E119%3C/text%3E%3Ctext x='20' y='1915.5'%3E120%3C/text%3E%3C/svg%3E");
 }
 
 /* ==========================================================================
@@ -638,18 +587,21 @@ body {
 }
 
 /* H1 carries the brand's 3px double rule — the hero rule of the archive. */
-.markdown-rendered h1 {
+.markdown-rendered h1,
+.cm-s-obsidian .cm-line.HyperMD-header-1 {
   border-bottom: 3px double var(--cairn-kraft-deep);
   padding-bottom: 0.3em;
 }
 
-.markdown-rendered h2 {
+.markdown-rendered h2,
+.cm-s-obsidian .cm-line.HyperMD-header-2 {
   border-bottom: 1px dashed var(--cairn-kraft-deep);
   padding-bottom: 0.25em;
 }
 
 /* H6 is the archivist's label: small, wide, uppercase-ish */
-.markdown-rendered h6 {
+.markdown-rendered h6,
+.cm-s-obsidian .cm-line.HyperMD-header-6 {
   color: var(--text-muted);
   letter-spacing: var(--cairn-ls-label);
 }
@@ -662,6 +614,13 @@ body {
 }
 
 /* Links ------------------------------------------------------------------- */
+body {
+  --link-decoration: none;
+  --link-decoration-hover: underline;
+  --link-external-decoration: none;
+  --link-external-decoration-hover: underline;
+}
+
 .markdown-rendered a.internal-link,
 .markdown-rendered a.external-link {
   text-decoration: none;
@@ -680,10 +639,16 @@ body {
   text-decoration-color: var(--cairn-kraft-deep);
 }
 
-/* Emphasis ---------------------------------------------------------------- */
-.markdown-rendered mark {
-  padding: 0.05em 0.2em;
-  border-radius: var(--radius-s);
+/* Emphasis — Looseleaf warm yellow highlighter with asymmetric nib corners */
+.markdown-rendered mark,
+.cm-s-obsidian span.cm-highlight {
+  background-color: var(--text-highlight-bg);
+  color: var(--cairn-ink);
+  padding: 0.06em 0.22em;
+  margin: 0 -0.05em;
+  border-radius: 3px 8px 4px 9px / 8px 3px 9px 4px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
 }
 
 .markdown-rendered strong {
@@ -715,13 +680,17 @@ body {
   /* Sidebar */
   --nav-item-color: var(--cairn-ink-soft);
   --nav-item-color-hover: var(--cairn-ink);
-  --nav-item-color-active: var(--cairn-ink);
+  --nav-item-color-active: var(--cairn-accent-deep);
   --nav-item-background-hover: var(--background-modifier-hover);
-  --nav-item-background-active: rgba(191, 91, 61, 0.1);
+  --nav-item-background-active: var(--cairn-nav-active-bg);
   --nav-item-weight-active: 700;
   --nav-item-size: 13.5px;
   --nav-indentation-guide-color: var(--cairn-line);
-  --nav-heading-color: var(--cairn-muted);
+  --nav-heading-color: var(--cairn-ink-soft);
+  --ribbon-background: var(--cairn-desk);
+  --tab-container-background: var(--cairn-desk);
+  --titlebar-background: var(--cairn-desk);
+  --titlebar-background-focused: var(--cairn-desk);
 
   /* Inputs & buttons */
   --interactive-normal: var(--cairn-paper-deep);
@@ -741,19 +710,45 @@ body {
   --scrollbar-active-thumb-bg: var(--cairn-kraft-deep);
 }
 
-/* Sidebar and ribbon share the desk surface, with grain. */
+/* Sidebar and ribbon share the flat natural kraft desk surface — organic
+   cellulose fibres and pulp flecks (no checkerboard grid), recessed gently
+   beside the center writing sheet. */
 .workspace-ribbon,
+.workspace-split.mod-left-split,
 .workspace-split.mod-left-split .workspace-leaf-content,
-.workspace-split.mod-right-split .workspace-leaf-content {
+.workspace-split.mod-right-split,
+.workspace-split.mod-right-split .workspace-leaf-content,
+.workspace-split.mod-left-split .workspace-tab-header-container,
+.workspace-split.mod-right-split .workspace-tab-header-container,
+.workspace-split.mod-root .workspace-tab-header-container,
+.workspace-sidedock-vault-profile,
+.titlebar {
+  background-color: var(--cairn-desk);
   background-image: var(--cairn-grain);
+  background-size: var(--cairn-grain-size);
+}
+
+.workspace-split.mod-left-split {
+  box-shadow: var(--cairn-desk-depth-left);
+}
+
+.workspace-split.mod-right-split {
+  box-shadow: var(--cairn-desk-depth-right);
 }
 
 .workspace-ribbon {
   border-right: 1px solid var(--cairn-line);
 }
 
+.workspace-split.mod-left-split .workspace-tab-header.is-active,
+.workspace-split.mod-right-split .workspace-tab-header.is-active {
+  background-color: var(--cairn-panel);
+  border-radius: var(--radius-m);
+  box-shadow: inset 0 -2px 0 var(--cairn-accent);
+}
+
 .side-dock-ribbon-action {
-  color: var(--cairn-muted);
+  color: var(--cairn-ink-soft);
   transition: color var(--anim-duration-fast) var(--anim-motion-smooth);
 }
 
@@ -772,7 +767,107 @@ body {
   letter-spacing: 0.03em;
 }
 
-/* Hover is physical, not tonal — the brand moves things rather than tinting. */
+/* Active navigation items (File Explorer, Outline, Bookmarks, etc.) sit on a
+   warm parchment archive slip — calm, tonal, and strictly inside the expanded
+   tree's vertical ink guide lines.
+   Obsidian injects inline negative margin-inline-start (!important) on nested
+   .tree-item-self rows so their outer box stretches to the sidebar edge; painting
+   the parchment slip on .tree-item-inner keeps it cleanly to the right of every
+   vertical guide line at any nesting depth without shifting text alignment. */
+.workspace-split:not(.mod-root) .tree-item-self.is-clickable:hover,
+.workspace-split:not(.mod-root) .tree-item-self.is-active:not(.is-being-renamed),
+.workspace-split:not(.mod-root) .tree-item-self.is-active:not(.is-being-renamed):hover,
+.workspace-split:not(.mod-root) .tree-item-self.mod-active,
+.workspace-split:not(.mod-root) .tree-item-self.mod-active:hover {
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.workspace-split:not(.mod-root) .tree-item-self .tree-item-inner {
+  flex: 1 1 auto;
+  min-width: 0;
+  border-radius: 3px;
+  padding: 3px 8px 3px 12px;
+  margin: -3px 0 -3px -12px;
+  transition: background-color var(--anim-duration-fast) var(--anim-motion-smooth),
+    color var(--anim-duration-fast) var(--anim-motion-smooth);
+}
+
+.workspace-split:not(.mod-root) .tree-item-self.mod-collapsible .tree-item-inner {
+  padding-inline-start: 5px;
+  margin-inline-start: -5px;
+}
+
+.workspace-split:not(.mod-root) .tree-item-self.is-clickable:hover .tree-item-inner {
+  background-color: var(--nav-item-background-hover);
+  color: var(--nav-item-color-hover);
+}
+
+.workspace-split:not(.mod-root) .tree-item-self.is-active,
+.workspace-split:not(.mod-root) .tree-item-self.is-active:hover,
+.workspace-split:not(.mod-root) .tree-item-self.mod-active,
+.workspace-split:not(.mod-root) .tree-item-self.mod-active:hover {
+  color: var(--cairn-accent-deep);
+  font-weight: 700;
+}
+
+.workspace-split:not(.mod-root) .tree-item-self.is-active .tree-item-inner,
+.workspace-split:not(.mod-root) .tree-item-self.is-active:hover .tree-item-inner,
+.workspace-split:not(.mod-root) .tree-item-self.mod-active .tree-item-inner,
+.workspace-split:not(.mod-root) .tree-item-self.mod-active:hover .tree-item-inner {
+  background-color: var(--cairn-nav-active-bg);
+  color: var(--cairn-accent-deep);
+  box-shadow: inset 0 0 0 1px var(--cairn-nav-active-border);
+}
+
+/* Expanded tree indentation guides use a single reusable 6x160px vector
+   pencil-ink SVG tile (continuous and subtly textured, zero filter cost).
+   Shifting margin/padding by 3px keeps identical 16px child indentation
+   while centering the ink stroke directly beneath the collapse chevron. */
+.workspace-split:not(.mod-root) .tree-item-children {
+  margin-inline-start: 9px;
+  padding-inline-start: 7px;
+  border-inline-start: none;
+  background-image: var(--cairn-nav-guide);
+  background-repeat: repeat-y;
+  background-position: left top;
+  background-size: 6px 160px;
+}
+
+.mod-rtl .workspace-split:not(.mod-root) .tree-item-children {
+  background-position: right top;
+}
+
+.workspace-split:not(.mod-root) .graph-control-section .tree-item-children,
+.workspace-split:not(.mod-root) .recent-changes-container .tree-item-children,
+.workspace-split:not(.mod-root) .nav-folder.mod-root > .tree-item-children {
+  margin-inline-start: 0;
+  padding-inline-start: 0;
+  background-image: none;
+}
+
+/* Collapse chevrons — refined rounded ink angle, enlarged for clarity
+   over Obsidian's stock 10px / 4px-stroke arrow. */
+.workspace-split:not(.mod-root) .tree-item-self .collapse-icon svg.svg-icon {
+  width: 13px;
+  height: 13px;
+  stroke-width: 2.6px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  color: var(--nav-collapse-icon-color);
+  transition: transform var(--anim-duration-fast) cubic-bezier(0.2, 0.9, 0.3, 1.15),
+    color var(--anim-duration-fast) var(--anim-motion-smooth);
+}
+
+.workspace-split:not(.mod-root) .tree-item-self:hover .collapse-icon svg.svg-icon {
+  color: var(--cairn-accent);
+}
+
+.workspace-split:not(.mod-root) .tree-item-self.is-active .collapse-icon svg.svg-icon,
+.workspace-split:not(.mod-root) .tree-item-self.mod-active .collapse-icon svg.svg-icon {
+  color: var(--cairn-accent-deep);
+}
+
 .nav-file-title,
 .nav-folder-title {
   transition: transform var(--anim-duration-fast) var(--anim-motion-smooth),
@@ -842,7 +937,35 @@ textarea:focus,
 
 .modal {
   background-image: var(--cairn-grain);
+  background-size: var(--cairn-grain-size);
   box-shadow: var(--shadow-l), var(--cairn-shadow-emboss);
+}
+
+/* Hover preview popovers & context menus — paper sheets floating above the desk. */
+.popover.hover-popover {
+  background-color: var(--cairn-panel);
+  background-image: var(--cairn-sheet-tooth);
+  background-size: var(--cairn-sheet-tooth-size);
+  border: 1px solid var(--cairn-kraft-deep);
+  border-radius: var(--radius-l);
+  box-shadow: var(--shadow-l), var(--cairn-shadow-emboss);
+}
+
+.menu {
+  background-color: var(--cairn-card);
+  background-image: var(--cairn-grain);
+  background-size: var(--cairn-grain-size);
+  border: 1px solid var(--cairn-kraft-deep);
+  box-shadow: var(--shadow-l), var(--cairn-shadow-emboss);
+}
+
+.menu-separator {
+  border-bottom: 1px dashed var(--cairn-line);
+}
+
+.menu-item.selected:not(.is-disabled):not(.is-label) {
+  background-color: var(--background-modifier-active-hover);
+  color: var(--cairn-accent-deep);
 }
 
 /* Status bar — the widest tracking in the theme, as a caption should be. */
@@ -865,7 +988,7 @@ textarea:focus,
 
 body {
   /* Code */
-  --code-white-space: pre-wrap;
+  --code-white-space: pre;
   --code-size: 0.875em;
 
   /* Blockquote — a paper card, not a spine. The fill and the border are
@@ -899,8 +1022,8 @@ body {
   /* Lists */
   --list-indent: 1.7em;
   --list-spacing: 0.15em;
-  --list-marker-color: var(--cairn-kraft-deep);
-  --list-bullet-size: 4px;
+  --list-marker-color: var(--cairn-accent);
+  --list-bullet-size: 6px;
 
   /* Callouts */
   --callout-padding: 12px 16px 12px 18px;
@@ -909,12 +1032,14 @@ body {
   --callout-title-size: 1em;
   --callout-title-weight: 700;
 
-  /* Checkboxes */
+  /* Checkboxes — paper card box with a hand-drawn terracotta pen checkmark */
   --checkbox-border-color: var(--cairn-kraft-deep);
   --checkbox-border-color-hover: var(--cairn-accent);
-  --checkbox-color: var(--cairn-accent);
-  --checkbox-color-hover: var(--cairn-accent-deep);
-  --checkbox-marker-color: var(--text-on-accent);
+  --checkbox-color: color-mix(in srgb, var(--cairn-accent) 14%, var(--cairn-card));
+  --checkbox-color-hover: color-mix(in srgb, var(--cairn-accent) 22%, var(--cairn-card));
+  --checkbox-marker-color: var(--cairn-accent);
+  --checklist-done-color: var(--cairn-muted);
+  --checklist-done-decoration: line-through var(--cairn-kraft-deep);
 
   /* Embeds */
   --embed-border-left: 2px solid var(--cairn-kraft-deep);
@@ -956,6 +1081,15 @@ body {
   --callout-bug: var(--cairn-c-rule);
 }
 
+/* The sheet itself — lightweight vector cellulose fibres run wall to wall on
+   the scroller. Child combinators keep it off embedded notes. */
+.markdown-source-view.mod-cm6 > .cm-editor > .cm-scroller,
+.markdown-reading-view > .markdown-preview-view {
+  background-image: var(--cairn-sheet-tooth);
+  background-size: var(--cairn-sheet-tooth-size);
+  background-position: 0 0;
+}
+
 /* Ruled paper — the sheet inside the folder.
    The design system pitches its rules at a fixed 26px; here the pitch is
    computed from the live font size and line height instead, so the lines land
@@ -980,36 +1114,67 @@ body {
    box is one pitch tall, but a heading, a code block, an image or any
    paragraph spacing isn't, and everything below one of those is off the
    rhythm for good. Ruled paper doesn't know what's written on it either. */
-.markdown-source-view.mod-cm6 .cm-sizer,
+.markdown-source-view.mod-cm6 .cm-contentContainer,
 .markdown-preview-view .markdown-preview-sizer {
   --cairn-rule-pitch: calc(1em * var(--cairn-line-height));
   --cairn-rule-bleed: 18px;
-  /* The inline title's line box — not its block: the 0.5em margin below the
-     title is left out on purpose, so the rule lands under the title's own
-     letters rather than a margin's width below them. Both views set
-     font-size to --font-text-size, so the em here is the em the pitch is
-     built from. Nudge the ruling by overriding --cairn-rule-offset. */
   --cairn-rule-title-line: calc(var(--h1-size) * var(--h1-line-height));
   --cairn-rule-offset: calc(var(--cairn-rule-title-line) - var(--cairn-rule-pitch));
 
+  position: relative;
   background-image: linear-gradient(
     180deg,
     rgba(0, 0, 0, 0) 0 calc(var(--cairn-rule-pitch) - 1px),
     var(--cairn-rule-color) calc(var(--cairn-rule-pitch) - 1px) var(--cairn-rule-pitch)
   );
   background-size: 100% var(--cairn-rule-pitch);
-
-  /* Unphased, a rule sits across the face of the title. The offset above
-     moves the ruling so one lands just under the title's letters instead;
-     because it tiles, the rest of the page is ruled exactly as before.
-     Properties, if the note has them, push the body off this alignment;
-     that is fine. */
-  background-position: 0 var(--cairn-rule-offset);
+  background-position: 0 0;
 
   /* Let the paper breathe a little wider than the text sitting on it,
      without moving the text: padding out, margin back. */
   padding-left: var(--cairn-rule-bleed);
   padding-right: var(--cairn-rule-bleed);
+  margin-left: calc(var(--cairn-rule-bleed) * -1);
+  margin-right: calc(var(--cairn-rule-bleed) * -1);
+}
+
+/* In reading view the sizer wraps both the title and the body, so phase the
+   body rules to the title line box. */
+.markdown-preview-view .markdown-preview-sizer {
+  background-position: 0 var(--cairn-rule-offset);
+}
+
+/* Pull the line-number and fold gutters out into the left margin so
+   .cm-content starts at the exact same left edge as .inline-title and
+   .metadata-container, whether line numbers are on or off.
+   left: auto overrides CodeMirror's default left: 0 on .cm-gutters. */
+.markdown-source-view.mod-cm6 .cm-gutters {
+  position: absolute;
+  left: auto;
+  right: calc(100% - var(--cairn-rule-bleed) + 8px);
+  z-index: 1;
+}
+
+/* The inline title carries its own 2px header rule at the bottom of every
+   wrapped line on a transparent ground, so the paper tooth underneath flows
+   through without a seam. */
+.markdown-source-view.mod-cm6 .inline-title,
+.markdown-preview-view .inline-title {
+  --cairn-title-line-height: var(--inline-title-line-height, var(--h1-line-height, 1.2));
+  --cairn-title-pitch: calc(1em * var(--cairn-title-line-height));
+  --cairn-title-rule-width: 2px;
+  --cairn-rule-bleed: 18px;
+
+  line-height: var(--cairn-title-line-height);
+  background-image: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 0 calc(var(--cairn-title-pitch) - var(--cairn-title-rule-width)),
+    var(--cairn-title-rule-color) calc(var(--cairn-title-pitch) - var(--cairn-title-rule-width)) var(--cairn-title-pitch)
+  );
+  background-size: 100% var(--cairn-title-pitch);
+  background-position: 0 0;
+
+  padding: 0 var(--cairn-rule-bleed);
   margin-left: calc(var(--cairn-rule-bleed) * -1);
   margin-right: calc(var(--cairn-rule-bleed) * -1);
 }
@@ -1027,51 +1192,243 @@ body {
    opaque card colour instead produces an opaque result, which fully lifts
    the callout off the page it's sitting on. */
 .callout {
-  border-left: 5px solid rgba(var(--callout-color), 0.85);
+  border-top: 1px solid color-mix(in srgb, rgb(var(--callout-color)) 28%, var(--cairn-line));
+  border-right: 1px solid color-mix(in srgb, rgb(var(--callout-color)) 28%, var(--cairn-line));
+  border-bottom: 1px solid color-mix(in srgb, rgb(var(--callout-color)) 28%, var(--cairn-line));
+  border-left: 5px solid rgba(var(--callout-color), 0.88);
   background-color: color-mix(in srgb, rgb(var(--callout-color)) 14%, var(--cairn-card));
-  box-shadow: var(--shadow-s);
+  background-image: var(--cairn-tex-fibre);
+  background-size: 240px 240px;
+  box-shadow: var(--shadow-s), var(--cairn-shadow-emboss);
 }
 
 .callout-title {
   letter-spacing: 0.02em;
+  align-items: center;
 }
 
-/* Code blocks — a hairline frame, card stock inside. */
+.callout-title:has(+ .callout-content) {
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+  border-bottom: 1px dashed color-mix(in srgb, rgb(var(--callout-color)) 30%, transparent);
+}
+
+.callout-icon {
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  background-color: color-mix(in srgb, rgb(var(--callout-color)) 14%, transparent);
+  border: 1px solid color-mix(in srgb, rgb(var(--callout-color)) 32%, transparent);
+  border-radius: 50%;
+  padding: 0;
+}
+
+.callout-icon .svg-icon {
+  width: 17px;
+  height: 17px;
+}
+
+/* Strip any redundant outer circle from stock Lucide icons so the circular
+   stamp badge around .callout-icon is never doubled. */
+.callout-icon .svg-icon > circle[cx="12"][cy="12"] {
+  display: none;
+}
+
+/* Distinct full-sized glyphs (spanning y=3.5..20.5 in 24x24, no inner circle)
+   for types whose default Lucide icon carried a circle or duplicated another
+   type:
+   - info: serifed archival 'i'
+   - todo: task checklist (check + lines, distinct from success's single check)
+   - question/help/faq: full-height '?'
+   - important: bold '!' (distinct from warning's triangle and tip's flame) */
+.callout[data-callout="info"] {
+  --cairn-callout-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='5.2' r='1.6' fill='%23000' stroke='none'/%3E%3Cpath d='M9.6 10.2H12.4V19.6M8.8 19.6H15.4'/%3E%3C/svg%3E");
+}
+
+.callout[data-callout="todo"] {
+  --cairn-callout-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.8 7.5L6.2 9.8L10.4 5.2M13.5 7.5H20.2M3.8 16.5L6.2 18.8L10.4 14.2M13.5 16.5H20.2'/%3E%3C/svg%3E");
+}
+
+.callout[data-callout="question"],
+.callout[data-callout="help"],
+.callout[data-callout="faq"] {
+  --cairn-callout-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8.2 8.2Q8.5 4.2 12.2 4.2Q16 4.3 16 8.2Q16 10.8 12.6 12.2Q12 12.7 12 14.8'/%3E%3Ccircle cx='12' cy='19.2' r='1.55' fill='%23000' stroke='none'/%3E%3C/svg%3E");
+}
+
+.callout[data-callout="important"] {
+  --cairn-callout-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.6' stroke-linecap='round'%3E%3Cpath d='M12 4.5V14.2'/%3E%3Ccircle cx='12' cy='19.2' r='1.65' fill='%23000' stroke='none'/%3E%3C/svg%3E");
+}
+
+.callout[data-callout="info"] .callout-icon .svg-icon,
+.callout[data-callout="todo"] .callout-icon .svg-icon,
+.callout[data-callout="question"] .callout-icon .svg-icon,
+.callout[data-callout="help"] .callout-icon .svg-icon,
+.callout[data-callout="faq"] .callout-icon .svg-icon,
+.callout[data-callout="important"] .callout-icon .svg-icon {
+  background-color: rgb(var(--callout-color));
+  -webkit-mask-image: var(--cairn-callout-mask);
+  mask-image: var(--cairn-callout-mask);
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+.callout[data-callout="info"] .callout-icon .svg-icon > *,
+.callout[data-callout="todo"] .callout-icon .svg-icon > *,
+.callout[data-callout="question"] .callout-icon .svg-icon > *,
+.callout[data-callout="help"] .callout-icon .svg-icon > *,
+.callout[data-callout="faq"] .callout-icon .svg-icon > *,
+.callout[data-callout="important"] .callout-icon .svg-icon > * {
+  display: none;
+}
+
+/* Code blocks — a hairline frame, card stock inside, and an independent
+   1-based line-number gutter in both reading view and live preview. */
 .markdown-rendered pre,
 .cm-s-obsidian .HyperMD-codeblock-bg {
   border: 1px solid var(--cairn-line);
 }
 
 .markdown-rendered pre {
-  padding: 12px 14px;
+  --cairn-code-lh: 1.6em;
+  padding: 12px 14px 12px 3.2em;
+  line-height: var(--cairn-code-lh);
   box-shadow: var(--cairn-shadow-emboss);
+  overflow-x: auto;
+  background-image:
+    linear-gradient(0deg, var(--code-background) 0 12px, rgba(0, 0, 0, 0) 12px),
+    var(--cairn-code-ln),
+    linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0) 0 2.4em,
+      var(--cairn-line) 2.4em calc(2.4em + 1px),
+      rgba(0, 0, 0, 0) calc(2.4em + 1px)
+    );
+  background-size: 100% 100%, 2.4em calc(120 * var(--cairn-code-lh)), 100% 100%;
+  background-position: 0 0, 0 12px, 0 0;
+  background-repeat: no-repeat, no-repeat, no-repeat;
+}
+
+/* Code block copy button & Live Preview language flair — kraft paper badges. */
+.markdown-rendered pre > button.copy-code-button,
+.markdown-source-view.mod-cm6 .code-block-flair {
+  background-color: var(--cairn-card);
+  color: var(--cairn-ink-soft);
+  border: 1px solid var(--cairn-line);
+  border-radius: var(--radius-s);
+  box-shadow: var(--shadow-s), var(--cairn-shadow-emboss);
+  padding: 3px 8px;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  transition: color var(--anim-duration-fast) var(--anim-motion-smooth),
+    border-color var(--anim-duration-fast) var(--anim-motion-smooth),
+    opacity var(--anim-duration-fast) var(--anim-motion-smooth);
+}
+
+.markdown-rendered pre > button.copy-code-button:hover,
+.markdown-source-view.mod-cm6 .code-block-flair:hover {
+  background-color: var(--cairn-card);
+  color: var(--cairn-accent-deep);
+  border-color: var(--cairn-kraft-deep);
 }
 
 .markdown-rendered code {
   letter-spacing: 0;
 }
 
-/* Tables: horizontal rules between rows, kraft header, boxed by a hairline
-   on all four sides — the outer edge belongs to the table itself, not to
-   every cell, so the interior stays free of vertical dividers.
-   The card fill is solid for the same reason as the callout fix above: the
-   ruled-paper stripe lives on the ancestor sizer, and cells with no
-   background of their own would let it show through one row at a time. */
-.markdown-rendered table {
-  border-collapse: collapse;
-  border: 1px solid var(--table-border-color);
-  background-color: var(--cairn-card);
+.cm-s-obsidian .cm-line.HyperMD-codeblock-begin {
+  counter-reset: cairn-code-line 0;
 }
 
-.markdown-rendered th {
-  letter-spacing: var(--cairn-ls-label);
-  font-size: 0.9em;
+.cm-s-obsidian .cm-line.HyperMD-codeblock:not(.HyperMD-codeblock-begin):not(.HyperMD-codeblock-end) {
+  counter-increment: cairn-code-line;
+  padding-left: 3.2em;
+  position: relative;
+}
+
+.cm-s-obsidian .cm-line.HyperMD-codeblock:not(.HyperMD-codeblock-begin):not(.HyperMD-codeblock-end)::before {
+  content: counter(cairn-code-line);
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2.4em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: var(--cairn-muted);
+  font-family: var(--font-monospace);
+  font-size: 0.85em;
+  font-variant-numeric: tabular-nums;
+  border-right: 1px solid var(--cairn-line);
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Tables: horizontal rules between rows, kraft header with a 2px ledger
+   bottom rule, boxed by a hairline on all four sides. Covers Reading View
+   (.markdown-rendered), Live Preview table widgets (.cm-table-widget) and
+   embedded tables (.cm-embed-block). */
+.markdown-rendered table,
+.cm-table-widget table,
+.cm-embed-block table {
+  border-collapse: collapse;
+  border: 1px solid var(--table-border-color);
+  background-color: var(--table-background);
+  box-shadow: var(--shadow-s);
+  font-variant-numeric: tabular-nums;
 }
 
 .markdown-rendered th,
-.markdown-rendered td {
+.cm-table-widget th,
+.cm-embed-block th {
+  letter-spacing: var(--cairn-ls-label);
+  font-size: 0.9em;
+  border-bottom: 2px solid var(--cairn-kraft-deep);
+}
+
+.markdown-rendered th,
+.markdown-rendered td,
+.cm-table-widget th,
+.cm-table-widget td,
+.cm-embed-block th,
+.cm-embed-block td {
   border-left: none;
   border-right: none;
+}
+
+/* Obsidian's app.css applies --table-row-alt-background to tbody tr:nth-child(odd).
+   Reset odd rows to the warm parchment --table-background so the first row under
+   the header is soft cream (never glaring white), and shade even rows instead. */
+.markdown-rendered tbody tr:nth-child(odd),
+.cm-table-widget tbody tr:nth-child(odd),
+.cm-embed-block tbody tr:nth-child(odd) {
+  background-color: var(--table-background);
+}
+
+.markdown-rendered tbody tr:nth-child(even),
+.cm-table-widget tbody tr:nth-child(even),
+.cm-embed-block tbody tr:nth-child(even) {
+  background-color: var(--table-row-alt-background);
+}
+
+.markdown-rendered tbody tr:hover,
+.markdown-rendered tbody tr:nth-child(odd):hover,
+.markdown-rendered tbody tr:nth-child(even):hover,
+.cm-table-widget tbody tr:hover,
+.cm-table-widget tbody tr:nth-child(odd):hover,
+.cm-table-widget tbody tr:nth-child(even):hover,
+.cm-embed-block tbody tr:hover,
+.cm-embed-block tbody tr:nth-child(odd):hover,
+.cm-embed-block tbody tr:nth-child(even):hover {
+  background-color: var(--table-row-background-hover);
 }
 
 /* Blockquotes are paper cards — the design system's wiki note laid on the
@@ -1208,36 +1565,227 @@ body {
   border-bottom-right-radius: var(--radius-s);
 }
 
-/* Completed tasks are filed away, not deleted. */
-.markdown-rendered li.task-list-item[data-task="x"] .task-list-item-checkbox + * {
-  color: var(--cairn-muted);
-  text-decoration: line-through;
-  text-decoration-color: var(--cairn-kraft-deep);
+/* Lists — tabular terracotta numerals for ordered lists. */
+.markdown-rendered ol > li::marker,
+.cm-s-obsidian .cm-formatting-list-ol {
+  color: var(--cairn-accent-deep);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 
-/* Properties read as the label block at the top of a file card — a solid
-   card fill, same as the table and blockquote fix above: with no background
-   of its own the ruled-paper stripe on the ancestor sizer would show through
-   the box instead of stopping at its border. */
-.metadata-container {
+/* Checkboxes & completed tasks — a stamped paper box with a full-bleed
+   hand-drawn pen checkmark. Obsidian's --checklist-done-* variables handle
+   the muted text and kraft strikethrough in both views without doubling. */
+input[type="checkbox"].task-list-item-checkbox {
+  border-radius: var(--checkbox-radius);
   background-color: var(--cairn-card);
-  border: 1px solid var(--cairn-line);
-  border-radius: var(--radius-m);
-  padding: 8px 12px;
-  margin-bottom: 20px;
-  box-shadow: var(--cairn-shadow-emboss);
+  box-shadow: var(--shadow-s), var(--cairn-shadow-emboss);
+}
+
+input[type="checkbox"].task-list-item-checkbox:checked {
+  background-color: var(--checkbox-color);
+  border-color: var(--cairn-accent);
+  transform: rotate(-2deg);
+}
+
+input[type="checkbox"].task-list-item-checkbox:checked::after {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--cairn-accent);
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='2.25' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.5 8.3Q4.7 10.7 6.2 12.2Q9.9 6.2 13.9 2.2'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='2.25' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.5 8.3Q4.7 10.7 6.2 12.2Q9.9 6.2 13.9 2.2'/%3E%3C/svg%3E");
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+/* Properties read as an archival receipt slip clipped to the top of the note:
+   zig-zag tear-off teeth on both top and bottom edges, a dashed divider under
+   the header, typewriter-style property keys, and an enameled wire paperclip
+   over the top-right edge. */
+.metadata-container {
+  position: relative;
+  background-color: transparent;
+  background-image:
+    var(--cairn-receipt-top),
+    linear-gradient(0deg, var(--cairn-card), var(--cairn-card)),
+    var(--cairn-receipt-bottom);
+  background-size:
+    10px 7px,
+    100% calc(100% - 12px),
+    10px 7px;
+  background-position:
+    right 0,
+    0 6px,
+    right 100%;
+  background-repeat: repeat-x, no-repeat, repeat-x;
+  border: none;
+  border-radius: 0;
+  padding: 18px 20px 16px;
+  margin-top: 6px;
+  margin-bottom: 24px;
+  box-shadow: none;
+  filter: var(--cairn-receipt-shadow);
+}
+
+/* Paperclip is phase-locked 1:1 to the right-anchored 10px zig-zag teeth so
+   the back leg clips cleanly behind the paper edge at any container width. */
+.metadata-container::after {
+  content: "";
+  position: absolute;
+  top: -15px;
+  right: 16px;
+  width: 24px;
+  height: 54px;
+  background-image: var(--cairn-paperclip);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* In the sidebar File Properties pane, shift right by an exact 10px tooth
+   period (16px -> 6px) so the 1:1 zig-zag clip remains phase-locked while
+   staying clear of the centered receipt heading. */
+.workspace > .workspace-split:not(.mod-root) .metadata-container,
+.workspace-leaf-content[data-type="file-properties"] .metadata-container {
+  --metadata-divider-width: 0px;
+  padding: 16px 16px 14px;
+  margin-top: 10px;
+}
+
+.workspace-leaf-content[data-type="file-properties"] .metadata-container::after {
+  top: -15px;
+  right: 6px;
+  width: 24px;
+  height: 54px;
+}
+
+.workspace-leaf-content[data-type="file-properties"] .metadata-properties-heading {
+  display: flex;
+  justify-content: center;
+  padding: 2px 30px 10px;
+  margin-bottom: 6px;
+}
+
+.workspace-leaf-content[data-type="file-properties"] .metadata-property:not(:last-child) {
+  border-bottom: 1px dashed var(--cairn-line);
+  padding-bottom: 2px;
+  margin-bottom: 2px;
+}
+
+.metadata-properties-heading {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 2px 4px 10px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--cairn-kraft-deep);
+}
+
+.metadata-container.is-collapsed .metadata-properties-heading {
+  margin-bottom: 0;
+  padding-bottom: 4px;
+  border-bottom: none;
+}
+
+.metadata-properties-title {
+  letter-spacing: 0.04em;
+  font-weight: 700;
+  color: var(--cairn-ink);
 }
 
 .metadata-property-key-input {
+  font-family: var(--font-monospace);
+  color: var(--cairn-ink-soft);
+  letter-spacing: 0.02em;
+  font-size: 0.88em;
+}
+
+.metadata-property-value {
+  font-variant-numeric: tabular-nums;
+}
+
+.metadata-container .metadata-add-button {
+  margin-top: 6px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--cairn-line);
+  width: 100%;
   color: var(--cairn-muted);
-  letter-spacing: var(--cairn-ls-label);
-  font-size: 0.9em;
 }
 
 /* Tags are archive badges — small, wide-tracked, squared off. */
 .markdown-rendered a.tag,
 .cm-s-obsidian .cm-hashtag {
   letter-spacing: 0.04em;
+}
+
+/* Images — mounted on archival photo paper with a soft warm shadow and a
+   translucent washi tape strip along the top edge. padding-top keeps the tape
+   inside .image-embed's own paint box so CodeMirror's contain: paint in Live
+   Preview never clips it; matches both block embeds and .cm-line > .image-embed.
+   Users can hide the tape via Style Settings or cssclasses: [cairn-no-image-tape]. */
+.markdown-rendered .image-embed,
+.markdown-source-view.mod-cm6 .cm-content .image-embed {
+  position: relative;
+  display: inline-flex;
+  width: fit-content;
+  max-width: 100%;
+  padding-top: 10px;
+  margin-top: 4px;
+}
+
+.markdown-rendered .image-embed::before,
+.markdown-source-view.mod-cm6 .cm-content .image-embed::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%) rotate(-1.5deg);
+  width: 78px;
+  height: 19px;
+  background-image: var(--cairn-washi-tape);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.markdown-rendered img:not(.emoji),
+.markdown-source-view.mod-cm6 .cm-content img:not(.emoji) {
+  display: block;
+  padding: 6px;
+  background-color: var(--cairn-card);
+  border: 1px solid var(--cairn-line);
+  border-radius: var(--radius-m);
+  box-shadow: var(--shadow-s), var(--cairn-shadow-emboss);
+}
+
+/* Internal note embeds — opaque archival sub-sheet card so ruled paper lines
+   stop cleanly at the embed border. Excludes hover popovers which wrap their
+   own .markdown-embed directly inside .popover.hover-popover. */
+.markdown-rendered .internal-embed.markdown-embed,
+.markdown-source-view.mod-cm6 .internal-embed.markdown-embed {
+  background-color: var(--cairn-card);
+  background-image: var(--cairn-tex-fibre);
+  background-size: 240px 240px;
+  border: 1px solid var(--cairn-line);
+  border-left: 4px solid var(--cairn-kraft-deep);
+  border-radius: var(--radius-m);
+  padding: 12px 16px 14px;
+  margin: 1.1em 0;
+  box-shadow: var(--shadow-s), var(--cairn-shadow-emboss);
+}
+
+.markdown-rendered .internal-embed.markdown-embed .markdown-embed-title,
+.markdown-source-view.mod-cm6 .internal-embed.markdown-embed .markdown-embed-title {
+  color: var(--cairn-accent-deep);
+  padding-bottom: 6px;
+  margin-bottom: 8px;
+  border-bottom: 1px dashed var(--cairn-line);
 }
 
 /* ==========================================================================
@@ -1254,11 +1802,84 @@ body {
   --graph-node-attachment: rgb(var(--cairn-c-raw));
 
   --search-result-background: transparent;
-  /* kraft-deep is the folder stock's own tone, which put the arrow at 1.93:1
-     against the pane — legible only because the stroke is heavy. muted is the
-     theme's own quiet ink and clears 2.8:1 while staying hardware rather than
-     a second label. */
-  --nav-collapse-icon-color: var(--cairn-muted);
+  /* Use soft ink for the refined 13px / 2.6px-stroke collapse chevrons so
+     they stay crisp and legible against the kraft desk in both themes. */
+  --nav-collapse-icon-color: var(--cairn-ink-soft);
+
+  /* Obsidian Bases — mapped onto Cairn's ledger table palette */
+  --bases-table-header-background: var(--table-header-background);
+  --bases-table-header-background-hover: var(--table-header-background);
+  --bases-table-header-color: var(--cairn-ink-soft);
+  --bases-table-header-weight: 700;
+  --bases-table-border-color: var(--table-border-color);
+  --bases-table-group-background: var(--table-background);
+  --bases-table-summary-background: var(--cairn-paper);
+  --bases-table-row-background-hover: var(--table-row-background-hover);
+  --bases-table-row-height: 34px;
+  --bases-cards-background: var(--cairn-card);
+  --bases-cards-shadow: 0 0 0 1px var(--cairn-line), var(--shadow-s);
+  --bases-cards-shadow-hover: 0 0 0 1px var(--cairn-kraft-deep), var(--shadow-s);
+
+  /* Canvas — warm kraft dot board and archival card palette.
+     Obsidian 1.9+ consumes --canvas-color-1..6 directly as CSS color values
+     (for SVG strokes, borders, and color-mix()), not bare RGB triplets. */
+  --canvas-background: var(--cairn-paper);
+  --canvas-dot-pattern: var(--cairn-dot-color);
+  --canvas-color: var(--cairn-kraft-deep);
+  --canvas-color-1: rgb(var(--cairn-c-rule));
+  --canvas-color-2: var(--cairn-accent);
+  --canvas-color-3: rgb(var(--cairn-c-know));
+  --canvas-color-4: rgb(var(--cairn-c-log));
+  --canvas-color-5: rgb(var(--cairn-c-proc));
+  --canvas-color-6: rgb(var(--cairn-c-raw));
+}
+
+/* Embedded Bases view — unified archival ledger card with full-width kraft
+   toolbar, bold 2px ledger header rule, and alternating warm zebra rows. */
+.workspace-leaf-content[data-type="markdown"] .bases-embed,
+.workspace-leaf-content[data-type="markdown"] .block-language-base {
+  --bases-embed-border-width: 0;
+  --bases-embed-border-radius: 0;
+  --bases-embed-radius: 0;
+  --bases-header-border-width: 0 0 1px 0;
+  --bases-header-padding-start: 10px;
+  border: 1px solid var(--cairn-line);
+  border-radius: var(--radius-m);
+  background-color: var(--table-background);
+  box-shadow: var(--shadow-s);
+  overflow: hidden;
+}
+
+.bases-header {
+  background-color: var(--cairn-paper-deep);
+  border-bottom: 1px solid var(--cairn-line);
+}
+
+.bases-toolbar {
+  background-color: transparent;
+  border-bottom: none;
+}
+
+.bases-table-container {
+  font-variant-numeric: tabular-nums;
+}
+
+.bases-thead {
+  background-color: var(--bases-table-header-background);
+  box-shadow: inset 0 -2px 0 var(--cairn-kraft-deep);
+}
+
+.bases-tbody {
+  background-color: var(--table-background);
+}
+
+.bases-tbody .bases-tr:nth-child(even) {
+  background-color: var(--table-row-alt-background);
+}
+
+.bases-tbody .bases-tr:hover,
+.bases-tbody .bases-tr:nth-child(even):hover {
+  background-color: var(--bases-table-row-background-hover);
 }
 
 /* Search matches use the ochre highlight — the archivist's marker pen. */
@@ -1277,14 +1898,199 @@ body {
   color: var(--cairn-ink-soft);
 }
 
-/* Canvas cards are file cards. */
-.canvas-node-container {
+/* Canvas — warm kraft dot board with tinted archival index cards, transparent
+   dashed groups, and framed embedded boards. */
+.canvas-wrapper {
+  background-color: var(--canvas-background);
+}
+
+.internal-embed.canvas-embed {
+  background-color: var(--cairn-paper);
+  background-image: radial-gradient(
+    circle at center,
+    var(--cairn-dot-color) 0 1px,
+    transparent 1.3px
+  );
+  background-size: 20px 20px;
+  border: 1px solid var(--cairn-line);
   border-radius: var(--radius-m);
+  overflow: hidden;
+  box-shadow: var(--shadow-s), var(--cairn-shadow-emboss);
+}
+
+.internal-embed.canvas-embed .embed-title {
+  margin: 0;
+  padding: 9px 36px 9px 14px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--cairn-ink);
+  background-color: var(--cairn-paper-deep);
+  border-bottom: 1px solid var(--cairn-line);
+}
+
+.internal-embed.canvas-embed .markdown-embed-link,
+.internal-embed.canvas-embed .file-embed-link {
+  top: 6px;
+  inset-inline-end: 8px;
+}
+
+.internal-embed.canvas-embed .canvas-minimap {
+  display: block;
+  padding: 14px 18px;
+}
+
+.canvas-minimap rect {
+  stroke-width: 5px;
+  stroke: var(--cairn-kraft-deep);
+  fill: var(--cairn-card);
+  fill-opacity: 0.92;
+}
+
+.canvas-minimap rect.is-themed {
+  stroke: var(--canvas-color);
+  fill: var(--canvas-color);
+  fill-opacity: 0.24;
+}
+
+.canvas-minimap path {
+  stroke: var(--cairn-kraft-deep);
+  fill: none;
+}
+
+.canvas-minimap path.is-themed {
+  stroke: var(--canvas-color);
+}
+
+.canvas-node:not(.canvas-node-group) .canvas-node-container {
+  background-color: var(--cairn-card);
+  background-image: var(--cairn-sheet-tooth);
+  background-size: var(--cairn-sheet-tooth-size);
+  border-radius: var(--radius-m);
+  border: 1px solid var(--cairn-kraft-deep);
+  box-shadow: var(--shadow-s), var(--cairn-shadow-emboss);
+}
+
+.canvas-node.is-themed:not(.canvas-node-group) .canvas-node-container {
+  background-color: color-mix(in srgb, var(--canvas-color) 10%, var(--cairn-card));
+  border-color: color-mix(in srgb, var(--canvas-color) 62%, var(--cairn-kraft-deep));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--canvas-color) 28%, transparent),
+    var(--shadow-s);
+}
+
+.canvas-node.is-selected .canvas-node-container,
+.canvas-node.is-focused .canvas-node-container {
+  border-color: var(--cairn-accent);
+  box-shadow: var(--shadow-s), 0 0 0 2px var(--cairn-accent);
+}
+
+.canvas-node.is-selected.is-themed .canvas-node-container,
+.canvas-node.is-focused.is-themed .canvas-node-container {
+  border-color: var(--canvas-color);
+  box-shadow: inset 0 0 0 1px var(--canvas-color), 0 0 0 2px var(--canvas-color);
+}
+
+.canvas-node.canvas-node-group .canvas-node-container,
+.canvas-node.canvas-node-group.is-themed .canvas-node-container {
+  background-color: transparent;
+  background-image: none;
+  border-radius: var(--radius-l);
+  border: 1.5px dashed color-mix(in srgb, var(--canvas-color) 55%, var(--cairn-kraft-deep));
+  box-shadow: none;
+}
+
+.canvas-node-group .canvas-node-content {
+  background-color: color-mix(in srgb, var(--canvas-color) 5%, transparent);
+  background-image: none;
+}
+
+.canvas-node:not(.canvas-node-group) .canvas-node-content {
+  background-color: transparent;
+  background-image: none;
+}
+
+.canvas-node-content .markdown-preview-view,
+.canvas-node-content .markdown-preview-sizer,
+.canvas-node-content .cm-contentContainer {
+  background-color: transparent;
+  background-image: none;
+}
+
+.canvas-path-label {
+  background-color: var(--cairn-card);
+  border: 1px solid var(--cairn-line);
+  border-radius: var(--radius-s);
+  color: var(--cairn-ink-soft);
   box-shadow: var(--shadow-s);
 }
 
-.canvas-node-content {
-  background-image: var(--cairn-grain);
+/* Canvas image nodes — mounted archival prints sharing the exact same --cairn-card
+   photo-paper mat and --cairn-line border as note images. Painted outward via
+   box-shadow (6px all sides) so every aspect ratio stays evenly framed. */
+.canvas-node:not(.canvas-node-group):has(.canvas-node-content.media-embed > img)
+  .canvas-node-container {
+  background-color: var(--cairn-card);
+  border-radius: 2px;
+  border: none;
+  box-shadow:
+    0 0 0 6px var(--cairn-card),
+    0 0 0 7px var(--cairn-line),
+    0 5px 14px 4px rgba(63, 53, 40, 0.16);
+}
+
+.canvas-node.is-selected:not(.canvas-node-group):has(.canvas-node-content.media-embed > img)
+  .canvas-node-container,
+.canvas-node.is-focused:not(.canvas-node-group):has(.canvas-node-content.media-embed > img)
+  .canvas-node-container {
+  border: none;
+  box-shadow:
+    0 0 0 6px var(--cairn-card),
+    0 0 0 8px var(--cairn-accent),
+    0 6px 18px 5px rgba(63, 53, 40, 0.22);
+}
+
+.canvas-node-content.media-embed:has(> img) {
+  padding: 0;
+}
+
+.canvas-node-content.media-embed > img {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 2px;
+}
+
+.canvas-node:has(.canvas-node-content.media-embed > img)::after {
+  content: "";
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-1.6deg);
+  width: 88px;
+  height: 20px;
+  background-image: var(--cairn-washi-tape);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.canvas-node:has(.canvas-node-content.media-embed > img) .canvas-node-label {
+  top: calc(-18px * var(--zoom-multiplier));
+  font-size: 11.5px;
+  letter-spacing: 0.02em;
+  color: var(--cairn-muted);
+  opacity: 0;
+  transition: opacity var(--anim-duration-fast) var(--anim-motion-smooth),
+    color var(--anim-duration-fast) var(--anim-motion-smooth);
+}
+
+.canvas-node:has(.canvas-node-content.media-embed > img):hover .canvas-node-label,
+.canvas-node:has(.canvas-node-content.media-embed > img).is-selected .canvas-node-label,
+.canvas-node:has(.canvas-node-content.media-embed > img).is-focused .canvas-node-label {
+  opacity: 0.92;
+  color: var(--cairn-ink-soft);
 }
 
 /* ==========================================================================
@@ -1294,67 +2100,51 @@ body {
 /* --------------------------------------------------------------------------
    Paper stock — what the note is printed on.
 
-   Ruled is the default and needs no class: the ruling is set on the sizer in
-   06-editor.css, so a vault without Style Settings still gets the notebook
-   page. The three variants below take it away or replace it. The stock class
-   lands on body, so each selector here outweighs the base rule by one class
-   and comes later in the build besides.
+   Three stocks, all sharing the cold-press fibrous sheet on the scroller and
+   the 2px header rule on .inline-title (set in 06-editor.css):
+     - Ruled (cairn-stock-ruled): default horizontal rules on the sizer.
+     - Dot grid (cairn-stock-dots): 20px/100px dot pad on the sizer.
+     - Plain (cairn-stock-plain): unruled body, title rule only.
+
+   Selectors match both body.cairn-stock-* (set globally by Style Settings)
+   and .markdown-source-view / .markdown-preview-view.cairn-stock-* (set per
+   note via Obsidian's cssclasses frontmatter property).
    -------------------------------------------------------------------------- */
 
-/* Aged paper — a plain yellowed sheet: no ruling, but mottling, grain and a
-   wash over the note surface. Tokens live in the palette files.
+/* Dot grid — uniform 20px dot pad. Offset by half a pitch (10px) so the outer
+   row of dots sits inside the sizer rather than getting clipped on the edge. */
+.cairn-stock-dots .markdown-source-view.mod-cm6 .cm-contentContainer,
+.cairn-stock-dots .markdown-preview-view .markdown-preview-sizer,
+.markdown-source-view.mod-cm6.cairn-stock-dots .cm-contentContainer,
+.markdown-preview-view.cairn-stock-dots .markdown-preview-sizer {
+  background-image: radial-gradient(circle at center, var(--cairn-dot-color) 0 0.9px, transparent 1.25px);
+  background-size: 20px 20px;
+  background-position: 10px 10px;
+}
 
-   Ruling rides the sizer, because a ruled sheet has margins and has to stop
-   at the measure. Aged stock does the opposite: it is the stock the whole
-   note is printed on, so it runs wall to wall on the scroller instead — a
-   wash that stopped at 42rem would draw a hard yellow rectangle down the
-   middle of the pane. The child combinators keep it off embedded notes,
-   which would otherwise take a second coat of the wash.
+/* Plain sheet — drops the body rules from the sizer, keeping the fibrous
+   cold-press sheet, the header rule under .inline-title and the linen desk. */
+.cairn-stock-plain .markdown-source-view.mod-cm6 .cm-contentContainer,
+.cairn-stock-plain .markdown-preview-view .markdown-preview-sizer,
+.markdown-source-view.mod-cm6.cairn-stock-plain .cm-contentContainer,
+.markdown-preview-view.cairn-stock-plain .markdown-preview-sizer {
+  background-image: none;
+}
 
-   Attachment is local, so the texture belongs to the page and scrolls with
-   it. Left to scroll, the foxing would sit at a fixed spot on the screen and
-   read as a smudge on the monitor rather than a stain in the paper. */
-.cairn-stock-aged .markdown-source-view.mod-cm6 > .cm-editor > .cm-scroller,
-.cairn-stock-aged .markdown-reading-view > .markdown-preview-view {
-  background-image: var(--cairn-stock-aged);
-  background-size: var(--cairn-stock-aged-size);
-  /* No ruling to phase, so no offset — every tile starts at the top edge. */
+/* Per-note override back to Ruled when the vault default is Dot grid or Plain. */
+.markdown-source-view.mod-cm6.cairn-stock-ruled .cm-contentContainer,
+.markdown-preview-view.cairn-stock-ruled .markdown-preview-sizer {
+  background-image: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 0 calc(var(--cairn-rule-pitch) - 1px),
+    var(--cairn-rule-color) calc(var(--cairn-rule-pitch) - 1px) var(--cairn-rule-pitch)
+  );
+  background-size: 100% var(--cairn-rule-pitch);
   background-position: 0 0;
-  background-attachment: local;
 }
 
-/* …and the ruling comes off the sheet itself. */
-.cairn-stock-aged .markdown-source-view.mod-cm6 .cm-sizer,
-.cairn-stock-aged .markdown-preview-view .markdown-preview-sizer {
-  background-image: none;
-}
-
-/* The rest of the app moves onto the same stock, grain only. */
-.theme-light.cairn-stock-aged,
-.theme-dark.cairn-stock-aged {
-  --cairn-grain: var(--cairn-grain-aged);
-}
-
-/* A callout is a card cut from the sheet it sits on, not a ruled page. */
-.cairn-stock-aged .callout {
-  background-image: var(--cairn-grain);
-}
-
-/* Plain sheet — drops the rules from the running text but keeps the desk. */
-.cairn-stock-plain .markdown-source-view.mod-cm6 .cm-sizer,
-.cairn-stock-plain .markdown-preview-view .markdown-preview-sizer {
-  background-image: none;
-}
-
-/* Flat — drops every texture layer, rules and grain alike. */
-.cairn-stock-flat .markdown-source-view.mod-cm6 .cm-sizer,
-.cairn-stock-flat .markdown-preview-view .markdown-preview-sizer,
-.cairn-stock-flat .workspace-ribbon,
-.cairn-stock-flat .modal,
-.cairn-stock-flat .prompt,
-.cairn-stock-flat .callout,
-.cairn-stock-flat .metadata-container {
-  background-image: none;
+.markdown-preview-view.cairn-stock-ruled .markdown-preview-sizer {
+  background-position: 0 var(--cairn-rule-offset);
 }
 
 /* Plain quote — trades the paper card for the kraft spine the theme used
@@ -1380,8 +2170,21 @@ body {
 
 .cairn-plain-quote
   .markdown-source-view.mod-cm6.is-live-preview
-  .cm-line.HyperMD-quote {
-  padding: 0;
+  .cm-line.HyperMD-quote:not(.HyperMD-callout),
+.cairn-plain-quote
+  .markdown-source-view.mod-cm6.is-live-preview
+  .cm-line.HyperMD-quote
+  + .cm-line.HyperMD-quote:not(.HyperMD-callout),
+.cairn-plain-quote
+  .markdown-source-view.mod-cm6.is-live-preview
+  .cm-line.HyperMD-quote:not(.HyperMD-callout):has(+ *:not(.HyperMD-quote)),
+.cairn-plain-quote
+  .markdown-source-view.mod-cm6.is-live-preview
+  .cm-line.HyperMD-quote:not(.HyperMD-callout):last-child {
+  padding-top: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+  padding-inline-start: 18px;
   border: none;
   border-radius: 0;
   background-color: transparent;
@@ -1395,12 +2198,36 @@ body {
 .cairn-plain-quote .markdown-rendered blockquote:not(.callout)::after,
 .cairn-plain-quote
   .markdown-source-view.mod-cm6.is-live-preview
-  .cm-line.HyperMD-quote::after {
+  .cm-line.HyperMD-quote:not(.HyperMD-callout)::after {
   content: none;
 }
 
-/* Underline internal links */
-.cairn-underline-links .markdown-rendered a.internal-link {
+/* Hide image washi tape — keeps the archival photo frame without the top
+   translucent tape strip. Works globally via Style Settings or per note via
+   frontmatter cssclasses: [cairn-no-image-tape]. */
+.cairn-no-image-tape .markdown-rendered .image-embed,
+.cairn-no-image-tape .markdown-source-view.mod-cm6 .cm-content .image-embed,
+.markdown-preview-view.cairn-no-image-tape .image-embed,
+.markdown-source-view.mod-cm6.cairn-no-image-tape .cm-content .image-embed {
+  padding-top: 0;
+  margin-top: 0;
+}
+
+.cairn-no-image-tape .markdown-rendered .image-embed::before,
+.cairn-no-image-tape .markdown-source-view.mod-cm6 .cm-content .image-embed::before,
+.markdown-preview-view.cairn-no-image-tape .image-embed::before,
+.markdown-source-view.mod-cm6.cairn-no-image-tape .cm-content .image-embed::before,
+.cairn-no-image-tape .canvas-node:has(.canvas-node-content.media-embed > img)::after {
+  content: none;
+}
+
+/* Underline internal links — works in both Reading View and Live Preview */
+.cairn-underline-links {
+  --link-decoration: underline;
+}
+
+.cairn-underline-links .markdown-rendered a.internal-link,
+.cairn-underline-links .cm-s-obsidian .cm-hmd-internal-link .cm-underline {
   text-decoration: underline;
   text-underline-offset: 3px;
   text-decoration-color: var(--cairn-kraft-deep);
@@ -1420,12 +2247,6 @@ body {
 .cairn-dim-chrome .workspace-split.mod-right-split:hover,
 .cairn-dim-chrome .workspace-tab-header-container:hover {
   opacity: 1;
-}
-
-/* Block cursor */
-.cairn-block-cursor .cm-editor .cm-cursor-primary {
-  border-left-width: 0.5em;
-  opacity: 0.5;
 }
 
 /* Respect reduced motion for anything that moves on its own. */

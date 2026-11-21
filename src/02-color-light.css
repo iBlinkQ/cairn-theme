@@ -10,6 +10,7 @@
   --cairn-paper-deep: #ece2cc;
   --cairn-panel: #fbf5e6; /* --bg-ruled-paper: the sheet inside a folder */
   --cairn-card: #fffdf4;
+  --cairn-desk: #efe6d3;
   --cairn-kraft: #d9c19c;
   --cairn-kraft-deep: #c4a87e;
   --cairn-ink: #3f3528;
@@ -51,7 +52,7 @@
   --text-error: #a84b32;
   --text-success: #5f6335;
   --text-selection: rgba(191, 91, 61, 0.18);
-  --text-highlight-bg: rgba(192, 138, 62, 0.32);
+  --text-highlight-bg: rgba(248, 220, 76, 0.65);
 
   /* Links use the deeper terracotta: #bf5b3d is 4.04:1 on paper, which is
      fine for a stamp but not for text you read all day. #8e3c1f is 6.85:1. */
@@ -65,11 +66,24 @@
   --divider-color: var(--cairn-line);
   --divider-color-hover: var(--cairn-accent);
 
-  /* Blocks ---------------------------------------------------------------- */
+  /* Blocks & five-colour archival code syntax ----------------------------- */
   --code-background: #f5ecd8;
-  --code-normal: #6b4a2f;
+  --code-normal: #5a432c;
+  --code-comment: var(--cairn-muted);
+  --code-keyword: rgb(var(--cairn-c-rule));
+  --code-string: rgb(var(--cairn-c-log));
+  --code-function: rgb(var(--cairn-c-proc));
+  --code-property: rgb(var(--cairn-c-proc));
+  --code-value: rgb(var(--cairn-c-know));
+  --code-important: rgb(var(--cairn-c-know));
+  --code-tag: var(--cairn-accent-deep);
+  --code-operator: var(--cairn-ink-soft);
+  --code-punctuation: var(--cairn-ink-soft);
   --blockquote-border-color: var(--cairn-kraft-deep);
-  --table-header-background: var(--cairn-paper-deep);
+  --table-background: #f7efdc;
+  --table-column-alt-background: transparent;
+  --table-header-background: #e5d6b8;
+  --table-header-background-hover: #e5d6b8;
 
   /* Blockquote paper — the design system's wiki note (#fbf3da → #f2e4bd on a
      #d8c08e edge), sitting one step deeper than the note surface so the card
@@ -85,11 +99,13 @@
      a shadow that follows the cut, and box-shadow only knows rectangles. */
   --cairn-quote-lift: drop-shadow(2px 3px 6px rgba(110, 85, 45, 0.2));
   --cairn-quote-fold-shadow: -1px 1px 1px rgba(110, 85, 45, 0.32);
-  --table-row-alt-background: rgba(150, 120, 80, 0.05);
+  --table-row-alt-background: #efe4cc;
+  --table-row-background-hover: rgba(191, 91, 61, 0.12);
+  --table-row-alt-background-hover: rgba(191, 91, 61, 0.12);
 
-  /* Shadows — always warm brown, never neutral gray */
-  --shadow-s: 0 1px 3px rgba(110, 85, 50, 0.1);
-  --shadow-l: 0 10px 30px rgba(80, 60, 35, 0.35);
+  /* Shadows — two-layer warm brown contact + diffuse lift, never cool gray */
+  --shadow-s: 0 1px 1.5px rgba(90, 68, 40, 0.14), 0 5px 12px -4px rgba(90, 68, 40, 0.14);
+  --shadow-l: 0 2px 4px rgba(80, 60, 35, 0.16), 0 12px 28px -6px rgba(80, 60, 35, 0.34);
   --cairn-shadow-emboss: inset 0 1px 0 rgba(255, 255, 255, 0.7);
   --cairn-shadow-glow: 0 0 0 3px rgba(191, 91, 61, 0.45);
 
@@ -102,70 +118,30 @@
   --cairn-c-raw: 107, 97, 86; /* 外部输入 · 灰褐 */
   --cairn-c-proc: 79, 111, 122; /* 过程制品 · 青灰 */
 
-  /* Paper grain and ruled lines */
-  --cairn-grain: repeating-linear-gradient(
-      0deg,
-      transparent 0 3px,
-      rgba(120, 95, 60, 0.022) 3px 4px
-    ),
-    repeating-linear-gradient(90deg, transparent 0 3px, rgba(120, 95, 60, 0.018) 3px 4px);
+  /* Paper tooth, desk grain and ruling tokens -----------------------------
+     --cairn-tex-fibre is a pure vector path SVG (curved cellulose fibres and
+     plant flecks wrapped toroidally across a 240x240 tile) with zero SVG
+     filter primitives, so it rasterises once on the GPU without CPU overhead. */
+  --cairn-tex-fibre: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240' fill='none' stroke-linecap='round'%3E%3Cpath d='M232.2 221Q237.6 216.9 241.7 211.6M-7.8 221Q-2.4 216.9 1.7 211.6M217.2 205Q217.4 200.9 214.7 197.8M12.5 192.3Q10.6 201.4 9.6 210.5M147 111.7Q149.8 111.6 151.7 113.6M199.1 230.1Q198.4 233.9 197.3 237.6M181 107.2Q178.1 108.6 175 107.7M239.9 157.2Q239.6 153.3 237.4 150M-0.1 157.2Q-0.4 153.3 -2.6 150M106 87.6Q106.1 92 107 96.3M76.1 101.5Q77.7 103.5 78.9 105.6M170.3 65Q174.3 66.6 178.4 65.6M56.6 137.8Q52.6 143.3 51.8 150M93.3 132.9Q89.9 135.5 85.6 135.8M38.2 175.2Q32.5 179.5 25.8 181.6M47.8 80.1Q45.6 83.3 46.9 86.9M171.5 26.7Q173.2 33.3 173.1 40.1M16.5 30.2Q13.8 35.2 11.7 40.5M129.5 40.6Q131.8 38.3 130.6 35.2M136.1 85.6Q128.3 79.2 121.6 71.6M55.9 164.2Q52.3 167.9 50.6 172.9M35.9 215.9Q30.3 212.8 24 211.6M51.3 107.3Q54.2 101.4 58.3 96.2M13.9 46.8Q19.2 51.9 24.1 57.4M236.8 25.7Q243.5 17.5 252 11.2M-3.2 25.7Q3.5 17.5 12 11.2M136.4 12Q135.2 9.2 134.3 6.3M75.5 17.3Q76.3 14.2 76.2 11M115.1 107.9Q109.9 114.4 102.7 118.8M113.1 215.7Q119 211.2 122 204.5M172.8 201.1Q174.7 198.9 174.4 196M78.5 152.1Q76.6 157.9 72.7 162.7M65.4 126.8Q63.6 137.4 63.3 148.1M95.9 232.4Q95.2 237.2 95.8 242M95.9 -7.6Q95.2 -2.8 95.8 2M181.4 180.9Q176.8 173.2 171.1 166.4M34 13.1Q31.6 6.1 30.4 -1.2M34 253.1Q31.6 246.1 30.4 238.8M1.7 71.4Q3 69 4.5 66.9M241.7 71.4Q243 69 244.5 66.9M45.9 150.8Q49.2 159 55.1 165.5' stroke='%23fffdf4' stroke-width='0.65' stroke-opacity='0.6'/%3E%3Cpath d='M108.6 237.4Q112.2 241.1 117.2 241.7M108.6 -2.6Q112.2 1.1 117.2 1.7M30.5 158.8Q27.6 158 26.7 155.2M7.5 90.5Q9.8 88.3 13 88.4M84.5 45.2Q82.5 43.5 82 40.9M133 229.5Q132.6 232.8 130.4 235.3M30.8 14.7Q21.1 17.4 11.9 21.4M40.5 13.8Q43.1 16.4 46.5 18.1M14.2 107.8Q17.9 105.4 20.7 102.1M236 135.7Q240.3 133.6 245 132.5M-4 135.7Q0.3 133.6 5 132.5M201.4 67.6Q208.4 63.3 216.2 61M117.5 4.1Q117.8 14.1 114.4 23.5M57.3 65.2Q51 58 44.4 51.1M231.2 171.7Q227.5 172.4 223.9 172.3M176.2 1.6Q182.2 -2.7 185.7 -9.2M176.2 241.6Q182.2 237.3 185.7 230.8M223.2 215.6Q223.1 212.4 220.6 210.5M3.3 203.8Q2.3 206.3 2.9 209M237.9 19.3Q233.3 21.3 230.2 25.4M34.3 0.5Q38.7 6.1 42.3 12.3M34.3 240.5Q38.7 246.1 42.3 252.3M175.9 145.9Q177 143.4 179.6 142.5M60 69.2Q60.7 80.2 64.8 90.5M114.8 162.1Q118.5 157.7 124.1 156.3M111.8 14.9Q111.3 11.3 113.9 8.7M116.2 136.9Q112 140 107.8 143M196.4 47.3Q203.7 50.4 211.5 50.3M94.9 53.7Q92.9 43.2 94.4 32.6M155.2 138.4Q143.6 139.8 133.1 145.2M225.2 87.3Q219.8 78 214.7 68.6M9.6 183Q-6.6 173.2 -24.6 167M249.6 183Q233.4 173.2 215.4 167M217.7 0.6Q217.9 18.6 223.8 35.5M217.7 240.6Q217.9 258.6 223.8 275.5M85.2 38.2Q104.5 33.1 124.3 35.8M102.7 93.5Q102.2 110.2 100.2 126.7' stroke='%23674f28' stroke-width='0.55' stroke-opacity='0.085'/%3E%3Cpath d='M145.1 171.8Q144.2 169.3 142.7 167.1M36.7 32.4Q35.3 33 34.5 34.2M85.5 0.9Q84.7 2.9 83.2 4.3M85.5 240.9Q84.7 242.9 83.2 244.3M134.6 227.2Q135.2 224.5 135.4 221.9M160.7 79.8Q159.5 78 157.6 76.8M210.4 157Q210.7 160 212 162.7M90 2.6Q90.3 4.2 91.3 5.4M232.3 224Q230.7 225.2 228.7 225.5M119.1 88.7Q119 86.9 119.4 85.1M28.3 14.8Q28.7 17.5 28.4 20.2' stroke='%23543f20' stroke-width='0.8' stroke-opacity='0.14'/%3E%3C/svg%3E");
+
+  --cairn-sheet-tooth: var(--cairn-tex-fibre);
+  --cairn-sheet-tooth-size: 240px 240px;
+
+  --cairn-kraft-flecks: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180' fill='none'%3E%3Ccircle cx='18' cy='24' r='0.75' fill='%23543f20' fill-opacity='0.1'/%3E%3Ccircle cx='62' cy='14' r='0.55' fill='%23543f20' fill-opacity='0.075'/%3E%3Ccircle cx='115' cy='38' r='0.8' fill='%2378582c' fill-opacity='0.09'/%3E%3Ccircle cx='158' cy='19' r='0.6' fill='%23543f20' fill-opacity='0.08'/%3E%3Ccircle cx='34' cy='76' r='0.65' fill='%23543f20' fill-opacity='0.085'/%3E%3Ccircle cx='89' cy='68' r='0.5' fill='%23fffdf4' fill-opacity='0.5'/%3E%3Ccircle cx='142' cy='84' r='0.85' fill='%23674f28' fill-opacity='0.1'/%3E%3Ccircle cx='12' cy='128' r='0.7' fill='%2378582c' fill-opacity='0.085'/%3E%3Ccircle cx='71' cy='116' r='0.75' fill='%23543f20' fill-opacity='0.09'/%3E%3Ccircle cx='126' cy='135' r='0.55' fill='%23fffdf4' fill-opacity='0.45'/%3E%3Ccircle cx='168' cy='118' r='0.7' fill='%23543f20' fill-opacity='0.08'/%3E%3Ccircle cx='48' cy='162' r='0.8' fill='%23674f28' fill-opacity='0.09'/%3E%3Ccircle cx='102' cy='154' r='0.6' fill='%23543f20' fill-opacity='0.075'/%3E%3Ccircle cx='151' cy='169' r='0.65' fill='%2378582c' fill-opacity='0.085'/%3E%3Cpath d='M42 44l7-1.2M128 56l6 1.5M22 104l8-0.8M96 142l7 1.1M138 14l5-1.6M76 92l6 0.9M154 146l6-1.3M14 158l5 1.2' stroke='%23674f28' stroke-width='0.55' stroke-opacity='0.085' stroke-linecap='round'/%3E%3Cpath d='M58 32l6 1.1M112 98l7-1.4M28 144l5-0.9M162 62l5 1.3' stroke='%23fffdf4' stroke-width='0.6' stroke-opacity='0.42' stroke-linecap='round'/%3E%3C/svg%3E");
+  --cairn-grain: var(--cairn-tex-fibre), var(--cairn-kraft-flecks);
+  --cairn-grain-size: 240px 240px, 180px 180px;
+  --cairn-desk-depth-left: inset -8px 0 14px -10px rgba(85, 62, 35, 0.16);
+  --cairn-desk-depth-right: inset 8px 0 14px -10px rgba(85, 62, 35, 0.16);
+  --cairn-nav-active-bg: #f8f1dd;
+  --cairn-nav-active-border: rgba(196, 168, 126, 0.65);
+  --cairn-nav-guide: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='160' viewBox='0 0 6 160' fill='none' stroke-linecap='round'%3E%3Cpath d='M3 0L3.06 40L2.96 82L3.05 124L3 160' stroke='%236e5f4c' stroke-width='1.05' stroke-opacity='0.34'/%3E%3Cpath d='M2.97 0L3.03 52L2.98 106L3.02 160' stroke='%233f3528' stroke-width='0.7' stroke-opacity='0.18'/%3E%3Cpath d='M3.02 8v5M2.96 27v4M3.04 49v6M2.97 73v4M3.03 95v5M2.96 118v4M3.04 141v6' stroke='%233f3528' stroke-width='1.2' stroke-opacity='0.16'/%3E%3C/svg%3E");
   --cairn-rule-color: rgba(150, 120, 80, 0.09);
-  /* 180deg, so the pattern anchors at the top edge: these boxes grow as their
-     content grows, and a bottom-anchored pattern would slide as they do. */
-  --cairn-rule-lines: repeating-linear-gradient(
-    180deg,
-    transparent 0 26px,
-    rgba(150, 120, 80, 0.05) 26px 27px
-  );
-
-  /* Aged stock — the sheet that has been in the drawer a while.
-
-     Four layers of one thing: noise at four scales, from stains down to
-     specks, plus a wash that yellows whatever note surface is set instead of
-     replacing it — the Note surface setting still shows through.
-
-     Scale is the whole trick. Noise at a low base frequency is not grain, it
-     is mottling: soft continents of tone hundreds of pixels across, which is
-     what old paper actually looks like. Grain alone reads as film, and noise
-     stretched along one axis reads as brushed metal, so there is no
-     directional layer here at all.
-
-     The two mottling layers use type='turbulence' rather than fractalNoise.
-     Fractal noise is evenly distributed — pretty, but it covers the sheet
-     like weather. Turbulence is the absolute value of the same noise, so it
-     clumps: big stains in some places and clean paper in others, which is
-     the unevenness real foxing has. The mid layer stays fractal, to break up
-     the big shapes without competing with them.
-
-     Every filter carries an explicit region — x/y 0%, width/height 100%.
-     Without it the region defaults to 10% larger than the rect, stitchTiles
-     stitches the region rather than the tile, and every tile boundary shows
-     up as a straight line across the page. This is the fix for that.
-
-     The alphas are small on purpose. Anything heavier stops being paper and
-     starts being camouflage. Every tile anchors top-left at a fixed size,
-     which is what keeps the texture still while CodeMirror re-estimates the
-     document height — see the ruled-paper note in 06-editor.css. */
-  --cairn-aged-tint: rgba(193, 158, 92, 0.14);
-  /* Stains — the big uneven ones, a couple per screenful */
-  --cairn-mottle-stain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='1200'%3E%3Cfilter id='s' x='0%25' y='0%25' width='100%25' height='100%25'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.004' numOctaves='2' seed='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.404 0 0 0 0 0.31 0 0 0 0 0.157 0.15 0.15 0.15 0 -0.02'/%3E%3C/filter%3E%3Crect width='1200' height='1200' filter='url(%23s)'/%3E%3C/svg%3E");
-  /* Mid patches, on a tile that never lines up with the stains */
-  --cairn-mottle-patch: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500'%3E%3Cfilter id='p' x='0%25' y='0%25' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.02' numOctaves='3' seed='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.404 0 0 0 0 0.31 0 0 0 0 0.157 0.06 0.06 0.06 0 -0.07'/%3E%3C/filter%3E%3Crect width='500' height='500' filter='url(%23p)'/%3E%3C/svg%3E");
-  /* The only layer that lightens: paper wears thin as well as dark */
-  --cairn-mottle-bloom: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='800'%3E%3Cfilter id='b' x='0%25' y='0%25' width='100%25' height='100%25'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.006' numOctaves='2' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 0.98 0 0 0 0 0.92 0.1 0.1 0.1 0 -0.035'/%3E%3C/filter%3E%3Crect width='800' height='800' filter='url(%23b)'/%3E%3C/svg%3E");
-  /* Small grey marks — dirt worked into the sheet, not spread over it */
-  --cairn-mottle-smudge: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600'%3E%3Cfilter id='m' x='0%25' y='0%25' width='100%25' height='100%25'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.06' numOctaves='3' seed='21' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.3 0 0 0 0 0.27 0 0 0 0 0.22 0.34 0.34 0.34 0 -0.44'/%3E%3C/filter%3E%3Crect width='600' height='600' filter='url(%23m)'/%3E%3C/svg%3E");
-  /* One tile, three passes: the even grain of the fibre, a scatter of grey
-     flecks a couple of pixels across, and the odd bigger speck of dirt.
-     Both fleck passes are turbulence read past a high threshold, so most of
-     the tile stays clean and what does show is a mark rather than a film. */
-  --cairn-noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='g' x='0%25' y='0%25' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' seed='0' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.404 0 0 0 0 0.31 0 0 0 0 0.157 0.12 0.12 0.12 0 -0.09'/%3E%3C/filter%3E%3Cfilter id='f' x='0%25' y='0%25' width='100%25' height='100%25'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.5' numOctaves='2' seed='13' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.3 0 0 0 0 0.27 0 0 0 0 0.22 0.4 0.4 0.4 0 -0.5736'/%3E%3C/filter%3E%3Cfilter id='d' x='0%25' y='0%25' width='100%25' height='100%25'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.12' numOctaves='2' seed='29' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.3 0 0 0 0 0.27 0 0 0 0 0.22 0.6667 0.6667 0.6667 0 -1.01'/%3E%3C/filter%3E%3Crect width='320' height='320' filter='url(%23g)'/%3E%3Crect width='320' height='320' filter='url(%23f)'/%3E%3Crect width='320' height='320' filter='url(%23d)'/%3E%3C/svg%3E");
-  --cairn-stock-aged: var(--cairn-mottle-stain), var(--cairn-mottle-patch),
-    var(--cairn-mottle-bloom), var(--cairn-mottle-smudge), var(--cairn-noise),
-    linear-gradient(0deg, var(--cairn-aged-tint), var(--cairn-aged-tint));
-  --cairn-stock-aged-size: 1200px 1200px, 500px 500px, 800px 800px,
-    600px 600px, 320px 320px, auto;
-  /* The desk, the modals and the callouts take the grain alone — stains and
-     wash belong to the sheet, not to every panel in the app. */
-  --cairn-grain-aged: var(--cairn-noise), var(--cairn-grain);
+  --cairn-title-rule-color: rgba(168, 75, 50, 0.32);
+  --cairn-dot-color: rgba(110, 95, 76, 0.28);
+  --cairn-receipt-top: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpolygon points='0,7 0,6 5,0 10,6 10,7' fill='%23fffdf4'/%3E%3C/svg%3E");
+  --cairn-receipt-bottom: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpolygon points='0,0 10,0 10,1 5,7 0,1' fill='%23fffdf4'/%3E%3C/svg%3E");
+  --cairn-receipt-shadow: drop-shadow(0 1px 1.5px rgba(85, 62, 35, 0.22)) drop-shadow(0 8px 18px rgba(85, 62, 35, 0.16));
+  --cairn-paperclip: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 54' fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cdefs%3E%3CclipPath id='a'%3E%3Cpath d='M-4-4H28V16.2L25 15L20 21L15 15L10 21L5 15L0 21L-4 16.2Z'/%3E%3C/clipPath%3E%3C/defs%3E%3Cg clip-path='url(%23a)'%3E%3Cpath d='M19 30V8.5A5.8 5.8 0 0 0 7.4 8.5V22' stroke='%233e84bd' stroke-width='2.15'/%3E%3Cpath d='M19 30V8.5A5.8 5.8 0 0 0 7.4 8.5V22' stroke='%231d3b54' stroke-width='0.85' stroke-opacity='0.34' transform='translate(0.45 0.3)'/%3E%3Cpath d='M19 30V8.5A5.8 5.8 0 0 0 7.4 8.5V22' stroke='%23fffdf6' stroke-width='0.72' stroke-opacity='0.86' transform='translate(-0.42 -0.45)'/%3E%3C/g%3E%3Cline x1='18.2' y1='16.4' x2='19.8' y2='17.8' stroke='%233f3528' stroke-width='1.2' stroke-opacity='0.16'/%3E%3Cpath d='M13.2 2.7A5.8 5.8 0 0 0 7.4 8.5V40.5A4.4 4.4 0 0 0 16.2 40.5V22.5' stroke='%233f3528' stroke-width='2.4' stroke-opacity='0.2' transform='translate(1.1 1.5)'/%3E%3Cpath d='M13.2 2.7A5.8 5.8 0 0 0 7.4 8.5V40.5A4.4 4.4 0 0 0 16.2 40.5V22.5' stroke='%233e84bd' stroke-width='2.15'/%3E%3Cpath d='M13.2 2.7A5.8 5.8 0 0 0 7.4 8.5V40.5A4.4 4.4 0 0 0 16.2 40.5V22.5' stroke='%231d3b54' stroke-width='0.85' stroke-opacity='0.34' transform='translate(0.45 0.3)'/%3E%3Cpath d='M13.2 2.7A5.8 5.8 0 0 0 7.4 8.5V40.5A4.4 4.4 0 0 0 16.2 40.5V22.5' stroke='%23fffdf6' stroke-width='0.72' stroke-opacity='0.86' transform='translate(-0.42 -0.45)'/%3E%3C/svg%3E");
+  --cairn-washi-tape: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='20' viewBox='0 0 84 20'%3E%3Cpolygon points='2,1.5 82,1 79.5,5.5 82.5,10.5 80,15 82,18.5 1.5,19 4,14 1.5,9.5 4,5' fill='%23efe3c4' fill-opacity='0.78' stroke='%239a8a72' stroke-opacity='0.34' stroke-width='0.75'/%3E%3Cline x1='10' y1='2.6' x2='74' y2='2.2' stroke='%23ffffff' stroke-opacity='0.52' stroke-width='0.8'/%3E%3C/svg%3E");
+  --cairn-code-ln: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 1920' preserveAspectRatio='xMaxYMin meet' fill='%239a8a72' font-family='SF Mono,ui-monospace,Menlo,Consolas,monospace' font-size='8.5' text-anchor='end'%3E%3Ctext x='20' y='11.5'%3E1%3C/text%3E%3Ctext x='20' y='27.5'%3E2%3C/text%3E%3Ctext x='20' y='43.5'%3E3%3C/text%3E%3Ctext x='20' y='59.5'%3E4%3C/text%3E%3Ctext x='20' y='75.5'%3E5%3C/text%3E%3Ctext x='20' y='91.5'%3E6%3C/text%3E%3Ctext x='20' y='107.5'%3E7%3C/text%3E%3Ctext x='20' y='123.5'%3E8%3C/text%3E%3Ctext x='20' y='139.5'%3E9%3C/text%3E%3Ctext x='20' y='155.5'%3E10%3C/text%3E%3Ctext x='20' y='171.5'%3E11%3C/text%3E%3Ctext x='20' y='187.5'%3E12%3C/text%3E%3Ctext x='20' y='203.5'%3E13%3C/text%3E%3Ctext x='20' y='219.5'%3E14%3C/text%3E%3Ctext x='20' y='235.5'%3E15%3C/text%3E%3Ctext x='20' y='251.5'%3E16%3C/text%3E%3Ctext x='20' y='267.5'%3E17%3C/text%3E%3Ctext x='20' y='283.5'%3E18%3C/text%3E%3Ctext x='20' y='299.5'%3E19%3C/text%3E%3Ctext x='20' y='315.5'%3E20%3C/text%3E%3Ctext x='20' y='331.5'%3E21%3C/text%3E%3Ctext x='20' y='347.5'%3E22%3C/text%3E%3Ctext x='20' y='363.5'%3E23%3C/text%3E%3Ctext x='20' y='379.5'%3E24%3C/text%3E%3Ctext x='20' y='395.5'%3E25%3C/text%3E%3Ctext x='20' y='411.5'%3E26%3C/text%3E%3Ctext x='20' y='427.5'%3E27%3C/text%3E%3Ctext x='20' y='443.5'%3E28%3C/text%3E%3Ctext x='20' y='459.5'%3E29%3C/text%3E%3Ctext x='20' y='475.5'%3E30%3C/text%3E%3Ctext x='20' y='491.5'%3E31%3C/text%3E%3Ctext x='20' y='507.5'%3E32%3C/text%3E%3Ctext x='20' y='523.5'%3E33%3C/text%3E%3Ctext x='20' y='539.5'%3E34%3C/text%3E%3Ctext x='20' y='555.5'%3E35%3C/text%3E%3Ctext x='20' y='571.5'%3E36%3C/text%3E%3Ctext x='20' y='587.5'%3E37%3C/text%3E%3Ctext x='20' y='603.5'%3E38%3C/text%3E%3Ctext x='20' y='619.5'%3E39%3C/text%3E%3Ctext x='20' y='635.5'%3E40%3C/text%3E%3Ctext x='20' y='651.5'%3E41%3C/text%3E%3Ctext x='20' y='667.5'%3E42%3C/text%3E%3Ctext x='20' y='683.5'%3E43%3C/text%3E%3Ctext x='20' y='699.5'%3E44%3C/text%3E%3Ctext x='20' y='715.5'%3E45%3C/text%3E%3Ctext x='20' y='731.5'%3E46%3C/text%3E%3Ctext x='20' y='747.5'%3E47%3C/text%3E%3Ctext x='20' y='763.5'%3E48%3C/text%3E%3Ctext x='20' y='779.5'%3E49%3C/text%3E%3Ctext x='20' y='795.5'%3E50%3C/text%3E%3Ctext x='20' y='811.5'%3E51%3C/text%3E%3Ctext x='20' y='827.5'%3E52%3C/text%3E%3Ctext x='20' y='843.5'%3E53%3C/text%3E%3Ctext x='20' y='859.5'%3E54%3C/text%3E%3Ctext x='20' y='875.5'%3E55%3C/text%3E%3Ctext x='20' y='891.5'%3E56%3C/text%3E%3Ctext x='20' y='907.5'%3E57%3C/text%3E%3Ctext x='20' y='923.5'%3E58%3C/text%3E%3Ctext x='20' y='939.5'%3E59%3C/text%3E%3Ctext x='20' y='955.5'%3E60%3C/text%3E%3Ctext x='20' y='971.5'%3E61%3C/text%3E%3Ctext x='20' y='987.5'%3E62%3C/text%3E%3Ctext x='20' y='1003.5'%3E63%3C/text%3E%3Ctext x='20' y='1019.5'%3E64%3C/text%3E%3Ctext x='20' y='1035.5'%3E65%3C/text%3E%3Ctext x='20' y='1051.5'%3E66%3C/text%3E%3Ctext x='20' y='1067.5'%3E67%3C/text%3E%3Ctext x='20' y='1083.5'%3E68%3C/text%3E%3Ctext x='20' y='1099.5'%3E69%3C/text%3E%3Ctext x='20' y='1115.5'%3E70%3C/text%3E%3Ctext x='20' y='1131.5'%3E71%3C/text%3E%3Ctext x='20' y='1147.5'%3E72%3C/text%3E%3Ctext x='20' y='1163.5'%3E73%3C/text%3E%3Ctext x='20' y='1179.5'%3E74%3C/text%3E%3Ctext x='20' y='1195.5'%3E75%3C/text%3E%3Ctext x='20' y='1211.5'%3E76%3C/text%3E%3Ctext x='20' y='1227.5'%3E77%3C/text%3E%3Ctext x='20' y='1243.5'%3E78%3C/text%3E%3Ctext x='20' y='1259.5'%3E79%3C/text%3E%3Ctext x='20' y='1275.5'%3E80%3C/text%3E%3Ctext x='20' y='1291.5'%3E81%3C/text%3E%3Ctext x='20' y='1307.5'%3E82%3C/text%3E%3Ctext x='20' y='1323.5'%3E83%3C/text%3E%3Ctext x='20' y='1339.5'%3E84%3C/text%3E%3Ctext x='20' y='1355.5'%3E85%3C/text%3E%3Ctext x='20' y='1371.5'%3E86%3C/text%3E%3Ctext x='20' y='1387.5'%3E87%3C/text%3E%3Ctext x='20' y='1403.5'%3E88%3C/text%3E%3Ctext x='20' y='1419.5'%3E89%3C/text%3E%3Ctext x='20' y='1435.5'%3E90%3C/text%3E%3Ctext x='20' y='1451.5'%3E91%3C/text%3E%3Ctext x='20' y='1467.5'%3E92%3C/text%3E%3Ctext x='20' y='1483.5'%3E93%3C/text%3E%3Ctext x='20' y='1499.5'%3E94%3C/text%3E%3Ctext x='20' y='1515.5'%3E95%3C/text%3E%3Ctext x='20' y='1531.5'%3E96%3C/text%3E%3Ctext x='20' y='1547.5'%3E97%3C/text%3E%3Ctext x='20' y='1563.5'%3E98%3C/text%3E%3Ctext x='20' y='1579.5'%3E99%3C/text%3E%3Ctext x='20' y='1595.5'%3E100%3C/text%3E%3Ctext x='20' y='1611.5'%3E101%3C/text%3E%3Ctext x='20' y='1627.5'%3E102%3C/text%3E%3Ctext x='20' y='1643.5'%3E103%3C/text%3E%3Ctext x='20' y='1659.5'%3E104%3C/text%3E%3Ctext x='20' y='1675.5'%3E105%3C/text%3E%3Ctext x='20' y='1691.5'%3E106%3C/text%3E%3Ctext x='20' y='1707.5'%3E107%3C/text%3E%3Ctext x='20' y='1723.5'%3E108%3C/text%3E%3Ctext x='20' y='1739.5'%3E109%3C/text%3E%3Ctext x='20' y='1755.5'%3E110%3C/text%3E%3Ctext x='20' y='1771.5'%3E111%3C/text%3E%3Ctext x='20' y='1787.5'%3E112%3C/text%3E%3Ctext x='20' y='1803.5'%3E113%3C/text%3E%3Ctext x='20' y='1819.5'%3E114%3C/text%3E%3Ctext x='20' y='1835.5'%3E115%3C/text%3E%3Ctext x='20' y='1851.5'%3E116%3C/text%3E%3Ctext x='20' y='1867.5'%3E117%3C/text%3E%3Ctext x='20' y='1883.5'%3E118%3C/text%3E%3Ctext x='20' y='1899.5'%3E119%3C/text%3E%3Ctext x='20' y='1915.5'%3E120%3C/text%3E%3C/svg%3E");
 }
