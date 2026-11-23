@@ -275,8 +275,8 @@ body {
   top: -15px;
   left: 50%;
   transform: translateX(-50%) rotate(-1.6deg);
-  width: 88px;
-  height: 20px;
+  width: clamp(0px, (100% - var(--cairn-tape-min-width) + 0.5px) * 1000, 88px);
+  height: clamp(0px, (100% - var(--cairn-tape-min-height) + 0.5px) * 1000, 20px);
   background-image: var(--cairn-washi-tape);
   background-size: 100% 100%;
   background-repeat: no-repeat;

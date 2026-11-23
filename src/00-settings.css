@@ -172,6 +172,16 @@ settings:
         type: class-toggle
         default: false
     -
+        id: cairn-tape-min-width
+        title: Image tape minimum width
+        description: Images narrower than this skip the washi tape strip so inline icons and small badges stay clean.
+        type: variable-number-slider
+        default: 160
+        min: 80
+        max: 360
+        step: 10
+        format: px
+    -
         id: cairn-underline-links
         title: Underline internal links
         type: class-toggle

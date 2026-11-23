@@ -12,6 +12,8 @@ body {
   --cairn-line-width: 42rem;
   --cairn-radius: 4px;
   --cairn-texture: 1;
+  --cairn-tape-min-width: 160px;
+  --cairn-tape-min-height: 96px;
 
   /* Type — set in sans-serif.
      Remote webfonts are forbidden in community themes, so this is an

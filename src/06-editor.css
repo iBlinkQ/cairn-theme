@@ -739,29 +739,42 @@ input[type="checkbox"].task-list-item-checkbox:checked::after {
 }
 
 /* Images — mounted on archival photo paper with a soft warm shadow and a
-   translucent washi tape strip along the top edge. padding-top keeps the tape
-   inside .image-embed's own paint box so CodeMirror's contain: paint in Live
-   Preview never clips it; matches both block embeds and .cm-line > .image-embed.
+   translucent washi tape strip along the top edge. A percentage-clamped
+   ::before spacer reserves the 14px headroom only when the frame reaches
+   --cairn-tape-min-width, keeping the tape inside .image-embed's own paint
+   box (so CodeMirror's contain: paint in Live Preview never clips it) while
+   leaving small inline icons with zero extra top gap. The ::after tape strip
+   uses the same clamp() step on both width and height so narrow icons and
+   thin banners skip the tape automatically.
    Users can hide the tape via Style Settings or cssclasses: [cairn-no-image-tape]. */
 .markdown-rendered .image-embed,
 .markdown-source-view.mod-cm6 .cm-content .image-embed {
   position: relative;
   display: inline-flex;
+  flex-direction: column;
   width: fit-content;
   max-width: 100%;
-  padding-top: 10px;
-  margin-top: 4px;
+  vertical-align: bottom;
 }
 
 .markdown-rendered .image-embed::before,
 .markdown-source-view.mod-cm6 .cm-content .image-embed::before {
   content: "";
+  display: block;
+  height: 0;
+  flex: none;
+  padding-top: clamp(0px, (100% - var(--cairn-tape-min-width) + 0.5px) * 1000, 14px);
+}
+
+.markdown-rendered .image-embed::after,
+.markdown-source-view.mod-cm6 .cm-content .image-embed::after {
+  content: "";
   position: absolute;
-  top: 0;
+  top: 4px;
   left: 50%;
   transform: translateX(-50%) rotate(-1.5deg);
-  width: 78px;
-  height: 19px;
+  width: clamp(0px, (100% - var(--cairn-tape-min-width) + 0.5px) * 1000, 78px);
+  height: clamp(0px, (100% - var(--cairn-tape-min-height) + 0.5px) * 1000, 19px);
   background-image: var(--cairn-washi-tape);
   background-size: 100% 100%;
   background-repeat: no-repeat;

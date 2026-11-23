@@ -177,6 +177,16 @@ settings:
         type: class-toggle
         default: false
     -
+        id: cairn-tape-min-width
+        title: Image tape minimum width
+        description: Images narrower than this skip the washi tape strip so inline icons and small badges stay clean.
+        type: variable-number-slider
+        default: 160
+        min: 80
+        max: 360
+        step: 10
+        format: px
+    -
         id: cairn-underline-links
         title: Underline internal links
         type: class-toggle
@@ -195,6 +205,8 @@ body {
   --cairn-line-width: 42rem;
   --cairn-radius: 4px;
   --cairn-texture: 1;
+  --cairn-tape-min-width: 160px;
+  --cairn-tape-min-height: 96px;
 
   --cairn-font: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB",
     "Microsoft YaHei", "Noto Sans SC", "Source Han Sans SC", "Helvetica Neue", Arial,
@@ -1464,21 +1476,30 @@ input[type="checkbox"].task-list-item-checkbox:checked::after {
 .markdown-source-view.mod-cm6 .cm-content .image-embed {
   position: relative;
   display: inline-flex;
+  flex-direction: column;
   width: fit-content;
   max-width: 100%;
-  padding-top: 10px;
-  margin-top: 4px;
+  vertical-align: bottom;
 }
 
 .markdown-rendered .image-embed::before,
 .markdown-source-view.mod-cm6 .cm-content .image-embed::before {
   content: "";
+  display: block;
+  height: 0;
+  flex: none;
+  padding-top: clamp(0px, (100% - var(--cairn-tape-min-width) + 0.5px) * 1000, 14px);
+}
+
+.markdown-rendered .image-embed::after,
+.markdown-source-view.mod-cm6 .cm-content .image-embed::after {
+  content: "";
   position: absolute;
-  top: 0;
+  top: 4px;
   left: 50%;
   transform: translateX(-50%) rotate(-1.5deg);
-  width: 78px;
-  height: 19px;
+  width: clamp(0px, (100% - var(--cairn-tape-min-width) + 0.5px) * 1000, 78px);
+  height: clamp(0px, (100% - var(--cairn-tape-min-height) + 0.5px) * 1000, 19px);
   background-image: var(--cairn-washi-tape);
   background-size: 100% 100%;
   background-repeat: no-repeat;
@@ -1777,8 +1798,8 @@ body {
   top: -15px;
   left: 50%;
   transform: translateX(-50%) rotate(-1.6deg);
-  width: 88px;
-  height: 20px;
+  width: clamp(0px, (100% - var(--cairn-tape-min-width) + 0.5px) * 1000, 88px);
+  height: clamp(0px, (100% - var(--cairn-tape-min-height) + 0.5px) * 1000, 20px);
   background-image: var(--cairn-washi-tape);
   background-size: 100% 100%;
   background-repeat: no-repeat;
@@ -1884,18 +1905,14 @@ body {
   content: none;
 }
 
-.cairn-no-image-tape .markdown-rendered .image-embed,
-.cairn-no-image-tape .markdown-source-view.mod-cm6 .cm-content .image-embed,
-.markdown-preview-view.cairn-no-image-tape .image-embed,
-.markdown-source-view.mod-cm6.cairn-no-image-tape .cm-content .image-embed {
-  padding-top: 0;
-  margin-top: 0;
-}
-
 .cairn-no-image-tape .markdown-rendered .image-embed::before,
+.cairn-no-image-tape .markdown-rendered .image-embed::after,
 .cairn-no-image-tape .markdown-source-view.mod-cm6 .cm-content .image-embed::before,
+.cairn-no-image-tape .markdown-source-view.mod-cm6 .cm-content .image-embed::after,
 .markdown-preview-view.cairn-no-image-tape .image-embed::before,
+.markdown-preview-view.cairn-no-image-tape .image-embed::after,
 .markdown-source-view.mod-cm6.cairn-no-image-tape .cm-content .image-embed::before,
+.markdown-source-view.mod-cm6.cairn-no-image-tape .cm-content .image-embed::after,
 .cairn-no-image-tape .canvas-node:has(> .canvas-node-container > .image-embed)::after {
   content: none;
 }

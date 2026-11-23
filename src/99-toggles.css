@@ -110,18 +110,14 @@
 /* Hide image washi tape — keeps the archival photo frame without the top
    translucent tape strip. Works globally via Style Settings or per note via
    frontmatter cssclasses: [cairn-no-image-tape]. */
-.cairn-no-image-tape .markdown-rendered .image-embed,
-.cairn-no-image-tape .markdown-source-view.mod-cm6 .cm-content .image-embed,
-.markdown-preview-view.cairn-no-image-tape .image-embed,
-.markdown-source-view.mod-cm6.cairn-no-image-tape .cm-content .image-embed {
-  padding-top: 0;
-  margin-top: 0;
-}
-
 .cairn-no-image-tape .markdown-rendered .image-embed::before,
+.cairn-no-image-tape .markdown-rendered .image-embed::after,
 .cairn-no-image-tape .markdown-source-view.mod-cm6 .cm-content .image-embed::before,
+.cairn-no-image-tape .markdown-source-view.mod-cm6 .cm-content .image-embed::after,
 .markdown-preview-view.cairn-no-image-tape .image-embed::before,
+.markdown-preview-view.cairn-no-image-tape .image-embed::after,
 .markdown-source-view.mod-cm6.cairn-no-image-tape .cm-content .image-embed::before,
+.markdown-source-view.mod-cm6.cairn-no-image-tape .cm-content .image-embed::after,
 .cairn-no-image-tape .canvas-node:has(> .canvas-node-container > .image-embed)::after {
   content: none;
 }
